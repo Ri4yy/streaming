@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { FaUserAlt } from 'react-icons/fa';
 import { FaMessage } from 'react-icons/fa6';
 import { MdEmail } from 'react-icons/md';
+import CustomPlayer from '@/components/CustomPlayer';
 import { TMDBDetail, tmdbApi } from '@/services/tmdb';
 
 export default function DetailTabs({ media, type }: { media: TMDBDetail, type: 'movie' | 'tv' | 'anime' }) {
@@ -62,16 +63,8 @@ export default function DetailTabs({ media, type }: { media: TMDBDetail, type: '
                                 {media.overview || "Описание отсутствует."}
                             </p>
                             {trailer && (
-                                <div className="mt-10 w-full aspect-video rounded-xl overflow-hidden">
-                                    <iframe 
-                                        width="100%" 
-                                        height="100%" 
-                                        src={`https://www.youtube.com/embed/${trailer.key}`} 
-                                        title="YouTube video player" 
-                                        frameBorder="0" 
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                        allowFullScreen
-                                    ></iframe>
+                                <div className="mt-10 w-full rounded-xl overflow-hidden shadow-2xl shadow-black/50 border border-white/5">
+                                    <CustomPlayer url={`https://www.youtube.com/watch?v=${trailer.key}`} />
                                 </div>
                             )}
                             <ul className='flex flex-col divide-y-[1px] divide-[#dee2e6]/20 mt-12'>
