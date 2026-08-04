@@ -1,87 +1,96 @@
-"use client";
-
-import React, { useState } from 'react';
+import React from 'react';
 import MediaCard from '@/components/MediaCard';
-import { BsSearch } from "react-icons/bs";
-import Checkbox from '@/components/Checkbox';
+import CatalogFilters from '@/components/CatalogFilters';
+import { googleBooksApi } from '@/services/googleBooks';
 
-export default function BooksPage() {
-    let arrGenre = [
-        { id: 1, name: 'Фантастика' },
-        { id: 2, name: 'Фэнтези' },
-        { id: 3, name: 'Детективы' },
-        { id: 4, name: 'Романы' },
-        { id: 5, name: 'Ужасы' },
-        { id: 6, name: 'Научная литература' },
-        { id: 7, name: 'Биографии' },
-        { id: 8, name: 'История' },
-        { id: 9, name: 'Бизнес' },
-        { id: 10, name: 'Саморазвитие' }
-    ];
-    
-    const [isActive, setActive] = useState(false);
+export default async function BooksPage() {
+    const books = await googleBooksApi.getPopularBooks('популярные книги', 40);
+
+    // Мы больше не удаляем старые книги (иначе API отдает слишком мало результатов),
+    // но сортировка ниже выстроит их так, что самые новые будут первыми.
+    const heroBook = books.length > 0 ? books[0] : null;
+    let booksList = books.length > 0 ? books.slice(1) : [];
+
+    // Отсортировать книги в каталоге: самые новые первыми, а при равном годе - самые популярные
+    booksList.sort((a, b) => {
+        const yearA = parseInt(a.volumeInfo.publishedDate?.substring(0, 4) || '0', 10);
+        const yearB = parseInt(b.volumeInfo.publishedDate?.substring(0, 4) || '0', 10);
+        
+        // Сначала по новизне (году выпуска)
+        if (yearB !== yearA) {
+            return yearB - yearA;
+        }
+
+        const countA = a.volumeInfo.ratingsCount || 0;
+        const countB = b.volumeInfo.ratingsCount || 0;
+        
+        // Затем по количеству оценок (популярность)
+        if (countB !== countA) {
+            return countB - countA;
+        }
+        
+        // Если количество оценок равно, то по рейтингу
+        const ratingA = a.volumeInfo.averageRating || 0;
+        const ratingB = b.volumeInfo.averageRating || 0;
+        return ratingB - ratingA;
+    });
+
+    const allGenres = Array.from(new Set(books.flatMap(b => b.volumeInfo.categories || [])));
+    const arrGenre = allGenres.map((name, index) => ({ id: index + 1, name }));
 
     return (
         <main className='-mt-20'>
             <section className='lg:px-[80px] md:px-10 px-5 pt-[100px]'>
-                <div className="bg-[#1E1E20] bg-center bg-cover rounded-2xl h-[700px] w-full relative overflow-hidden flex items-center justify-center">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                    <div className="absolute md:bottom-5 md:left-5 md:right-5 bottom-0 px-4 py-2.5 bg-black/60 backdrop-blur-md rounded-xl lg:max-w-[700px]">
-                        <p className='md:text-3xl text-xl font-medium mb-4'>Властелин колец</p>
-                        <p className='md:text-base text-xs text-[#e8dfde]'>
-                            «Властелин колец» — роман-эпопея английского писателя Дж. Р. Р. Толкина, одно из самых известных произведений жанра фэнтези.
-                        </p>
-                    </div>
+                <div className="bg-[#1E1E20] rounded-2xl h-[700px] w-full relative overflow-hidden flex items-center justify-center">
+                    {heroBook && (
+                        <div 
+                            className="absolute inset-0 bg-cover bg-center opacity-40 z-0"
+                            style={{ backgroundImage: `url(${googleBooksApi.getHeroImage(heroBook)})` }}
+                        />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-0"></div>
+
+                    {heroBook && (
+                        <div className="absolute md:bottom-5 md:left-5 md:right-5 bottom-0 px-4 py-2.5 bg-black/60 backdrop-blur-md rounded-xl lg:max-w-[700px] z-10">
+                            <p className='text-[#CAE962] text-xl font-bold mb-1'>{heroBook.volumeInfo.categories?.[0] || 'Книга'}</p>
+                            <p className='md:text-4xl text-2xl font-bold mb-3 leading-[1.1]'>{heroBook.volumeInfo.title}</p>
+                            
+                            <div className="flex flex-wrap items-center gap-4 mb-4 text-sm font-medium">
+                                {heroBook.volumeInfo.authors && (
+                                    <span className="bg-white/10 px-2 py-1 rounded">Автор: {heroBook.volumeInfo.authors.join(', ')}</span>
+                                )}
+                                {heroBook.volumeInfo.publishedDate && (
+                                    <span className="bg-white/10 px-2 py-1 rounded">Год: {heroBook.volumeInfo.publishedDate.substring(0, 4)}</span>
+                                )}
+                                {heroBook.volumeInfo.averageRating && (
+                                    <span className="bg-[#F6C700] text-black px-2 py-1 rounded font-bold">Оценка: {heroBook.volumeInfo.averageRating}</span>
+                                )}
+                            </div>
+
+                            <div className='p-3 rounded-md bg-white/20 backdrop-blur-sm'>
+                                <p className='md:text-base text-sm text-[#F8F7F9]/100 line-clamp-3 leading-[1.3]'>
+                                    {heroBook.volumeInfo.description || "Описание отсутствует."}
+                                </p>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </section>
 
             <section className='container lg:py-[120px] md:py-14 py-8'>
-                <form action="#" className='w-full' onSubmit={(e) => e.preventDefault()}>
-                    <div className="group relative">
-                        <input className='focus:bg-black/50 w-full py-4 px-7 pr-14 rounded-lg backdrop-blur-md bg-[#1E1E20] outline-none' name='name' type="text" placeholder='Поиск...' autoComplete='off' />
-                        <button type='submit'><BsSearch className='absolute top-1/2 -translate-y-1/2 right-6 h-5 w-5 fill-white hover:fill-[#ff1414]' /></button>
-                    </div>
-                </form>
-                <div className="flex md:flex-row flex-col gap-5 justify-between md:items-center mt-4 ">
-                    <div className="flex xs:flex-row flex-col xs:items-center gap-5">
-                        Сортировать по:
-                        <select className='px-6 py-3 rounded-lg bg-white/10 backdrop-blur-sm'>
-                            <option>Дате добавления</option>
-                            <option>Дате выхода</option>
-                            <option>Рейтингу</option>
-                            <option>Названию</option>
-                        </select>
-                    </div>
-                    <div className="relative w-fit">
-                        <button
-                            className='px-6 py-3 rounded-lg bg-white/10 backdrop-blur-sm'
-                            onClick={() => setActive(!isActive)}
-                        >Выберите жанр</button>
-                        <div className={`absolute z-[51] top-14 left-0 p-3 rounded-md bg-black min-w-[200px] ${isActive ? 'block' : 'hidden'}`}>
-                            <ul className='flex flex-col gap-1 text-white max-h-[204px] overflow-y-scroll'>
-                                {arrGenre.map(genre =>
-                                    <li key={genre.id} className='hover:bg-[#ff1414]/70 transition-all duration-300 px-2 py-1 rounded-md'>
-                                        <label className='flex gap-3 items-center cursor-pointer'>
-                                            <Checkbox />
-                                            <p>{genre.name}</p>
-                                        </label>
-                                    </li>
-                                )}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <CatalogFilters genres={arrGenre} />
+
                 <div className="grid xl:grid-cols-4 lg:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9">
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+                    {booksList.map(book => (
                         <MediaCard 
-                            key={i}
-                            name="Властелин колец" 
-                            year="1954" 
-                            genre="Фэнтези" 
-                            rate="9.5" 
-                            img="/img/poster/spider.jpg" // placeholder
+                            key={book.id}
+                            name={book.volumeInfo.title} 
+                            year={book.volumeInfo.publishedDate ? book.volumeInfo.publishedDate.substring(0, 4) : ""} 
+                            genre={book.volumeInfo.categories?.[0] || "Книга"} 
+                            rate={book.volumeInfo.averageRating ? book.volumeInfo.averageRating.toString() : ""} 
+                            img={googleBooksApi.getThumbnail(book)}
                             type="book"
-                            href="/books/1"
+                            href={`/books/${book.id}`}
                         />
                     ))}
                 </div>

@@ -23,6 +23,16 @@ const nextConfig: NextConfig = {
         hostname: 'shared.akamai.steamstatic.com',
         pathname: '/**',
       },
+      {
+        protocol: 'http',
+        hostname: 'books.google.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'books.google.com',
+        pathname: '/**',
+      },
     ],
   },
 };
