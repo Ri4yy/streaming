@@ -6,7 +6,7 @@ import { TMDBMedia, tmdbApi } from '@/services/tmdb';
 export default function Hero({ movie }: { movie: TMDBMedia }) {
     if (!movie) return null;
     return (  
-        <section className='bg-no-repeat bg-cover bg-center w-full h-screen md:min-h-[800px] flex flex-col justify-center relative' style={{ backgroundImage: `url(${tmdbApi.getImageUrl(movie.backdrop_path || movie.poster_path, 'original')})` }}>
+        <section className='bg-no-repeat bg-cover bg-center w-full h-screen md:min-h-[800px] flex flex-col justify-center relative' style={{ backgroundImage: `url('${tmdbApi.getImageUrl(movie.backdrop_path || movie.poster_path, 'original')}')` }}>
             <div className="absolute inset-0 bg-black/60 z-0"></div>
             <StaggerContainer className="container relative z-10">
                 <StaggerItem>

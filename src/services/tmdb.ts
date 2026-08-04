@@ -33,7 +33,33 @@ const defaultParams = {
     language: 'ru-RU'
 };
 
-const mockMedia: TMDBMedia = {
+export interface TMDBVideo {
+    key: string;
+    site: string;
+    type: string;
+}
+
+export interface TMDBPerson {
+    id: number;
+    name: string;
+    profile_path: string | null;
+    character?: string;
+}
+
+export interface TMDBDetail extends TMDBMedia {
+    genres: { id: number; name: string }[];
+    runtime?: number; // for movies
+    episode_run_time?: number[]; // for tv
+    origin_country?: string[];
+    credits?: {
+        cast: TMDBPerson[];
+    };
+    videos?: {
+        results: TMDBVideo[];
+    };
+}
+
+const mockMedia: TMDBDetail = {
     id: 1,
     title: "Человек-паук: Паутина вселенных",
     name: "Человек-паук: Паутина вселенных",
@@ -41,10 +67,19 @@ const mockMedia: TMDBMedia = {
     poster_path: null,
     backdrop_path: null,
     genre_ids: [28, 12, 16],
+    genres: [{id: 28, name: 'Экшен'}, {id: 16, name: 'Мультфильм'}],
     popularity: 100,
     release_date: "2023-05-31",
     vote_average: 8.4,
-    vote_count: 1000
+    vote_count: 1000,
+    runtime: 140,
+    credits: {
+        cast: [
+            { id: 1, name: "Шамеик Мур", character: "Майлз Моралес", profile_path: null },
+            { id: 2, name: "Хейли Стайнфелд", character: "Гвен Стейси", profile_path: null }
+        ]
+    },
+    videos: { results: [] }
 };
 
 async function fetchTMDB<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {
@@ -73,13 +108,15 @@ async function fetchTMDB<T>(endpoint: string, params: Record<string, string> = {
         console.error(`Fetch failed for ${endpoint}:`, error);
         
         // Return fallback mock data to prevent app crash
-        const mockResponse: TMDBResponse<TMDBMedia> = {
+        // This object satisfies both list response and detail response
+        const mockFallback: any = {
+            ...mockMedia,
             page: 1,
             results: Array(20).fill(mockMedia).map((m, i) => ({ ...m, id: m.id + i })),
             total_pages: 1,
             total_results: 20
         };
-        return mockResponse as unknown as T;
+        return mockFallback as T;
     }
 }
 
@@ -103,8 +140,8 @@ export const tmdbApi = {
             sort_by: 'popularity.desc'
         }),
         
-    getDetails: (id: string, type: 'movie' | 'tv') => 
-        fetchTMDB<any>(`/${type}/${id}`, {
+    getDetails: (id: string, type: 'movie' | 'tv' | string) => 
+        fetchTMDB<TMDBDetail>(`/${type}/${id}`, {
             append_to_response: 'videos,credits'
         }),
         
