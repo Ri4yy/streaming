@@ -19,7 +19,7 @@ export default function ReleaseSlider({ movies }: { movies: TMDBMedia[] }) {
                 <StaggerItem>
                     <div className='pt-10'>
                         <Swiper
-                        className="[&>.swiper-wrapper]:w-[500%] [&>.swiper-wrapper]:p-5 [&>.swiper-wrapper]:rounded-lg [&>.swiper-wrapper]:bg-[#f8f7f9]/10 [&>.swiper-wrapper]:backdrop-blur-sm"
+                        className="!pt-5 !px-5"
                         breakpoints={{
                             320: { slidesPerView: 1 },
                             580: { slidesPerView: 2 },
@@ -31,6 +31,7 @@ export default function ReleaseSlider({ movies }: { movies: TMDBMedia[] }) {
                         spaceBetween={50}
                         slidesPerView={5}
                         >
+                            <div slot="container-start" className="absolute top-0 left-0 w-full h-[calc(100%-76px)] bg-[#f8f7f9]/10 backdrop-blur-sm rounded-l-lg z-0 pointer-events-none"></div>
                             {movies.map((movie) => (
                                 <SwiperSlide key={movie.id}>
                                     <MediaCard 
@@ -45,9 +46,9 @@ export default function ReleaseSlider({ movies }: { movies: TMDBMedia[] }) {
                                     />
                                 </SwiperSlide>
                             ))}
-                            <div className="flex justify-between items-center pr-[calc((100%-1240px))] mt-12">
-                                <div className="h-[1px] w-full bg-[#323234] md:mr-10 mr-5"></div>
-                                <SwiperNavButtons />
+                            <div className="flex justify-between items-center pr-[calc((100%-1240px))] mt-12 -mx-5 px-5">
+                                <div className="h-[1px] w-full bg-[#323234] md:mr-10 mr-5 relative z-10"></div>
+                                <div className="relative z-10"><SwiperNavButtons /></div>
                             </div>
                         </Swiper>
                     </div>

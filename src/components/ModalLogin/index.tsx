@@ -5,6 +5,7 @@ import { IoClose } from 'react-icons/io5';
 import { FaUserAlt } from 'react-icons/fa';
 import { BiSolidLock } from 'react-icons/bi';
 import { createClient } from '@/utils/supabase/client';
+import { LoginButton } from '@telegram-auth/react';
 
 export default function ModalLogin({ active, setActive }: { active: boolean, setActive: (v: boolean) => void }) {
     const [email, setEmail] = useState('');
@@ -34,6 +35,36 @@ export default function ModalLogin({ active, setActive }: { active: boolean, set
         }
     };
 
+    const handleTelegramAuth = async (user: any) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch('/api/auth/telegram', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(user)
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Ошибка авторизации через Telegram');
+            }
+            
+            // Successfully got session, now set it in Supabase
+            const { error: sessionError } = await supabase.auth.setSession(data.session);
+            
+            if (sessionError) throw sessionError;
+            
+            setActive(false);
+            window.location.reload();
+        } catch (err: any) {
+            setError(err.message || 'Произошла ошибка при входе через Telegram');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (  
         <div className={`${active ? 'modal__active' : 'modal'} flex justify-center items-center`}>
             <div className={`bg-black/80 backdrop-blur-xl md:pt-[60px] pt-8 md:px-[50px] px-[30px] md:pb-[50px] pb-6 rounded-2xl min-[440px]:w-[440px] w-[90%] h-fit z-[63] ${active ? 'flex ' : 'hidden'} relative`}>
@@ -53,13 +84,37 @@ export default function ModalLogin({ active, setActive }: { active: boolean, set
                         <BiSolidLock className='absolute top-1/2 -translate-y-1/2 left-6 h-5 w-5 fill-white/50 group-focus-within:fill-white transition-colors duration-300' />
                         <input value={password} onChange={e => setPassword(e.target.value)} required className='w-full py-[10px] pl-[60px] pr-6 rounded-lg border-[1px] border-white/10 bg-white/5 outline-none focus:border-white/70' name='password' type="password" placeholder='Пароль' autoComplete='current-password' />
                     </div>
-                    <button type="submit" disabled={loading} className='flex justify-center items-center group mt-4 py-4 w-full rounded-lg bg-[#ff1414] relative overflow-hidden transition-all duration-500 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100'>
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full transition-all duration-500 ease-out group-hover:w-[400px] group-hover:h-[400px] z-0"></div>
-                        <span className="relative z-10 font-medium group-hover:text-black transition-colors duration-500">{loading ? 'Загрузка...' : 'Войти'}</span>
-                    </button>
-                    <button type="button" onClick={() => handleAuth('signup')} disabled={loading} className='text-base font-medium text-center hover:text-[#ff1414] transition-all duration-300 disabled:opacity-50'>
-                        Регистрация
-                    </button>
+                    <div className="flex flex-col gap-4 mt-2">
+                        <button type="submit" disabled={loading} className='flex justify-center items-center group py-4 w-full rounded-lg bg-[#ff1414] relative overflow-hidden transition-all duration-500 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100'>
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full transition-all duration-500 ease-out group-hover:w-[400px] group-hover:h-[400px] z-0"></div>
+                            <span className="relative z-10 font-medium group-hover:text-black transition-colors duration-500">{loading ? 'Загрузка...' : 'Войти'}</span>
+                        </button>
+                        
+                        <div className="flex items-center gap-3 w-full">
+                            <div className="h-[1px] bg-white/10 flex-1"></div>
+                            <span className="text-white/40 text-sm">или</span>
+                            <div className="h-[1px] bg-white/10 flex-1"></div>
+                        </div>
+
+                        <div className="flex justify-center w-full items-center my-2">
+                            {process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME ? (
+                                <LoginButton
+                                    botUsername={process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}
+                                    onAuthCallback={(data) => handleTelegramAuth(data)}
+                                    buttonSize="large"
+                                    cornerRadius={8}
+                                    showAvatar={true}
+                                    lang="ru"
+                                />
+                            ) : (
+                                <div className="text-xs text-white/50 text-center px-4 py-2 border border-white/10 rounded-lg w-full bg-white/5">Telegram Auth недоступен (не настроен NEXT_PUBLIC_TELEGRAM_BOT_USERNAME)</div>
+                            )}
+                        </div>
+
+                        <button type="button" onClick={() => handleAuth('signup')} disabled={loading} className='flex justify-center items-center group py-4 w-full rounded-lg border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/40 transition-all duration-300 disabled:opacity-50'>
+                            <span className="font-medium text-white/90 transition-colors duration-300 group-hover:text-white">Регистрация</span>
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
