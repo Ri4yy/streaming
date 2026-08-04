@@ -49,7 +49,7 @@ export default function ModalSearch({ activeSearch, setActiveSearch }: { activeS
                                 leaveFrom="opacity-100"
                                 leaveTo="opacity-0"
                             >
-                                <Listbox.Options className="absolute mt-2 max-h-60 w-full overflow-auto rounded-md bg-[#1E1E20] py-2 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm text-white border border-white/10">
+                                <Listbox.Options className="absolute mt-2 max-h-60 w-full overflow-auto custom-scrollbar rounded-md bg-[#1E1E20] py-2 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm text-white border border-white/10">
                                     {searchCategories.map((option, index) => (
                                         <Listbox.Option
                                             key={index}

@@ -55,4 +55,20 @@
   .menu__active {
     @apply md:hidden translate-y-0 transition-all duration-500 ease-linear opacity-100 w-full h-screen bg-black before:top-0 before:left-0 before:absolute before:w-full before:h-screen pointer-events-auto before:bg-[radial-gradient(100%_100%_at_50%_0,hsla(0,92%,58%,0.25)_25%,hsla(240,4%,9%,0.9)_100%)] before:z-[61] fixed top-0 left-0 z-[60];
   } 
+
+  /* Custom scrollbar for dropdowns */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #ef4444; /* Tailwind red-500 */
+    border-radius: 10px;
+  }
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #ef4444 transparent;
+  }
 }

@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import DetailActions from '@/components/DetailActions';
 import DetailTabs from '@/components/DetailTabs';
+import FramesSlider from '@/components/FramesSlider';
 import { tmdbApi } from '@/services/tmdb';
 
 export default async function SeriesDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -72,22 +73,7 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ i
             </section>
             
             {series.images?.backdrops && series.images.backdrops.length > 0 && (
-                <section className='container py-12'>
-                    <h2 className='text-2xl font-bold mb-6'>Кадры</h2>
-                    <div className='flex overflow-x-auto gap-4 pb-4 snap-x'>
-                        {series.images.backdrops.map((backdrop: any, idx: number) => (
-                            <div key={idx} className='flex-none w-[300px] md:w-[450px] snap-center rounded-xl overflow-hidden'>
-                                <Image
-                                    src={tmdbApi.getImageUrl(backdrop.file_path, 'original')}
-                                    alt={`Кадр ${idx + 1}`}
-                                    width={450}
-                                    height={253}
-                                    className='w-full h-auto object-cover'
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </section>
+                <FramesSlider images={series.images.backdrops} />
             )}
             
             <DetailTabs media={series} type="tv" />

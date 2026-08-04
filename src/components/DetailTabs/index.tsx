@@ -32,6 +32,17 @@ export default function DetailTabs({ media, type }: { media: TMDBDetail, type: '
                             </button>
                         )}
                     </Tab>
+                    {(type === 'tv' || type === 'anime') && (
+                        <Tab as={Fragment}>
+                            {({ selected }) => (
+                                <button
+                                className={`${selected ? 'border-white text-white' : 'border-[#323234] text-[#cbcbd2]'} py-2.5 px-5 border-b-[2px] xs:w-fit w-full`}
+                                >
+                                Сезоны и серии
+                                </button>
+                            )}
+                        </Tab>
+                    )}
                     {isOngoing && (
                         <Tab as={Fragment}>
                             {({ selected }) => (
@@ -83,6 +94,22 @@ export default function DetailTabs({ media, type }: { media: TMDBDetail, type: '
                             </ul>
                         </div>
                     </Tab.Panel>
+                    {(type === 'tv' || type === 'anime') && (
+                        <Tab.Panel>
+                            <div className="xl:w-2/5 md:w-4/5 px-5 md:px-0 mx-auto pb-10">
+                                <ul className='flex flex-col divide-y-[1px] divide-[#dee2e6]/20 mt-4'>
+                                    <li className='flex xs:flex-row flex-col gap-y-1 py-4'>
+                                        <span className='text-[#8C8C8C] xs:w-1/2'>Количество сезонов</span>
+                                        <span className='xs:w-1/2 xs:text-base text-lg font-bold text-white'>{media.number_of_seasons || 'Неизвестно'}</span>
+                                    </li>
+                                    <li className='flex xs:flex-row flex-col gap-y-1 py-4'>
+                                        <span className='text-[#8C8C8C] xs:w-1/2'>Общее количество серий</span>
+                                        <span className='xs:w-1/2 xs:text-base text-lg font-bold text-white'>{media.number_of_episodes || 'Неизвестно'}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </Tab.Panel>
+                    )}
                     {isOngoing && (
                         <Tab.Panel>
                             <div className="flex flex-col gap-y-10 xl:w-2/5 md:w-4/5 px-5 md:px-0 mx-auto pb-20">

@@ -19,11 +19,11 @@ export default function SerialsSlider({ series }: { series: TMDBMedia[] }) {
                     320: { slidesPerView: 1 },
                     580: { slidesPerView: 2 },
                     900: { slidesPerView: 3 },
-                    1024: { slidesPerView: 4 },
+                    1024: { slidesPerView: 5 },
                 }}
                 modules={[Navigation]}
                 spaceBetween={50}
-                slidesPerView={4}
+                slidesPerView={5}
                 className='flex flex-col'
                 >
                     <div className="flex justify-between items-center order-1 mb-12 pt-2">

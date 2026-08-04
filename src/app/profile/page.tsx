@@ -60,7 +60,7 @@ function ProfileContent() {
                                 {item.cover_url && <Image src={item.cover_url} alt={item.title} fill className="object-cover" />}
                             </div>
                             <div>
-                                <Link href={`/${item.media_type === 'tv' ? 'series' : item.media_type === 'movie' ? 'movies' : item.media_type}s/${item.media_id}`} className="text-lg font-medium hover:text-red-500 transition-colors">
+                                <Link href={`/${item.media_type === 'tv' ? 'series' : item.media_type === 'movie' ? 'movies' : item.media_type === 'anime' ? 'anime' : item.media_type + 's'}/${item.media_id}`} className="text-lg font-medium hover:text-red-500 transition-colors">
                                     {item.title}
                                 </Link>
                                 <div className='flex items-center gap-x-3 text-[#8c8c8c] mt-2'>

@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Link from 'next/link';
 import MediaCard from '@/components/MediaCard';
 import { StaggerContainer, StaggerItem } from '@/components/AnimateIn/Stagger';
 import { TMDBMedia, tmdbApi } from '@/services/tmdb';
@@ -29,10 +30,10 @@ export default function MovieList({ movies }: { movies: TMDBMedia[] }) {
                     )}
                 </div>
                 <StaggerItem>
-                    <button className='flex gap-2 justify-center items-center group py-3 px-8 rounded-lg hover:scale-110 bg-[#ff1414] relative overflow-hidden transition-all duration-700 mx-auto mt-12'>
+                    <Link href="/movies" className='flex gap-2 justify-center items-center group py-3 px-8 rounded-lg hover:scale-110 bg-[#ff1414] relative overflow-hidden transition-all duration-700 mx-auto mt-12 w-fit'>
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full transition-all duration-500 ease-out group-hover:w-[300px] group-hover:h-[300px] z-0"></div>
                         <span className="relative z-10 group-hover:text-black transition-colors duration-500">Просмотреть все</span>
-                    </button>
+                    </Link>
                 </StaggerItem>
             </StaggerContainer>
         </div>

@@ -97,7 +97,7 @@ function CatalogFiltersContent({ genres }: { genres: { id: number, name: string 
                                 leaveFrom="opacity-100"
                                 leaveTo="opacity-0"
                             >
-                                <Listbox.Options className="absolute mt-2 max-h-60 w-full overflow-auto rounded-md bg-white py-2 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm text-black border border-gray-100">
+                                <Listbox.Options className="absolute mt-2 max-h-60 w-full overflow-auto custom-scrollbar rounded-md bg-white py-2 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm text-black border border-gray-100">
                                     {sortOptions.map((option, index) => (
                                         <Listbox.Option
                                             key={index}
