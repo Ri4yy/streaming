@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Heart } from 'lucide-react';
@@ -13,12 +13,15 @@ interface MediaCardProps {
     genre: string;
     rate: string | number;
     img: string;
+    fallbackImg?: string;
     type?: 'movie' | 'tv' | 'anime' | 'game' | 'book';
     href?: string;
 }
 
-export default function MediaCard({ id, name, year, genre, rate, img, type = "movie", href = "/movies/1" }: MediaCardProps) {
+export default function MediaCard({ id, name, year, genre, rate, img, fallbackImg, type = "movie", href = "/movies/1" }: MediaCardProps) {
     const { getMedia, toggleFavorite } = useUserMedia();
+    const [imgSrc, setImgSrc] = useState(img || (type === 'game' ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${id}/header.jpg` : '/img/poster/spider.jpg'));
+    const [isHorizontal, setIsHorizontal] = useState(false);
     const currentMedia = getMedia(type, String(id));
     const isFavorite = currentMedia?.is_favorite || false;
 
@@ -26,6 +29,10 @@ export default function MediaCard({ id, name, year, genre, rate, img, type = "mo
         e.preventDefault();
         toggleFavorite(type, String(id), { title: name, cover_url: img });
     };
+
+    useEffect(() => {
+        setImgSrc(img);
+    }, [img]);
 
     return (  
         <div className="flex flex-col gap-4 group h-full">
@@ -44,11 +51,32 @@ export default function MediaCard({ id, name, year, genre, rate, img, type = "mo
                 </button>
 
                 <Link href={href}>
+                    {isHorizontal && (
+                        <Image 
+                            src={imgSrc} 
+                            alt={`${name} background`}
+                            fill
+                            className='absolute inset-0 object-cover blur-xl opacity-60 scale-150 z-0' 
+                        />
+                    )}
                     <Image 
-                        src={img} 
+                        src={imgSrc} 
                         alt={name}
                         fill
-                        className='flex h-[400px] rounded-lg w-full overflow-hidden object-cover group-hover:scale-105 transition-all duration-700 z-10' 
+                        className={`flex h-[400px] rounded-lg w-full overflow-hidden transition-all duration-700 z-10 ${isHorizontal ? 'object-contain scale-100 group-hover:scale-105' : 'object-cover group-hover:scale-105'}`} 
+                        onLoad={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            if (target.naturalWidth > target.naturalHeight) {
+                                setIsHorizontal(true);
+                            }
+                        }}
+                        onError={() => {
+                            if (fallbackImg && imgSrc !== fallbackImg) {
+                                setImgSrc(fallbackImg);
+                            } else if (type === 'game' && !imgSrc.includes('header.jpg')) {
+                                setImgSrc(`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${id}/header.jpg`);
+                            }
+                        }}
                     />
                 </Link>
             </div>

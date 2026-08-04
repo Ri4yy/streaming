@@ -11,10 +11,12 @@ export default async function BooksPage({ searchParams }: { searchParams: Promis
 
     let allBooks = [];
 
+    const excludedSubjects = '-subject:medical -subject:science -subject:study -subject:education';
+
     if (q) {
-        allBooks = await googleBooksApi.searchBooks(q);
+        allBooks = await googleBooksApi.searchBooks(`${q} ${excludedSubjects}`);
     } else {
-        allBooks = await googleBooksApi.getPopularBooks('популярные книги', 60);
+        allBooks = await googleBooksApi.getPopularBooks(`популярные книги ${excludedSubjects}`, 60);
     }
 
     const heroBook = allBooks.length > 0 ? allBooks[0] : null;
@@ -114,9 +116,9 @@ export default async function BooksPage({ searchParams }: { searchParams: Promis
                 <CatalogFilters genres={arrGenre} />
 
                 <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9">
-                    {paginatedBooks.length > 0 ? paginatedBooks.map(book => (
+                    {paginatedBooks.length > 0 ? paginatedBooks.map((book, index) => (
                         <MediaCard 
-                            key={book.id}
+                            key={`${book.id}-${index}`}
                             id={book.id}
                             name={book.volumeInfo?.title || "Без названия"} 
                             year={book.volumeInfo?.publishedDate ? book.volumeInfo.publishedDate.substring(0, 4) : ""} 

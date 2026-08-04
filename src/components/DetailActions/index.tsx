@@ -3,6 +3,15 @@
 import React from 'react';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { useUserMedia } from '@/hooks/useUserMedia';
+import { Listbox, Transition } from '@headlessui/react';
+import { BsChevronDown } from 'react-icons/bs';
+
+const statusOptions = [
+    { id: 'planned', name: 'В планах' },
+    { id: 'watching', name: 'Смотрю / Читаю / Играю' },
+    { id: 'completed', name: 'Просмотрено' },
+    { id: 'dropped', name: 'Брошено' },
+];
 
 interface DetailActionsProps {
     id: string | number;
@@ -21,28 +30,56 @@ export default function DetailActions({ id, type, title, coverUrl }: DetailActio
         toggleFavorite(type, String(id), { title, cover_url: coverUrl });
     };
 
-    const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedStatusOption = statusOptions.find(opt => opt.id === status) || statusOptions[0];
+
+    const handleStatusChange = (option: { id: string, name: string }) => {
         updateMedia({
             media_type: type,
             media_id: String(id),
             title,
             cover_url: coverUrl,
-            status: e.target.value as any
+            status: option.id as any
         });
     };
 
     return (
-        <div className="flex flex-col gap-3 mt-4 absolute bottom-5 left-1/2 -translate-x-1/2 w-[90%]">
-            <select 
-                value={status}
-                onChange={handleStatusChange}
-                className="w-full backdrop-blur-md bg-black/60 text-white py-2 px-3 rounded-lg border border-white/20 outline-none"
-            >
-                <option value="planned">В планах</option>
-                <option value="watching">Смотрю / Читаю / Играю</option>
-                <option value="completed">Просмотрено</option>
-                <option value="dropped">Брошено</option>
-            </select>
+        <div className="flex flex-col gap-3 mt-4 absolute bottom-5 left-1/2 -translate-x-1/2 w-[90%] z-20">
+            <div className="relative w-full z-10">
+                <Listbox value={selectedStatusOption} onChange={handleStatusChange}>
+                    <Listbox.Button className="relative w-full cursor-default rounded-lg backdrop-blur-md bg-black/60 text-white py-2.5 pl-4 pr-10 text-left border border-white/20 outline-none hover:bg-black/80 transition-all duration-300">
+                        <span className="block truncate font-medium text-sm">{selectedStatusOption.name}</span>
+                        <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                            <BsChevronDown className="h-4 w-4 text-white" aria-hidden="true" />
+                        </span>
+                    </Listbox.Button>
+                    <Transition
+                        as={React.Fragment}
+                        leave="transition ease-in duration-100"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                    >
+                        <Listbox.Options className="absolute bottom-full mb-2 w-full overflow-auto rounded-lg bg-black/90 backdrop-blur-md border border-white/20 py-1 shadow-lg ring-1 ring-black/5 focus:outline-none text-white text-sm">
+                            {statusOptions.map((option, index) => (
+                                <Listbox.Option
+                                    key={index}
+                                    className={({ active }) =>
+                                        `relative cursor-default select-none py-2.5 pl-4 pr-4 transition-colors duration-200 ${
+                                            active ? 'bg-white/20' : ''
+                                        }`
+                                    }
+                                    value={option}
+                                >
+                                    {({ selected }) => (
+                                        <span className={`block truncate ${selected ? 'font-bold text-red-500' : 'font-normal'}`}>
+                                            {option.name}
+                                        </span>
+                                    )}
+                                </Listbox.Option>
+                            ))}
+                        </Listbox.Options>
+                    </Transition>
+                </Listbox>
+            </div>
             
             <button 
                 onClick={handleFavorite}

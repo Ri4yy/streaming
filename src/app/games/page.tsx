@@ -5,12 +5,16 @@ import CatalogFilters from '@/components/CatalogFilters';
 import { steamApi } from '@/services/steam';
 
 import Pagination from '@/components/Pagination';
+import WeeklySlider from '@/components/WeeklySlider';
 
 export default async function GamesPage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string }> }) {
     const { q, sort, genres: selectedGenresQuery, page: pageParam } = await searchParams;
     const page = parseInt(pageParam || '1');
 
-    let allGames = [];
+    let allGames: any[] = [];
+    let weeklyGamesRaw: any[] = [];
+    let bestOf2026Raw: any[] = [];
+    let totalPages = 1;
     
     if (q) {
         // Fetch real details for search results
@@ -19,19 +23,57 @@ export default async function GamesPage({ searchParams }: { searchParams: Promis
         // Sort search results by date primarily (newest or unreleased first)
         allGames.sort((a: any, b: any) => {
             const getYear = (game: any) => {
-                const parts = game.release_date?.date?.split(' ') || [];
-                const year = parseInt(parts[parts.length - 1]);
-                return isNaN(year) ? 9999 : year; // Unreleased or upcoming games often don't have a strict year, putting them first
+                const dateStr = game.release_date?.date || '';
+                const match = dateStr.match(/\b(19\d{2}|20\d{2})\b/);
+                if (match) {
+                    return parseInt(match[1], 10);
+                }
+                return game.release_date?.coming_soon ? 9999 : 0;
             };
             return getYear(b) - getYear(a);
         });
     } else {
-        // Получаем топовые игры со всеми деталями
-        allGames = await steamApi.getGamesWithDetails(60);
+        // Получаем игры для текущей страницы
+        const [gamesRes, weeklyRes, bestOf2026Res] = await Promise.all([
+            steamApi.getGamesWithDetails(page, 20),
+            steamApi.getAnticipatedGames(20),
+            steamApi.getBestGamesOf2026(20)
+        ]);
+        allGames = gamesRes.results;
+        totalPages = gamesRes.total_pages;
+        weeklyGamesRaw = weeklyRes;
+        bestOf2026Raw = bestOf2026Res;
     }
 
     // Первая игра для Hero-баннера
     const heroGame = allGames.length > 0 ? allGames[0] : null;
+
+    const extractYear = (dateStr: string) => {
+        const match = dateStr?.match(/\b(19\d{2}|20\d{2})\b/);
+        return match ? match[1] : '';
+    };
+    
+    // Новинки недели (первые 8 игр из официального API стима - релизы этой недели + coming soon)
+    const weeklyGames = weeklyGamesRaw.length > 0 ? weeklyGamesRaw.map(game => ({
+        ...game,
+        id: game.steam_appid,
+        title: game.name,
+        release_date: extractYear(game.release_date?.date || ''),
+        rate: game.metacritic?.score ? game.metacritic.score / 10 : 0,
+        img: steamApi.getVerticalImage(game.steam_appid),
+        fallbackImg: game.header_image
+    })) : [];
+
+    const bestOf2026Games = bestOf2026Raw.length > 0 ? bestOf2026Raw.map(game => ({
+        ...game,
+        id: game.steam_appid,
+        title: game.name,
+        release_date: extractYear(game.release_date?.date || ''),
+        rate: game.metacritic?.score ? game.metacritic.score / 10 : 0,
+        img: steamApi.getVerticalImage(game.steam_appid),
+        fallbackImg: game.header_image
+    })) : [];
+
     // Keep the hero game in the grid if searching so users don't miss it
     let gamesList = allGames.length > 0 ? (q ? allGames : allGames.slice(1)) : [];
 
@@ -59,9 +101,12 @@ export default async function GamesPage({ searchParams }: { searchParams: Promis
             
             // Very rough date parsing, as Steam returns localized strings or different formats
             const getYear = (game: any) => {
-                const parts = game.release_date?.date?.split(' ') || [];
-                const year = parseInt(parts[parts.length - 1]);
-                return isNaN(year) ? 0 : year;
+                const dateStr = game.release_date?.date || '';
+                const match = dateStr.match(/\b(19\d{2}|20\d{2})\b/);
+                if (match) {
+                    return parseInt(match[1], 10);
+                }
+                return game.release_date?.coming_soon ? 9999 : 0;
             };
             
             if (sort === 'date') return getYear(b) - getYear(a);
@@ -71,9 +116,8 @@ export default async function GamesPage({ searchParams }: { searchParams: Promis
         });
     }
 
-    const ITEMS_PER_PAGE = 20;
-    const totalPages = Math.ceil(gamesList.length / ITEMS_PER_PAGE);
-    const paginatedGames = gamesList.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+    // We don't slice paginatedGames anymore, as allGames only contains current page items
+    const paginatedGames = gamesList;
 
     return (
         <main className='-mt-20'>
@@ -111,21 +155,32 @@ export default async function GamesPage({ searchParams }: { searchParams: Promis
                 </div>
             </section>
 
-            <section className='container lg:py-[120px] md:py-14 py-8'>
+            <section className='container lg:pb-[120px] md:pb-14 pb-8'>
+                {!q && !selectedGenresQuery && !sort && weeklyGames.length > 0 && (
+                    <WeeklySlider items={weeklyGames} type="game" title="Ожидаемые новинки" />
+                )}
+                
+                {!q && !selectedGenresQuery && !sort && bestOf2026Games.length > 0 && (
+                    <div className="mt-10">
+                        <WeeklySlider items={bestOf2026Games} type="game" title="Лучшие новинки (2026)" />
+                    </div>
+                )}
+                
                 <CatalogFilters genres={arrGenre} />
 
                 <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9">
-                    {paginatedGames.length > 0 ? paginatedGames.map((game: any) => (
+                    {paginatedGames.length > 0 ? paginatedGames.map((game: any, index: number) => (
                         <MediaCard
-                            key={game.steam_appid}
+                            key={`${game.steam_appid}-${index}`}
                             id={game.steam_appid}
                             name={game.name}
-                            year={game.release_date?.date?.split(' ')[2] || game.release_date?.date?.split(',')[1]?.trim() || ''}
+                            year={extractYear(game.release_date?.date || '')}
                             genre={game.genres?.[0]?.description || "Игра"}
-                            rate={game.metacritic?.score ? game.metacritic.score / 10 : 0} // Scale 100 to 10
-                            img={steamApi.getVerticalImage(game.steam_appid)}
-                            type="game"
-                            href={`/games/${game.steam_appid}`}
+                            rate={game.rate || (game.metacritic?.score ? game.metacritic.score / 10 : 0)} 
+                            img={steamApi.getVerticalImage(game.steam_appid)} 
+                            fallbackImg={game.header_image}
+                            type="game" 
+                            href={`/games/${game.steam_appid}`} 
                         />
                     )) : (
                         <p className="text-gray-400 col-span-full">Ничего не найдено.</p>

@@ -7,62 +7,73 @@ import AnimeHeroSwiper from '@/components/AnimeHeroSwiper';
 import { tmdbApi } from '@/services/tmdb';
 
 import Pagination from '@/components/Pagination';
+import WeeklySlider from '@/components/WeeklySlider';
 
 export default async function AnimePage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string }> }) {
     const { q, sort, genres, page: pageParam } = await searchParams;
     const page = parseInt(pageParam || '1');
 
     let allAnime = [];
-
-    if (q) {
-        // We use TMDB multi search but we'd better filter for anime. TMDB search doesn't easily restrict to anime, but we can search 'tv' and maybe it returns some. Actually TMDB doesn't have an 'anime' type, it's just 'tv' with genre 16.
-        const res = await tmdbApi.searchMany(q, 'tv', 4);
-        allAnime = res.filter(item => item.genre_ids?.includes(16));
-    } else {
-        allAnime = await tmdbApi.getManyDiscoverAnime(4);
-    }
-
-    const heroAnime = allAnime.length > 0 ? allAnime[0] : null;
-    const swiperAnimes = allAnime.length > 1 ? allAnime.slice(1, 6) : [];
-    let animeList = allAnime.length > 0 ? (q ? allAnime : allAnime.slice(1)) : [];
-
+    let totalPages = 1;
+    
+    // TMDB TV genre IDs mapped for Anime context
     let arrGenre = [
-        {id: 1, name: 'Вампиры'}, {id: 2, name: 'Безумное'}, {id: 3, name: 'Военное'},
-        {id: 4, name: 'Детективы'}, {id: 5, name: 'Демоны'}, {id: 6, name: 'Комедия'},
-        {id: 7, name: 'Драма'}, {id: 8, name: 'Приключения'}, {id: 9, name: 'Ужасы'},
-        {id: 10, name: 'Фантастика'}, {id: 11, name: 'Фэнтези'}, {id: 12, name: 'Школа'}
+        {id: 10759, name: 'Экшен/Приключения'}, {id: 35, name: 'Комедия'}, {id: 18, name: 'Драма'},
+        {id: 9648, name: 'Детективы'}, {id: 10765, name: 'Фэнтези/Фантастика'}, {id: 10768, name: 'Военное'}
     ];
 
-    // Local filter by query is removed since we use API search now
-
-    // Filter by genres
-    if (genres) {
-        const selectedGenres = genres.split(',');
-        animeList = animeList.filter(anime => {
-            const animeGenres = anime.genre_ids.map(id => arrGenre.find(g => g.id === id)?.name).filter(Boolean);
-            return selectedGenres.some(g => animeGenres.includes(g));
-        });
+    if (q) {
+        const searchRes = await tmdbApi.searchPaginated(q, 'tv', page);
+        allAnime = searchRes.results.filter(item => item.genre_ids?.includes(16) || item.original_language === 'ja');
+        totalPages = searchRes.total_pages;
+    } else {
+        const options: Record<string, string> = {
+            with_genres: '16',
+            with_original_language: 'ja'
+        };
+        
+        if (genres) {
+            const selectedGenreNames = genres.split(',');
+            const selectedGenreIds = arrGenre
+                .filter(g => selectedGenreNames.includes(g.name))
+                .map(g => g.id);
+            if (selectedGenreIds.length > 0) {
+                // Must include Anime (16) AND selected genres
+                options.with_genres = `16,${selectedGenreIds.join(',')}`;
+            }
+        }
+        
+        if (sort) {
+            if (sort === 'rating') options.sort_by = 'vote_average.desc';
+            if (sort === 'rating_asc') options.sort_by = 'vote_average.asc';
+            if (sort === 'date') options.sort_by = 'first_air_date.desc';
+            if (sort === 'date_asc') options.sort_by = 'first_air_date.asc';
+            if (sort.includes('rating')) options['vote_count.gte'] = '50';
+        } else {
+            // Default recent
+            options.sort_by = 'first_air_date.desc';
+            const today = new Date();
+            const lastYear = new Date();
+            lastYear.setFullYear(today.getFullYear() - 1);
+            options['first_air_date.gte'] = lastYear.toISOString().split('T')[0];
+            options['first_air_date.lte'] = today.toISOString().split('T')[0];
+            options.sort_by = 'popularity.desc'; // Recent AND popular
+        }
+        
+        const discoverRes = await tmdbApi.getDiscoverPaginated('tv', options, page);
+        allAnime = discoverRes.results;
+        totalPages = discoverRes.total_pages;
     }
 
-    // Sort
-    if (sort) {
-        animeList.sort((a, b) => {
-            if (sort === 'rating') return (b.vote_average || 0) - (a.vote_average || 0);
-            if (sort === 'rating_asc') return (a.vote_average || 0) - (b.vote_average || 0);
-            
-            const dateA = new Date(a.first_air_date || 0).getTime();
-            const dateB = new Date(b.first_air_date || 0).getTime();
-            
-            if (sort === 'date') return dateB - dateA;
-            if (sort === 'date_asc') return dateA - dateB;
-            
-            return 0;
-        });
-    }
+    // Hero item
+    const heroAnime = allAnime.length > 0 ? allAnime[0] : null;
+    const swiperAnimes = allAnime.length > 1 ? allAnime.slice(1, 6) : [];
+    
+    // Weekly slider items
+    const trendingRes = await tmdbApi.getTrending('tv', 'week', 1);
+    const weeklyAnime = trendingRes.results.filter((item: any) => item.genre_ids?.includes(16) || item.original_language === 'ja').slice(0, 20);
 
-    const ITEMS_PER_PAGE = 20;
-    const totalPages = Math.ceil(animeList.length / ITEMS_PER_PAGE);
-    const paginatedAnime = animeList.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+    let paginatedAnime = allAnime.length > 0 ? (q ? allAnime : allAnime.slice(1)) : [];
 
     return (  
         <main className='-mt-20'>
@@ -108,12 +119,16 @@ export default async function AnimePage({ searchParams }: { searchParams: Promis
                 </div>
             </section>
 
-            <section className='container lg:py-[120px] md:py-14 py-8'>
+            <section className='container lg:pb-[120px] md:pb-14 pb-8'>
+                {!q && !genres && !sort && weeklyAnime.length > 0 && (
+                    <WeeklySlider items={weeklyAnime} type="anime" />
+                )}
+
                 <CatalogFilters genres={arrGenre} />
                 <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9">
-                    {paginatedAnime.length > 0 ? paginatedAnime.map(anime => (
+                    {paginatedAnime.length > 0 ? paginatedAnime.map((anime, index) => (
                         <MediaCard 
-                            key={anime.id}
+                            key={`${anime.id}-${index}`}
                             id={anime.id}
                             name={anime.name || anime.title || ''} 
                             year={anime.first_air_date ? anime.first_air_date.split('-')[0] : 'N/A'} 

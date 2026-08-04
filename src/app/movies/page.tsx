@@ -5,59 +5,62 @@ import CatalogFilters from '@/components/CatalogFilters';
 import { tmdbApi } from '@/services/tmdb';
 
 import Pagination from '@/components/Pagination';
+import WeeklySlider from '@/components/WeeklySlider';
 
 export default async function MoviesPage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string }> }) {
     const { q, sort, genres, page: pageParam } = await searchParams;
     const page = parseInt(pageParam || '1');
 
     let allMovies = [];
+    let totalPages = 1;
     
-    if (q) {
-        allMovies = await tmdbApi.searchMany(q, 'movie', 4);
-    } else {
-        allMovies = await tmdbApi.getManyPopular('movie', 4);
-    }
-
-    const heroMovie = allMovies.length > 0 ? allMovies[0] : null;
-    let moviesList = allMovies.length > 0 ? (q ? allMovies : allMovies.slice(1)) : [];
-
+    // TMDB genre IDs for movies
     let arrGenre = [
-        {id: 1, name: 'Боевики'}, {id: 2, name: 'Вестерны'}, {id: 3, name: 'Военное'},
-        {id: 4, name: 'Детективы'}, {id: 5, name: 'Документальное'}, {id: 6, name: 'Комедия'},
-        {id: 7, name: 'Драма'}, {id: 8, name: 'Криминал'}, {id: 9, name: 'Ужасы'},
-        {id: 10, name: 'Триллеры'}, {id: 11, name: 'Фэнтези'}, {id: 12, name: 'Фантастика'}
+        {id: 28, name: 'Боевики'}, {id: 37, name: 'Вестерны'}, {id: 10752, name: 'Военное'},
+        {id: 9648, name: 'Детективы'}, {id: 99, name: 'Документальное'}, {id: 35, name: 'Комедия'},
+        {id: 18, name: 'Драма'}, {id: 80, name: 'Криминал'}, {id: 27, name: 'Ужасы'},
+        {id: 53, name: 'Триллеры'}, {id: 14, name: 'Фэнтези'}, {id: 878, name: 'Фантастика'}
     ];
 
-    // Local filter by query is removed since we use API search now
-
-    // Filter by genres
-    if (genres) {
-        const selectedGenres = genres.split(',');
-        moviesList = moviesList.filter(movie => {
-            const movieGenres = movie.genre_ids.map(id => arrGenre.find(g => g.id === id)?.name).filter(Boolean);
-            return selectedGenres.some(g => movieGenres.includes(g));
-        });
+    if (q) {
+        const searchRes = await tmdbApi.searchPaginated(q, 'movie', page);
+        allMovies = searchRes.results;
+        totalPages = searchRes.total_pages;
+    } else {
+        const options: Record<string, string> = {};
+        
+        if (genres) {
+            const selectedGenreNames = genres.split(',');
+            const selectedGenreIds = arrGenre
+                .filter(g => selectedGenreNames.includes(g.name))
+                .map(g => g.id);
+            if (selectedGenreIds.length > 0) {
+                options.with_genres = selectedGenreIds.join(',');
+            }
+        }
+        
+        if (sort) {
+            if (sort === 'rating') options.sort_by = 'vote_average.desc';
+            if (sort === 'rating_asc') options.sort_by = 'vote_average.asc';
+            if (sort === 'date') options.sort_by = 'primary_release_date.desc';
+            if (sort === 'date_asc') options.sort_by = 'primary_release_date.asc';
+            // Need minimum vote count for rating sorts to make sense
+            if (sort.includes('rating')) options['vote_count.gte'] = '100';
+        } else {
+            options.sort_by = 'popularity.desc';
+        }
+        
+        const discoverRes = await tmdbApi.getDiscoverPaginated('movie', options, page);
+        allMovies = discoverRes.results;
+        totalPages = discoverRes.total_pages;
     }
 
-    // Sort
-    if (sort) {
-        moviesList.sort((a, b) => {
-            if (sort === 'rating') return (b.vote_average || 0) - (a.vote_average || 0);
-            if (sort === 'rating_asc') return (a.vote_average || 0) - (b.vote_average || 0);
-            
-            const dateA = new Date(a.release_date || 0).getTime();
-            const dateB = new Date(b.release_date || 0).getTime();
-            
-            if (sort === 'date') return dateB - dateA;
-            if (sort === 'date_asc') return dateA - dateB;
-            
-            return 0;
-        });
-    }
-    
-    const ITEMS_PER_PAGE = 20;
-    const totalPages = Math.ceil(moviesList.length / ITEMS_PER_PAGE);
-    const paginatedMovies = moviesList.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+    // Weekly slider items (only on first page, or always?)
+    const trendingRes = await tmdbApi.getTrending('movie', 'week', 1);
+    const weeklyMovies = trendingRes.results.slice(0, 20);
+
+    const heroMovie = allMovies.length > 0 ? allMovies[0] : null;
+    let paginatedMovies = allMovies.length > 0 ? (q ? allMovies : allMovies.slice(1)) : [];
 
     return (
         <main className='-mt-20'>
@@ -80,12 +83,16 @@ export default async function MoviesPage({ searchParams }: { searchParams: Promi
                 </div>
             </section>
 
-            <section className='container lg:py-[120px] md:py-14 py-8'>
+            <section className='container lg:pb-[120px] md:pb-14 pb-8'>
+                {!q && !genres && !sort && (
+                    <WeeklySlider items={weeklyMovies} type="movie" />
+                )}
+                
                 <CatalogFilters genres={arrGenre} />
                 <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9">
-                    {paginatedMovies.length > 0 ? paginatedMovies.map(movie => (
+                    {paginatedMovies.length > 0 ? paginatedMovies.map((movie, index) => (
                         <MediaCard 
-                            key={movie.id}
+                            key={`${movie.id}-${index}`}
                             id={movie.id}
                             name={movie.title || movie.name || ''} 
                             year={movie.release_date ? movie.release_date.split('-')[0] : 'N/A'} 

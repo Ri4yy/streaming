@@ -105,23 +105,145 @@ export const steamApi = {
     },
 
     // Получить список игр и сразу подгрузить для них полные детали (идеально для каталога)
-    getGamesWithDetails: async (limit: number = 60): Promise<SteamGameDetails[]> => {
+    getGamesWithDetails: async (page: number = 1, limit: number = 20): Promise<{ results: SteamGameDetails[], total_pages: number }> => {
         try {
-            const popularGames = await steamApi.getPopularGames();
-            // Фильтруем старые игры: берем только те, у которых высокий appid (относительно новые игры)
-            const newPopularGames = popularGames.filter(game => game.appid > 1500000);
+            const start = (page - 1) * limit;
             
-            // Если новых популярных мало, дополняем обычными
-            const gamesToFetch = newPopularGames.length >= limit 
-                ? newPopularGames.slice(0, limit) 
-                : [...newPopularGames, ...popularGames.filter(game => game.appid <= 1500000)].slice(0, limit);
+            const fetchSearchPage = async (url: string) => {
+                const res = await fetch(url, { next: { revalidate: 3600 * 24 } });
+                const text = await res.text();
+                const ids: string[] = [];
+                const regex = /data-ds-appid="(\d+)"/g;
+                let match;
+                while ((match = regex.exec(text)) !== null) {
+                    ids.push(match[1]);
+                }
+                return ids;
+            };
+
+            // Собираем популярные новинки и лидеры продаж с учетом пагинации
+            const [popularNew, topSellers] = await Promise.all([
+                fetchSearchPage(`https://store.steampowered.com/search/results?q=&category1=998&filter=popularnew&page=${page}`),
+                fetchSearchPage(`https://store.steampowered.com/search/results?q=&category1=998&filter=topsellers&page=${page}`)
+            ]);
+            
+            // Объединяем, чередуя новинки и хиты продаж для разнообразия, убираем дубликаты
+            const combinedIds = Array.from(new Set([...popularNew, ...topSellers])).slice(0, limit);
             
             // Запрашиваем детали параллельно
-            const detailsPromises = gamesToFetch.map(game => steamApi.getGameDetails(game.appid));
+            const detailsPromises = combinedIds.map(id => steamApi.getGameDetails(id));
             const detailsResults = await Promise.all(detailsPromises);
             
             // Фильтруем null
+            const validGames = detailsResults.filter((game): game is SteamGameDetails => game !== null && game.type === 'game');
+            
+            return {
+                results: validGames,
+                total_pages: 50 // Steam typically limits deep pagination, 50 pages is safe
+            };
+        } catch (error) {
+            console.error(error);
+            return { results: [], total_pages: 1 };
+        }
+    },
+
+    // Получить новинки и ожидаемые игры
+    getWeeklyNewGames: async (limit: number = 8): Promise<SteamGameDetails[]> => {
+        try {
+            const res = await fetch(`https://store.steampowered.com/api/featuredcategories?l=russian`, {
+                next: { revalidate: 3600 * 24 }
+            });
+            if (!res.ok) throw new Error('Steam featuredcategories failed');
+            const data = await res.json();
+            
+            const newReleases = data.new_releases?.items || [];
+            const comingSoon = data.coming_soon?.items || [];
+            
+            const combined = [...newReleases, ...comingSoon];
+            const uniqueIds = Array.from(new Set(combined.map(item => item.id))).slice(0, limit);
+            
+            const detailsPromises = uniqueIds.map(id => steamApi.getGameDetails(id));
+            const detailsResults = await Promise.all(detailsPromises);
+            
             return detailsResults.filter((game): game is SteamGameDetails => game !== null && game.type === 'game');
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    },
+
+    // Получить ожидаемые новинки (Top Wishlisted / Popular Coming Soon)
+    getAnticipatedGames: async (limit: number = 10): Promise<SteamGameDetails[]> => {
+        try {
+            const res = await fetch('https://store.steampowered.com/search/results?q=&category1=998&filter=popularcomingsoon', {
+                next: { revalidate: 3600 * 24 }
+            });
+            if (!res.ok) throw new Error('Steam search fetch failed');
+            const text = await res.text();
+            
+            const ids: string[] = [];
+            const regex = /data-ds-appid="(\d+)"/g;
+            let match;
+            while ((match = regex.exec(text)) !== null) {
+                ids.push(match[1]);
+            }
+            
+            const uniqueIds = Array.from(new Set(ids)).slice(0, 20); // fetch extra to account for failures
+            
+            const detailsPromises = uniqueIds.map(id => steamApi.getGameDetails(id));
+            const detailsResults = await Promise.all(detailsPromises);
+            
+            return detailsResults.filter((game): game is SteamGameDetails => game !== null && game.type === 'game').slice(0, limit);
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    },
+
+    // Получить лучшие новинки конкретного года (по умолчанию 2026)
+    getBestGamesOf2026: async (limit: number = 20): Promise<SteamGameDetails[]> => {
+        try {
+            const fetchSearchPage = async (page: number) => {
+                const res = await fetch(`https://store.steampowered.com/search/results?q=&category1=998&filter=popularnew&page=${page}`, {
+                    next: { revalidate: 3600 * 24 }
+                });
+                const text = await res.text();
+                const ids: string[] = [];
+                const regex = /data-ds-appid="(\d+)"/g;
+                let match;
+                while ((match = regex.exec(text)) !== null) {
+                    ids.push(match[1]);
+                }
+                return ids;
+            };
+
+            // Fetch a few pages to get enough 2026 games
+            const [page1, page2, page3, page4] = await Promise.all([
+                fetchSearchPage(1),
+                fetchSearchPage(2),
+                fetchSearchPage(3),
+                fetchSearchPage(4)
+            ]);
+            
+            const uniqueIds = Array.from(new Set([...page1, ...page2, ...page3, ...page4]));
+            
+            const detailsPromises = uniqueIds.map(id => steamApi.getGameDetails(id));
+            const detailsResults = await Promise.all(detailsPromises);
+            
+            const gamesOf2026 = detailsResults.filter((game): game is SteamGameDetails => {
+                if (!game || game.type !== 'game') return false;
+                const match = game.release_date?.date?.match(/\b(19\d{2}|20\d{2})\b/);
+                return match ? match[1] === '2026' : false;
+            });
+            
+            // Sort by positive reviews / recommendations if available (hyper/popular)
+            gamesOf2026.sort((a, b) => {
+                const recA = a.recommendations?.total || 0;
+                const recB = b.recommendations?.total || 0;
+                return recB - recA;
+            });
+            
+            return gamesOf2026.slice(0, limit);
         } catch (error) {
             console.error(error);
             return [];

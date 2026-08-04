@@ -38,7 +38,7 @@ function PaginationContent({ totalPages }: PaginationProps) {
         for (let i = startPage; i <= endPage; i++) {
             pages.push(
                 <button
-                    key={i}
+                    key={`page-${i}`}
                     onClick={() => handlePageChange(i)}
                     className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors duration-300 ${
                         currentPage === i 
@@ -64,7 +64,7 @@ function PaginationContent({ totalPages }: PaginationProps) {
             </button>
             
             {currentPage > 3 && totalPages > 5 && (
-                <>
+                <React.Fragment key="first-page">
                     <button 
                         onClick={() => handlePageChange(1)}
                         className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-300"
@@ -72,13 +72,13 @@ function PaginationContent({ totalPages }: PaginationProps) {
                         1
                     </button>
                     <span className="text-white/50 px-1">...</span>
-                </>
+                </React.Fragment>
             )}
             
             {renderPageNumbers()}
             
             {currentPage < totalPages - 2 && totalPages > 5 && (
-                <>
+                <React.Fragment key="last-page">
                     <span className="text-white/50 px-1">...</span>
                     <button 
                         onClick={() => handlePageChange(totalPages)}
@@ -86,7 +86,7 @@ function PaginationContent({ totalPages }: PaginationProps) {
                     >
                         {totalPages}
                     </button>
-                </>
+                </React.Fragment>
             )}
 
             <button 

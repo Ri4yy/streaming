@@ -5,6 +5,7 @@ import DetailActions from '@/components/DetailActions';
 import { steamApi } from '@/services/steam';
 import { notFound } from 'next/navigation';
 import GameScreenshots from '@/components/GameScreenshots';
+import GamePoster from '@/components/GamePoster';
 
 export default async function GameDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -27,8 +28,13 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
                 <div className="absolute inset-0 bg-black/50 z-10"></div>
                 <div className="container flex max-[1100px]:flex-col gap-x-20 items-start z-20 relative">
                     <div className="max-[1100px]:mt-[40px] w-[30%] h-full max-[1100px]:w-full relative sticky top-[120px]">
-                        {/* Изменено на 9/16 постер */}
-                        <Image src={steamApi.getVerticalImage(game.steam_appid)} alt={game.name} width={600} height={900} className='rounded-xl w-full h-[600px] object-cover border border-white/10' />
+                        {/* Постер с фоллбеком */}
+                        <GamePoster 
+                            appId={game.steam_appid} 
+                            name={game.name} 
+                            initialSrc={steamApi.getVerticalImage(game.steam_appid)} 
+                            fallbackSrc={game.header_image}
+                        />
                         <DetailActions 
                             id={game.steam_appid} 
                             type="game" 

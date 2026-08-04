@@ -17,10 +17,12 @@ export default function DetailTabs({ media, type }: { media: TMDBDetail, type: '
 
     const trailer = media.videos?.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube');
 
+    const isOngoing = (type === 'tv' || type === 'anime') && media.status === 'Returning Series';
+
     return (
         <section>
             <Tab.Group>
-                <Tab.List className={'mt-10 xl:w-2/5 md:w-4/5 px-5 md:px-0 mx-auto'}>
+                <Tab.List className={'mt-10 xl:w-2/5 md:w-4/5 px-5 md:px-0 mx-auto flex gap-4'}>
                     <Tab as={Fragment}>
                         {({ selected }) => (
                             <button
@@ -30,15 +32,17 @@ export default function DetailTabs({ media, type }: { media: TMDBDetail, type: '
                             </button>
                         )}
                     </Tab>
-                    <Tab as={Fragment}>
-                        {({ selected }) => (
-                            <button
-                            className={`${selected ? 'border-white text-white' : 'border-[#323234] text-[#cbcbd2]'} py-2.5 px-5 border-b-[2px] xs:w-fit w-full`}
-                            >
-                            Отзывы
-                            </button>
-                        )}
-                    </Tab>
+                    {isOngoing && (
+                        <Tab as={Fragment}>
+                            {({ selected }) => (
+                                <button
+                                className={`${selected ? 'border-white text-white' : 'border-[#323234] text-[#cbcbd2]'} py-2.5 px-5 border-b-[2px] xs:w-fit w-full`}
+                                >
+                                Выход серий
+                                </button>
+                            )}
+                        </Tab>
+                    )}
                 </Tab.List>
                 <Tab.Panels className={'mt-10'}>
                     <Tab.Panel>
@@ -79,47 +83,25 @@ export default function DetailTabs({ media, type }: { media: TMDBDetail, type: '
                             </ul>
                         </div>
                     </Tab.Panel>
-                    <Tab.Panel>
-                        <div className="flex flex-col gap-y-10 xl:w-2/5 md:w-4/5 px-5 md:px-0 mx-auto pb-20">
-                            <div className="flex flex-col gap-y-5">
-                                <div className="flex items-center gap-4">
-                                    <div className='w-[70px] h-[70px] rounded-xl bg-gray-500'></div>
-                                    <div className="flex flex-col ">
-                                        <p className='font-medium'>Name Surname</p>
-                                        <span className='text-sm text-[#8C8C8C]'>January 6, 2021 at 1:24 pm</span>
+                    {isOngoing && (
+                        <Tab.Panel>
+                            <div className="flex flex-col gap-y-10 xl:w-2/5 md:w-4/5 px-5 md:px-0 mx-auto pb-20">
+                                {media.next_episode_to_air ? (
+                                    <div className="bg-[#1E1E20] p-6 rounded-xl border border-white/10">
+                                        <h3 className="text-xl font-bold mb-4">Следующая серия</h3>
+                                        <p className="text-[#CAE962] font-medium text-lg mb-2">
+                                            {media.next_episode_to_air.name || `Эпизод ${media.next_episode_to_air.episode_number}`}
+                                        </p>
+                                        <p className="text-white/60">
+                                            Дата выхода: {new Date(media.next_episode_to_air.air_date).toLocaleDateString('ru-RU')}
+                                        </p>
                                     </div>
-                                </div>
-                                <p className='text-[#BFBFBF]'>
-                                    Отличный фильм! Спецэффекты на высшем уровне.
-                                </p>
+                                ) : (
+                                    <p className="text-white/60">Информация о выходе новых серий пока отсутствует.</p>
+                                )}
                             </div>
-                        </div>
-                        <div className='bg-[#161618] lg:py-[120px] md:py-14 py-8'>
-                            <div className="xl:w-2/5 md:w-4/5 px-5 md:px-0 mx-auto">
-                                <form method='POST' className=" flex flex-col" onSubmit={(e) => e.preventDefault()}>
-                                    <h2 className='text-[28px] font-bold mb-14'>Добавить отзыв</h2>
-                                    <div className="w-full relative">
-                                        <FaMessage className='absolute top-4 left-6 h-4 w-4 fill-white/50 group-focus:fill-white' />
-                                        <textarea name="review" className='w-full min-h-[160px] rounded-xl border-[1px] border-[#323233] pl-14 py-2.5 pr-6 bg-[#1E1E20] outline-none focus:border-white/70' placeholder='Ваш отзыв'></textarea>
-                                    </div>
-                                    <div className="flex min-[600px]:flex-row flex-col gap-x-7 gap-y-4 min-[600px]:mt-7 mt-4">
-                                        <div className="grow group relative">
-                                            <FaUserAlt className='absolute top-1/2 -translate-y-1/2 left-6 h-4 w-4 fill-white/50 group-focus:fill-white' />
-                                            <input type="text" name="name" className='py-2.5 pr-6 pl-14 w-full rounded-xl bg-[#1E1E20] border-[1px] border-[#323233] outline-none focus:border-white/70' placeholder='Ваше имя' autoComplete='off' />
-                                        </div>
-                                        <div className="grow group relative">
-                                            <MdEmail className='absolute top-1/2 -translate-y-1/2 left-6 h-4 w-4 fill-white/50 group-focus:fill-white' />
-                                            <input type="text" name="email" className='py-2.5 pr-6 pl-14 w-full rounded-xl bg-[#1E1E20] border-[1px] border-[#323233] outline-none focus:border-white/70' placeholder='Ваша почта' autoComplete='off' />
-                                        </div>
-                                    </div>
-                                    <button type='submit' className="group hover:scale-105 transition-all duration-500 overflow-hidden flex justify-center items-center relative bg-[#ff1414] py-2.5 px-8 min-[600px]:w-fit w-full rounded-lg cursor-pointer mt-10">
-                                        <span className='group-hover:text-black transition-all duration-500'>Отправить</span>
-                                        <div className="-z-10 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-0 h-0 group-hover:w-[150%] rounded-full group-hover:h-[500%] bg-white transition-all duration-500"></div>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </Tab.Panel>
+                        </Tab.Panel>
+                    )}
                 </Tab.Panels>
             </Tab.Group>
         </section>

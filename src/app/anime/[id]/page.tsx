@@ -11,7 +11,7 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ id
 
     return (  
         <main className='-mt-20'>
-            <section className='max-[1100px]:pb-20 bg-[url(/img/bg.png)] bg-no-repeat bg-cover bg-center w-full min-[1100px]:h-screen md:min-h-[800px] flex flex-col justify-center relative after:absolute after:top-0 after:left-0 after:backdrop-blur-md after:z-10 after:w-full after:h-full overflow-hidden'>
+            <section className='pt-[120px] max-[1100px]:pb-20 bg-[url(/img/bg.png)] bg-no-repeat bg-cover bg-center w-full min-[1100px]:h-screen md:min-h-[800px] flex flex-col justify-center relative after:absolute after:top-0 after:left-0 after:backdrop-blur-md after:z-10 after:w-full after:h-full overflow-hidden'>
                 <div className="container flex max-[1100px]:flex-col gap-x-20 items-center z-20">
                     <div className="max-[1100px]:mt-[160px] w-[30%] h-full max-[1100px]:w-full relative pb-32">
                         <Image src={tmdbApi.getImageUrl(anime.poster_path)} alt="Poster" width={500} height={750} className='rounded-xl w-full object-cover h-[300px] min-[1100px]:h-full' />
@@ -33,6 +33,17 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ id
                                 <div className="text-white/60">16+</div>
                             </div>
                         </div>
+
+                        {anime.number_of_seasons && (
+                            <div className="flex gap-4 mt-4 text-[#BFBFBF] text-sm">
+                                <span>Сезонов: <strong className="text-white">{anime.number_of_seasons}</strong></span>
+                                <span>Серий: <strong className="text-white">{anime.number_of_episodes || '?'}</strong></span>
+                                {anime.status && (
+                                    <span>Статус: <strong className="text-[#CAE962]">{anime.status === 'Ended' ? 'Завершен' : 'Продолжается'}</strong></span>
+                                )}
+                            </div>
+                        )}
+
                         <h1 className='md:text-[50px] text-4xl font-bold w-fit my-4 leading-[1.1]'>{anime.title || anime.name}</h1>
                         <div className="flex items-center">
                             <svg width="43" height="22" viewBox="0 0 43 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -59,6 +70,25 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ id
                     </div>
                 </div>
             </section>
+            
+            {anime.images?.backdrops && anime.images.backdrops.length > 0 && (
+                <section className='container py-12'>
+                    <h2 className='text-2xl font-bold mb-6'>Кадры</h2>
+                    <div className='flex overflow-x-auto gap-4 pb-4 snap-x'>
+                        {anime.images.backdrops.map((backdrop: any, idx: number) => (
+                            <div key={idx} className='flex-none w-[300px] md:w-[450px] snap-center rounded-xl overflow-hidden'>
+                                <Image
+                                    src={tmdbApi.getImageUrl(backdrop.file_path, 'original')}
+                                    alt={`Кадр ${idx + 1}`}
+                                    width={450}
+                                    height={253}
+                                    className='w-full h-auto object-cover'
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
             
             <DetailTabs media={anime} type="anime" />
         </main>

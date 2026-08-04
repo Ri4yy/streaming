@@ -88,10 +88,16 @@ export default function Header() {
                 <button onClick={() => setActiveSearch(true)}><BsSearch className='xs:block hidden h-5 w-5 hover:fill-[#ff1414] transition-all duration-300'/></button>
                 
                 {!user ? (
-                    <button onClick={() => setActiveLogin(true)} className='flex justify-center items-center group md:py-2 md:px-6 rounded-lg md:border-white md:border-[2px] relative overflow-hidden '>
-                        <div className="md:block hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full transition-all duration-500 ease-out group-hover:w-[300px] group-hover:h-[300px] z-0"></div>
-                        <span className='md:block hidden relative z-10 group-hover:text-black transition-colors duration-500 text-sm'>Вход</span>
-                    </button>
+                    <>
+                        <Link href='/profile?tab=1' className='flex justify-center items-center group md:py-2 md:px-4 rounded-lg md:border-white md:border-[2px] relative overflow-hidden mr-2'>
+                            <div className="md:block hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full transition-all duration-500 ease-out group-hover:w-[300px] group-hover:h-[300px] z-0"></div>
+                            <span className='md:block hidden relative z-10 group-hover:text-black transition-colors duration-500 text-sm'>Избранное</span>
+                        </Link>
+                        <button onClick={() => setActiveLogin(true)} className='flex justify-center items-center group md:py-2 md:px-6 rounded-lg md:border-white md:border-[2px] relative overflow-hidden '>
+                            <div className="md:block hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full transition-all duration-500 ease-out group-hover:w-[300px] group-hover:h-[300px] z-0"></div>
+                            <span className='md:block hidden relative z-10 group-hover:text-black transition-colors duration-500 text-sm'>Вход</span>
+                        </button>
+                    </>
                 ) : (
                     <div className="group relative md:py-5 py-3 after:w-[calc(100%+100px)] after:-translate-x-[100px] after:h-3 after:absolute after:-bottom-3 after:left-0 md:block hidden">
                         <div className='w-10 h-10 rounded-full hover:outline-offset-1 hover:outline hover:outline-1 transition-all duration-200 cursor-pointer overflow-hidden relative bg-[#ff1414] flex justify-center items-center text-xl font-bold'>

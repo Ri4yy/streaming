@@ -17,7 +17,7 @@ export default async function Home() {
         tmdbApi.getTrending('movie', 'week'),
         tmdbApi.getPopular('movie'),
         tmdbApi.getUpcoming(),
-        tmdbApi.getPopular('tv'),
+        tmdbApi.getBestRecentSeries(),
         tmdbApi.getTrending('tv', 'week')
     ]);
 
@@ -30,7 +30,7 @@ export default async function Home() {
             <ReleaseSlider movies={popularMovies.results} />
             <UpComingSlider movies={upcomingMovies.results} />
             <FilmsOfWeek movie={weekShow} />
-            <SerialsSlider series={popularShows.results} />
+            <SerialsSlider series={popularShows} />
             <MovieList movies={trendingMovies.results.slice(1)} />
         </main>
     );

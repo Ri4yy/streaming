@@ -57,6 +57,13 @@ export interface TMDBDetail extends TMDBMedia {
     videos?: {
         results: TMDBVideo[];
     };
+    images?: {
+        backdrops: { file_path: string }[];
+    };
+    number_of_seasons?: number;
+    number_of_episodes?: number;
+    status?: string;
+    next_episode_to_air?: { air_date: string; episode_number: number; name: string } | null;
 }
 
 const mockMedia: TMDBDetail = {
@@ -155,7 +162,7 @@ export const tmdbApi = {
         return fetchTMDB<TMDBResponse<TMDBMedia>>('/discover/tv', {
             with_genres: '16', // Animation
             with_original_language: 'ja',
-            sort_by: 'popularity.desc',
+            sort_by: 'first_air_date.desc', // Changed from popularity.desc
             'air_date.gte': lastMonth.toISOString().split('T')[0],
             'air_date.lte': nextWeek.toISOString().split('T')[0],
             page: String(page)
@@ -167,10 +174,41 @@ export const tmdbApi = {
         const results = await Promise.all(promises);
         return results.flatMap(res => res.results);
     },
+
+    getBestRecentSeries: async (): Promise<TMDBMedia[]> => {
+        const today = new Date();
+        const threeYearsAgo = new Date();
+        threeYearsAgo.setFullYear(today.getFullYear() - 3);
+
+        const res = await fetchTMDB<TMDBResponse<TMDBMedia>>('/discover/tv', {
+            sort_by: 'vote_average.desc',
+            'first_air_date.gte': threeYearsAgo.toISOString().split('T')[0],
+            'first_air_date.lte': today.toISOString().split('T')[0],
+            'vote_count.gte': '500',
+            without_genres: '16'
+        });
+        return res.results;
+    },
+
+    getDiscoverPaginated: async (type: 'movie' | 'tv', options: Record<string, string>, uiPage = 1): Promise<{ results: TMDBMedia[], total_pages: number }> => {
+        const response = await fetchTMDB<TMDBResponse<TMDBMedia>>(`/discover/${type}`, { ...options, page: String(uiPage) });
+        return {
+            results: response.results,
+            total_pages: Math.min(response.total_pages, 500) // TMDB limit
+        };
+    },
+
+    searchPaginated: async (query: string, type: 'movie' | 'tv' | 'multi' = 'multi', uiPage = 1): Promise<{ results: TMDBMedia[], total_pages: number }> => {
+        const response = await fetchTMDB<TMDBResponse<TMDBMedia>>(`/search/${type}`, { query, page: String(uiPage) });
+        return {
+            results: response.results,
+            total_pages: Math.min(response.total_pages, 500)
+        };
+    },
         
     getDetails: (id: string, type: 'movie' | 'tv' | string) => 
         fetchTMDB<TMDBDetail>(`/${type}/${id}`, {
-            append_to_response: 'videos,credits'
+            append_to_response: 'videos,credits,images'
         }),
         
     getImageUrl: (path: string | null, size: 'w500' | 'original' = 'w500') => {
