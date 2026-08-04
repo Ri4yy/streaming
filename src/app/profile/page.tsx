@@ -8,15 +8,23 @@ import Image from 'next/image';
 import { useUserMedia } from '@/hooks/useUserMedia';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter, useSearchParams } from 'next/navigation';
+import MediaCard from '@/components/MediaCard';
+import { User, Heart, Settings } from 'lucide-react';
 
-function TabCustom({ text }: { text: string }) {
+function TabCustom({ text, icon: Icon }: { text: string, icon: any }) {
     return (
         <Tab as={Fragment}>
             {({ selected }) => (
-                <button className={
-                    selected ? 'outline-none flex items-center whitespace-nowrap py-2 pl-2 before:w-1.5 before:h-1.5 before:opacity-100 transition-all duration-300 before:transition-all before:duration-300 before:-translate-x-3 before:rounded-full before:bg-red-500 text-white' : 'outline-none flex items-center whitespace-nowrap py-2 hover:pl-2 hover:before:w-1.5 hover:before:h-1.5 hover:before:opacity-100 transition-all duration-300 before:transition-all before:duration-300 before:-translate-x-3 before:w-0 before:h-0 before:rounded-full before:bg-red-500 before:opacity-0 text-gray-400 hover:text-white'
-                }
-                >{text}</button>
+                <button className={`group/item flex w-full cursor-pointer items-center rounded-xl border p-3 transition-all duration-200 hover:border-white/10 hover:bg-white/5 hover:shadow-sm outline-none ${
+                    selected ? 'border-white/10 bg-white/5 shadow-sm' : 'border-transparent bg-transparent'
+                }`}>
+                    <div className="flex flex-1 items-center gap-3">
+                        <Icon className={`h-4 w-4 transition-colors ${selected ? 'text-white/90' : 'text-white/60 group-hover/item:text-white/90'}`} />
+                        <span className={`whitespace-nowrap font-medium text-sm leading-tight tracking-tight transition-colors ${selected ? 'text-white/90' : 'text-white/70 group-hover/item:text-white/90'}`}>
+                            {text}
+                        </span>
+                    </div>
+                </button>
             )}
         </Tab>
     )
@@ -49,35 +57,80 @@ function ProfileContent() {
     const games = favorites.filter(m => m.media_type === 'game');
     const books = favorites.filter(m => m.media_type === 'book');
 
-    const renderMediaList = (list: any[]) => {
-        if (list.length === 0) return <p className="text-gray-400 p-5">Список пуст</p>;
+    const FilterableMediaList = ({ items }: { items: any[] }) => {
+        const [statusFilter, setStatusFilter] = useState<string>('all');
         
+        const filteredItems = statusFilter === 'all' 
+            ? items 
+            : items.filter(item => item.status === statusFilter);
+
+        if (items.length === 0) return <p className="text-gray-400 p-5">Список пуст</p>;
+
         return (
-            <ul className='flex flex-col gap-y-5'>
-                {list.map(item => (
-                    <li key={`${item.media_type}-${item.media_id}`} className='flex flex-col sm:flex-row justify-between sm:items-center p-5 rounded-xl bg-[#161618] gap-4'>
-                        <div className="flex items-center gap-5">
-                            <div className='w-[70px] h-[90px] rounded-xl bg-gray-500 relative overflow-hidden shrink-0'>
-                                {item.cover_url && <Image src={item.cover_url} alt={item.title} fill className="object-cover" />}
-                            </div>
-                            <div>
-                                <Link href={`/${item.media_type === 'tv' ? 'series' : item.media_type === 'movie' ? 'movies' : item.media_type === 'anime' ? 'anime' : item.media_type + 's'}/${item.media_id}`} className="text-lg font-medium hover:text-red-500 transition-colors">
-                                    {item.title}
-                                </Link>
-                                <div className='flex items-center gap-x-3 text-[#8c8c8c] mt-2'>
-                                    <span className="capitalize">{item.media_type}</span>
-                                    <li><div className="h-1 w-1 rounded-full bg-[#8c8c8c]"></div></li>
-                                    <span>Статус: {
+            <div className="flex flex-col gap-6">
+                <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+                    <button 
+                        onClick={() => setStatusFilter('all')}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${statusFilter === 'all' ? 'bg-red-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                    >
+                        Все ({items.length})
+                    </button>
+                    <button 
+                        onClick={() => setStatusFilter('planned')}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${statusFilter === 'planned' ? 'bg-red-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                    >
+                        В планах ({items.filter(i => i.status === 'planned').length})
+                    </button>
+                    <button 
+                        onClick={() => setStatusFilter('watching')}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${statusFilter === 'watching' ? 'bg-red-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                    >
+                        Смотрю ({items.filter(i => i.status === 'watching').length})
+                    </button>
+                    <button 
+                        onClick={() => setStatusFilter('completed')}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${statusFilter === 'completed' ? 'bg-red-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                    >
+                        Просмотрено ({items.filter(i => i.status === 'completed').length})
+                    </button>
+                    <button 
+                        onClick={() => setStatusFilter('dropped')}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${statusFilter === 'dropped' ? 'bg-red-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                    >
+                        Брошено ({items.filter(i => i.status === 'dropped').length})
+                    </button>
+                </div>
+                
+                {filteredItems.length === 0 ? (
+                    <p className="text-gray-400 p-5">В этой категории пока ничего нет</p>
+                ) : (
+                    <ul className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-4'>
+                        {filteredItems.map(item => (
+                            <li key={`${item.media_type}-${item.media_id}`}>
+                                <MediaCard 
+                                    id={item.media_id}
+                                    name={item.title}
+                                    year={
                                         item.status === 'planned' ? 'В планах' : 
-                                        item.status === 'watching' ? 'В процессе' : 
+                                        item.status === 'watching' ? 'Смотрю' : 
                                         item.status === 'completed' ? 'Просмотрено' : 'Брошено'
-                                    }</span>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+                                    }
+                                    genre={
+                                        item.media_type === 'tv' ? 'Сериал' : 
+                                        item.media_type === 'movie' ? 'Фильм' : 
+                                        item.media_type === 'anime' ? 'Аниме' : 
+                                        item.media_type === 'game' ? 'Игра' : 'Книга'
+                                    }
+                                    rate={item.rating || 0}
+                                    img={item.cover_url || ''}
+                                    type={item.media_type}
+                                    href={`/${item.media_type === 'tv' ? 'series' : item.media_type === 'movie' ? 'movies' : item.media_type === 'anime' ? 'anime' : item.media_type + 's'}/${item.media_id}`}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         );
     };
 
@@ -89,10 +142,12 @@ function ProfileContent() {
         <main className='mt-[120px] mb-[100px]'>
             <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
                 <div className="container flex lg:flex-row flex-col gap-20">
-                    <Tab.List className='flex flex-col bg-[#161618] rounded-xl p-10 min-w-[300px] h-fit'>
-                        <TabCustom text='Профиль' />
-                        <TabCustom text='Избранное' />
-                        <TabCustom text='Настройки' />
+                    <Tab.List className="relative z-10 flex flex-col space-y-1 min-w-[280px] h-fit rounded-2xl border border-white/10 bg-black/40 p-2 shadow-xl shadow-black/50 before:content-[''] before:absolute before:inset-0 before:backdrop-blur-3xl before:rounded-2xl before:-z-10">
+                        <TabCustom text='Профиль' icon={User} />
+                        <div className="my-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent relative z-10" />
+                        <TabCustom text='Избранное' icon={Heart} />
+                        <div className="my-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent relative z-10" />
+                        <TabCustom text='Настройки' icon={Settings} />
                     </Tab.List>
                     <Tab.Panels className='w-full'>
                         <Tab.Panel>
@@ -127,11 +182,11 @@ function ProfileContent() {
                                     <SubTabCustom text={`Книги (${books.length})`} />
                                 </Tab.List>
                                 <Tab.Panels>
-                                    <Tab.Panel>{renderMediaList(movies)}</Tab.Panel>
-                                    <Tab.Panel>{renderMediaList(series)}</Tab.Panel>
-                                    <Tab.Panel>{renderMediaList(anime)}</Tab.Panel>
-                                    <Tab.Panel>{renderMediaList(games)}</Tab.Panel>
-                                    <Tab.Panel>{renderMediaList(books)}</Tab.Panel>
+                                    <Tab.Panel><FilterableMediaList items={movies} /></Tab.Panel>
+                                    <Tab.Panel><FilterableMediaList items={series} /></Tab.Panel>
+                                    <Tab.Panel><FilterableMediaList items={anime} /></Tab.Panel>
+                                    <Tab.Panel><FilterableMediaList items={games} /></Tab.Panel>
+                                    <Tab.Panel><FilterableMediaList items={books} /></Tab.Panel>
                                 </Tab.Panels>
                             </Tab.Group>
                         </Tab.Panel>

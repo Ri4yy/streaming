@@ -54,7 +54,7 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
                             id={game.steam_appid} 
                             type="game" 
                             title={game.name} 
-                            coverUrl={steamApi.getVerticalImage(game.steam_appid)}
+                            coverUrl={game.header_image}
                         />
                     </div>
                     <div className="max-[1100px]:mt-10 w-[70%] max-[1100px]:w-full pr-4 pb-10">

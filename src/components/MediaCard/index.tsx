@@ -31,8 +31,8 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
     };
 
     useEffect(() => {
-        setImgSrc(img);
-    }, [img]);
+        setImgSrc(img || (type === 'game' ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${id}/header.jpg` : '/img/poster/spider.jpg'));
+    }, [img, type, id]);
 
     return (  
         <div className="flex flex-col gap-4 group h-full">
@@ -71,10 +71,13 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
                             }
                         }}
                         onError={() => {
-                            if (fallbackImg && imgSrc !== fallbackImg) {
-                                setImgSrc(fallbackImg);
-                            } else if (type === 'game' && !imgSrc.includes('header.jpg')) {
-                                setImgSrc(`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${id}/header.jpg`);
+                            const steamFallback = `https://cdn.cloudflare.steamstatic.com/steam/apps/${id}/header.jpg`;
+                            const defaultFallback = fallbackImg || '/img/poster/spider.jpg';
+                            
+                            if (type === 'game' && imgSrc !== steamFallback && imgSrc !== defaultFallback) {
+                                setImgSrc(steamFallback);
+                            } else if (imgSrc !== defaultFallback) {
+                                setImgSrc(defaultFallback);
                             }
                         }}
                     />
