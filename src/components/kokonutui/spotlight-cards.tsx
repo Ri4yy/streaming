@@ -139,14 +139,12 @@ function Card({ item, dimmed, onHoverStart, onHoverEnd }: CardProps) {
         opacity: dimmed ? 0.5 : 1,
       }}
       className={cn(
-        "group relative flex flex-col gap-5 overflow-hidden rounded-2xl border p-6",
+        "group relative flex flex-col items-center justify-center gap-3 aspect-square overflow-hidden rounded-2xl border p-4",
         item.href && "cursor-pointer",
-        // Light
-        "border-zinc-200 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
-        // Dark
-        "dark:border-white/6 dark:bg-white/3 dark:shadow-none",
+        // Glassmorphism background
+        "border-white/10 bg-white/5 backdrop-blur-md shadow-lg",
         "transition-[border-color] duration-300",
-        "hover:border-zinc-300 dark:hover:border-white/14"
+        "hover:border-white/20"
       )}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -196,12 +194,12 @@ function Card({ item, dimmed, onHoverStart, onHoverEnd }: CardProps) {
       </div>
 
       {/* Text */}
-      <div className="relative z-10 flex flex-col gap-2">
-        <h3 className="font-semibold text-[14px] text-zinc-900 tracking-tight dark:text-white">
+      <div className="relative z-10 flex flex-col gap-2 items-center text-center">
+        <h3 className="font-bold text-[16px] text-white tracking-tight drop-shadow-md">
           {item.title}
         </h3>
         {item.description && (
-          <p className="text-[12.5px] text-zinc-500 leading-relaxed dark:text-white/40">
+          <p className="text-[12.5px] text-white/50 leading-relaxed">
             {item.description}
           </p>
         )}
@@ -258,14 +256,20 @@ export default function SpotlightCards({
       />
 
       {/* Header */}
-      <div className="relative mb-8 flex flex-col gap-1.5">
-        <p className="font-semibold text-[10px] text-indigo-600 uppercase tracking-[0.22em] dark:text-indigo-400/80">
-          {eyebrow}
-        </p>
-        <h2 className="font-semibold text-[22px] text-zinc-900 tracking-tight dark:text-white">
-          {heading}
-        </h2>
-      </div>
+      {(eyebrow || heading) && (
+        <div className="relative mb-6 flex flex-col gap-1.5">
+          {eyebrow && (
+            <p className="font-semibold text-[10px] text-indigo-400/80 uppercase tracking-[0.22em]">
+              {eyebrow}
+            </p>
+          )}
+          {heading && (
+            <h2 className="font-semibold text-[22px] text-white tracking-tight">
+              {heading}
+            </h2>
+          )}
+        </div>
+      )}
 
       {/* Card grid */}
       <div className="relative grid grid-cols-2 gap-3 sm:grid-cols-3">
