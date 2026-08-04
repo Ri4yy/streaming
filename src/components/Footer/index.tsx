@@ -39,8 +39,8 @@ export default function Footer() {
                     <div className="flex flex-col gap-4 items-start md:items-end">
                         <h3 className="text-white font-medium uppercase tracking-wider text-sm mb-2">Социальные сети</h3>
                         <div className="flex gap-x-4">
-                            <a href="#" className="group relative cursor-pointer w-12 h-12 flex justify-center items-center rounded-full border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/20 transition-all duration-300">
-                                <BsTelegram className='w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300'/>
+                            <a href="https://t.me/cinebox_cinema_bot" target="_blank" title="Перейти в Telegram-бота" className="group relative cursor-pointer w-12 h-12 flex justify-center items-center rounded-[16px] bg-[#0088cc]/10 border border-[#0088cc]/20 text-[#0088cc] hover:bg-[#0088cc]/20 hover:border-[#0088cc]/40 hover:shadow-[0_0_15px_rgba(0,136,204,0.15)] transition-all duration-300">
+                                <BsTelegram className='w-6 h-6 drop-shadow-[0_0_4px_rgba(0,136,204,0.3)]'/>
                             </a>
                             <a href="https://vk.com/" className="group relative cursor-pointer w-12 h-12 flex justify-center items-center rounded-full border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/20 transition-all duration-300">
                                 <SlSocialVkontakte className='w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300'/>
