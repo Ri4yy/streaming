@@ -6,6 +6,21 @@ import { steamApi } from '@/services/steam';
 import { notFound } from 'next/navigation';
 import GameScreenshots from '@/components/GameScreenshots';
 import GamePoster from '@/components/GamePoster';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+    const { id } = await params;
+    const game = await steamApi.getGameDetails(id);
+    if (!game) return { title: 'Не найдено' };
+    
+    const rawDesc = game.short_description || game.detailed_description || '';
+    const cleanDesc = rawDesc.replace(/<[^>]*>?/gm, '').substring(0, 160);
+    
+    return {
+        title: game.name || 'Игра',
+        description: cleanDesc || "Подробная информация об игре.",
+    };
+}
 
 export default async function GameDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -16,7 +31,7 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
     }
 
     return (
-        <main className='-mt-20'>
+        <main>
             <section className='pb-20 pt-[120px] md:pt-[150px] bg-no-repeat bg-cover bg-center w-full min-h-screen relative overflow-hidden'>
                 <Image
                     src={game.background_raw || game.background || game.header_image}

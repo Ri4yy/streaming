@@ -1,23 +1,52 @@
 import React from 'react';
 import { BsTelegram } from 'react-icons/bs';
 import { SlSocialVkontakte } from 'react-icons/sl';
+import Link from 'next/link';
 
 export default function Footer() {
     return (  
-        <footer className={`relative py-8 box-border w-full before:content-[''] before:block before:absolute before:top-0 before:left-0 before:right-0 before:bottom-0 before:-z-10 before:origin-center 
-        before:min-h-full before:bg-[url(/img/footer.png)] before:bg-[50%_60%] `}>
-            <div className="absolute top-0 left-0 w-full h-full bg-[#111112]/80 -z-10"></div>
-            <div className="container flex justify-between items-center z-10">
-                <span className='text-[#BFBFBF]'>© 2026 Entertainment Catalog</span>
-                <div className="flex gap-x-5">
-                    <a href="#" className="group relative cursor-pointer">
-                        <div className="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 backdrop-blur-md bg-white/20 h-0 w-0 group-hover:w-12 group-hover:h-12 rounded-full -z-10"></div>
-                        <BsTelegram className='w-7 h-7 z-10 group-hover:fill-white/70 backdrop-blur-md transition-all duration-300'/>
-                    </a>
-                    <a href="https://vk.com/" className="group relative cursor-pointer">
-                        <div className="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 backdrop-blur-md bg-white/20 h-0 w-0 group-hover:w-12 group-hover:h-12 rounded-full -z-10"></div>
-                        <SlSocialVkontakte className='w-7 h-7 z-10 group-hover:fill-white/70 backdrop-blur-md transition-all duration-300'/>
-                    </a>
+        <footer className="w-[98%] mx-auto my-4 relative z-10">
+            <div className="rounded-2xl backdrop-blur-xl bg-black/40 border border-white/10 shadow-lg shadow-black/20 overflow-hidden relative p-8 md:p-12">
+                {/* Background image layer for glass effect */}
+                <div className="absolute inset-0 bg-[url(/img/footer.png)] bg-cover bg-center opacity-30 -z-10 mix-blend-overlay"></div>
+                <div className="absolute inset-0 bg-black/40 -z-10"></div>
+
+                <div className="flex flex-col md:flex-row justify-between gap-10">
+                    <div className="flex flex-col gap-6 md:w-1/3">
+                        <div>
+                            <Link href="/" className="text-2xl font-bold text-white tracking-wider">CineBox</Link>
+                            <p className="mt-4 text-gray-400 text-sm leading-relaxed">Твой личный каталог и трекер для фильмов, сериалов, аниме и игр. Ищи, сохраняй и смотри.</p>
+                        </div>
+                        <span className='text-gray-500 text-sm'>© 2026 CineBox</span>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-10 md:gap-20">
+                        <div className="flex flex-col gap-4">
+                            <h3 className="text-white font-medium uppercase tracking-wider text-sm mb-2">Разделы</h3>
+                            <Link href="/movies" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">Фильмы</Link>
+                            <Link href="/series" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">Сериалы</Link>
+                            <Link href="/anime" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">Аниме</Link>
+                            <Link href="/games" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">Игры</Link>
+                        </div>
+
+                        <div className="flex flex-col gap-4">
+                            <h3 className="text-white font-medium uppercase tracking-wider text-sm mb-2">Правовое</h3>
+                            <Link href="/terms" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">Пользовательское соглашение</Link>
+                            <Link href="/privacy" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">Обработка персональных данных</Link>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-4 items-start md:items-end">
+                        <h3 className="text-white font-medium uppercase tracking-wider text-sm mb-2">Социальные сети</h3>
+                        <div className="flex gap-x-4">
+                            <a href="#" className="group relative cursor-pointer w-12 h-12 flex justify-center items-center rounded-full border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/20 transition-all duration-300">
+                                <BsTelegram className='w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300'/>
+                            </a>
+                            <a href="https://vk.com/" className="group relative cursor-pointer w-12 h-12 flex justify-center items-center rounded-full border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/20 transition-all duration-300">
+                                <SlSocialVkontakte className='w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300'/>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </footer>

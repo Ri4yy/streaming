@@ -5,13 +5,23 @@ import DetailActions from '@/components/DetailActions';
 import DetailTabs from '@/components/DetailTabs';
 import FramesSlider from '@/components/FramesSlider';
 import { tmdbApi } from '@/services/tmdb';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+    const { id } = await params;
+    const movie = await tmdbApi.getDetails(id, 'movie');
+    return {
+        title: movie.title || movie.name || 'Фильм',
+        description: movie.overview?.substring(0, 160) || "Подробная информация о фильме.",
+    };
+}
 
 export default async function MovieDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const movie = await tmdbApi.getDetails(id, 'movie');
 
     return (  
-        <main className='-mt-20'>
+        <main>
             <section className='pt-[120px] max-[1100px]:pb-20 bg-[url(/img/bg.png)] bg-no-repeat bg-cover bg-center w-full min-[1100px]:h-screen md:min-h-[800px] flex flex-col justify-center relative after:absolute after:top-0 after:left-0 after:backdrop-blur-md after:z-10 after:w-full after:h-full overflow-hidden'>
                 <div className="container flex max-[1100px]:flex-col gap-x-20 items-center z-20">
                     <div className="max-[1100px]:mt-[160px] w-[30%] h-full max-[1100px]:w-full relative pb-32">

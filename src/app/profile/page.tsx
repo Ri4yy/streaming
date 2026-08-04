@@ -1,6 +1,7 @@
 "use client";
 
 import React, { Fragment, useState, useEffect } from 'react';
+import { Metadata } from 'next';
 import { Tab } from '@headlessui/react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -151,6 +152,9 @@ function ProfileContent() {
         </main>
     );
 }
+
+
+
 
 export default function ProfilePage() {
     return (

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import MediaCard from '@/components/MediaCard';
 import CatalogFilters from '@/components/CatalogFilters';
@@ -6,6 +7,12 @@ import { steamApi } from '@/services/steam';
 
 import Pagination from '@/components/Pagination';
 import WeeklySlider from '@/components/WeeklySlider';
+
+
+export const metadata: Metadata = {
+  title: "Игры",
+  description: "Каталог популярных видеоигр.",
+};
 
 export default async function GamesPage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string }> }) {
     const { q, sort, genres: selectedGenresQuery, page: pageParam } = await searchParams;
@@ -120,8 +127,8 @@ export default async function GamesPage({ searchParams }: { searchParams: Promis
     const paginatedGames = gamesList;
 
     return (
-        <main className='-mt-20'>
-            <section className='lg:px-[80px] md:px-10 px-5 pt-[100px]'>
+        <main>
+            <section className='lg:px-[80px] md:px-10 px-5 pt-[120px]'>
                 <div className="bg-[#1E1E20] rounded-2xl h-[700px] w-full relative overflow-hidden flex items-center justify-center">
                     {heroGame && (
                         <Image

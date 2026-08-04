@@ -1,8 +1,15 @@
 import React from 'react';
+import { Metadata } from 'next';
 import MediaCard from '@/components/MediaCard';
 import { tmdbApi } from '@/services/tmdb';
 import { steamApi } from '@/services/steam';
 import { googleBooksApi } from '@/services/googleBooks';
+
+
+export const metadata: Metadata = {
+  title: "Поиск",
+  description: "Поиск фильмов, сериалов, аниме, книг и игр по каталогу CineBox.",
+};
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q: string }> }) {
     const { q } = await searchParams;

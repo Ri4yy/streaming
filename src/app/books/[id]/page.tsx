@@ -4,6 +4,22 @@ import Link from 'next/link';
 import DetailActions from '@/components/DetailActions';
 import { googleBooksApi } from '@/services/googleBooks';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+    const { id } = await params;
+    const book = await googleBooksApi.getBookDetails(id);
+    if (!book) return { title: 'Не найдено' };
+    
+    const { volumeInfo } = book;
+    const rawDesc = volumeInfo.description || '';
+    const cleanDesc = rawDesc.replace(/<[^>]*>?/gm, '').substring(0, 160);
+    
+    return {
+        title: volumeInfo.title || 'Книга',
+        description: cleanDesc || "Подробная информация о книге.",
+    };
+}
 
 export default async function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -16,7 +32,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
     const { volumeInfo } = book;
 
     return (
-        <main className='-mt-20'>
+        <main>
             <section className='pb-20 pt-[120px] md:pt-[150px] bg-no-repeat bg-cover bg-center w-full min-h-screen relative overflow-hidden'>
                 <div 
                     className="absolute top-0 inset-x-0 h-full bg-cover bg-center z-0 opacity-40 blur-md"

@@ -5,8 +5,15 @@ import Footer from "@/components/Footer";
 import ScrollToTopBtn from "@/components/ScrollToTopBtn";
 
 export const metadata: Metadata = {
-  title: "Entertainment Catalog",
-  description: "Your personal tracking catalog for movies, series, anime, games, and books.",
+  title: {
+    template: "%s | CineBox",
+    default: "CineBox — Каталог кино, сериалов, аниме и игр",
+  },
+  description: "CineBox — твой личный каталог и трекер для фильмов, сериалов, аниме, игр и книг. Ищи, сохраняй и смотри.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RootLayout({

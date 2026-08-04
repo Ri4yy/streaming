@@ -1,4 +1,5 @@
 import React from 'react';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import MediaCard from '@/components/MediaCard';
@@ -8,6 +9,12 @@ import { tmdbApi } from '@/services/tmdb';
 
 import Pagination from '@/components/Pagination';
 import WeeklySlider from '@/components/WeeklySlider';
+
+
+export const metadata: Metadata = {
+  title: "Аниме",
+  description: "Смотреть и искать новые и популярные аниме.",
+};
 
 export default async function AnimePage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string }> }) {
     const { q, sort, genres, page: pageParam } = await searchParams;
@@ -76,7 +83,7 @@ export default async function AnimePage({ searchParams }: { searchParams: Promis
     let paginatedAnime = allAnime.length > 0 ? (q ? allAnime : allAnime.slice(1)) : [];
 
     return (  
-        <main className='-mt-20'>
+        <main>
             <section className='relative w-full lg:h-screen h-fit pt-40 lg:py-0 md:min-h-[800px] flex flex-col justify-center lg:justify-end overflow-hidden'>
                 <Image 
                     src={tmdbApi.getImageUrl(heroAnime?.backdrop_path || heroAnime?.poster_path || null, 'original')}

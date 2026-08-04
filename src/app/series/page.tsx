@@ -1,4 +1,5 @@
 import React from 'react';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import MediaCard from '@/components/MediaCard';
 import CatalogFilters from '@/components/CatalogFilters';
@@ -6,6 +7,12 @@ import { tmdbApi } from '@/services/tmdb';
 
 import Pagination from '@/components/Pagination';
 import WeeklySlider from '@/components/WeeklySlider';
+
+
+export const metadata: Metadata = {
+  title: "Сериалы",
+  description: "Популярные сериалы, новинки и классика.",
+};
 
 export default async function SeriesPage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string }> }) {
     const { q, sort, genres, page: pageParam } = await searchParams;
@@ -69,8 +76,8 @@ export default async function SeriesPage({ searchParams }: { searchParams: Promi
     let paginatedSeries = allSeries.length > 0 ? (q ? allSeries : allSeries.slice(1)) : [];
 
     return (
-        <main className='-mt-20'>
-            <section className='lg:px-[80px] md:px-10 px-5 pt-[100px]'>
+        <main>
+            <section className='lg:px-[80px] md:px-10 px-5 pt-[120px]'>
                 <div className="rounded-2xl h-[700px] w-full relative overflow-hidden flex items-center justify-center">
                     <Image 
                         src={tmdbApi.getImageUrl(heroSeries?.backdrop_path || heroSeries?.poster_path || null, 'original')}

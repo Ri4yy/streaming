@@ -1,9 +1,16 @@
 import React from 'react';
+import { Metadata } from 'next';
 import MediaCard from '@/components/MediaCard';
 import CatalogFilters from '@/components/CatalogFilters';
 import { googleBooksApi } from '@/services/googleBooks';
 
 import Pagination from '@/components/Pagination';
+
+
+export const metadata: Metadata = {
+  title: "Книги",
+  description: "Каталог интересных книг и бестселлеров.",
+};
 
 export default async function BooksPage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string }> }) {
     const { q, sort, genres: selectedGenresQuery, page: pageParam } = await searchParams;
@@ -74,8 +81,8 @@ export default async function BooksPage({ searchParams }: { searchParams: Promis
     const paginatedBooks = booksList.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
     return (
-        <main className='-mt-20'>
-            <section className='lg:px-[80px] md:px-10 px-5 pt-[100px]'>
+        <main>
+            <section className='lg:px-[80px] md:px-10 px-5 pt-[120px]'>
                 <div className="bg-[#1E1E20] rounded-2xl h-[700px] w-full relative overflow-hidden flex items-center justify-center">
                     {heroBook && (
                         <div 

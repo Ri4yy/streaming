@@ -21,17 +21,17 @@ export default async function Home() {
         tmdbApi.getTrending('tv', 'week')
     ]);
 
-    const heroMovie = trendingMovies.results[0];
+    const heroMovies = trendingMovies.results.slice(0, 5);
     const weekShow = trendingShow.results[0];
 
     return (  
-        <main className='-mt-20'>
-            <Hero movie={heroMovie} />
+        <main>
+            <Hero movies={heroMovies} />
             <ReleaseSlider movies={popularMovies.results} />
             <UpComingSlider movies={upcomingMovies.results} />
             <FilmsOfWeek movie={weekShow} />
             <SerialsSlider series={popularShows} />
-            <MovieList movies={trendingMovies.results.slice(1)} />
+            <MovieList movies={trendingMovies.results.slice(5)} />
         </main>
     );
 }
