@@ -3,6 +3,7 @@
 import { useUserMedia } from '@/hooks/useUserMedia';
 import TWAMediaCard from '@/components/twa/TWAMediaCard';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function TWAFavoritesPage() {
   const { mediaList, loading } = useUserMedia();
@@ -28,11 +29,20 @@ export default function TWAFavoritesPage() {
           <button
             key={t}
             onClick={() => setFilter(t)}
-            className={`px-4 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors ${
-              filter === t ? 'bg-red-500 text-white' : 'bg-white/10 text-gray-300'
+            className={`relative px-4 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors ${
+              filter === t ? 'text-white' : 'bg-white/10 text-gray-300 hover:text-white'
             }`}
           >
-            {t === 'all' ? 'Всё' : t === 'movie' ? 'Фильмы' : t === 'tv' ? 'Сериалы' : t === 'anime' ? 'Аниме' : t === 'game' ? 'Игры' : 'Книги'}
+            {filter === t && (
+              <motion.div
+                layoutId="active-favorites-tab"
+                className="absolute inset-0 bg-red-500 rounded-full z-0"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
+            <span className="relative z-10">
+              {t === 'all' ? 'Всё' : t === 'movie' ? 'Фильмы' : t === 'tv' ? 'Сериалы' : t === 'anime' ? 'Аниме' : t === 'game' ? 'Игры' : 'Книги'}
+            </span>
           </button>
         ))}
       </div>

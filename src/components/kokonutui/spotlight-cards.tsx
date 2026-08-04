@@ -27,8 +27,9 @@ const GLOW_SPRING = { stiffness: 180, damping: 22 } as const;
 export interface SpotlightItem {
   icon: LucideIcon;
   title: string;
-  description: string;
+  description?: string;
   color: string;
+  href?: string;
 }
 
 const DEFAULT_ITEMS: SpotlightItem[] = [
@@ -78,6 +79,8 @@ const DEFAULT_ITEMS: SpotlightItem[] = [
 
 // ─── Card ────────────────────────────────────────────────────────────────────────
 
+import { useRouter } from "next/navigation";
+
 interface CardProps {
   item: SpotlightItem;
   dimmed: boolean;
@@ -88,6 +91,7 @@ interface CardProps {
 function Card({ item, dimmed, onHoverStart, onHoverEnd }: CardProps) {
   const Icon = item.icon;
   const cardRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const normX = useMotionValue(0.5);
   const normY = useMotionValue(0.5);
@@ -121,14 +125,22 @@ function Card({ item, dimmed, onHoverStart, onHoverEnd }: CardProps) {
     onHoverEnd();
   };
 
+  const handleClick = () => {
+    if (item.href) {
+      router.push(item.href);
+    }
+  };
+
   return (
     <motion.div
+      onClick={handleClick}
       animate={{
         scale: dimmed ? 0.96 : 1,
         opacity: dimmed ? 0.5 : 1,
       }}
       className={cn(
         "group relative flex flex-col gap-5 overflow-hidden rounded-2xl border p-6",
+        item.href && "cursor-pointer",
         // Light
         "border-zinc-200 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
         // Dark
@@ -188,9 +200,11 @@ function Card({ item, dimmed, onHoverStart, onHoverEnd }: CardProps) {
         <h3 className="font-semibold text-[14px] text-zinc-900 tracking-tight dark:text-white">
           {item.title}
         </h3>
-        <p className="text-[12.5px] text-zinc-500 leading-relaxed dark:text-white/40">
-          {item.description}
-        </p>
+        {item.description && (
+          <p className="text-[12.5px] text-zinc-500 leading-relaxed dark:text-white/40">
+            {item.description}
+          </p>
+        )}
       </div>
 
       {/* Accent bottom line */}
