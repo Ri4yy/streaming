@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" className={cn("font-sans", geist.variable)}>
+    <html lang="ru" className={cn("dark font-sans", geist.variable)}>
       <body className="antialiased flex flex-col min-h-screen">
         <ScrollToTopBtn />
         {children}

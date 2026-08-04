@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { BsSearch, BsThreeDotsVertical } from "react-icons/bs";
+import { BsSearch, BsThreeDotsVertical, BsTelegram } from "react-icons/bs";
 import { HiMenu } from "react-icons/hi";
 import { TbDownload } from "react-icons/tb";
 import { LogOut, User, Heart, LogIn } from "lucide-react";
@@ -134,9 +134,14 @@ export default function Header() {
     return (
         <>
             <header className={`flex justify-between items-center px-8 py-1 rounded-2xl backdrop-blur-xl bg-black/40 border border-white/10 shadow-lg shadow-black/20 w-[98%] left-[1%] absolute ${scrollDirection === "down" ? "-top-24 " : "fixed"} top-2 transition-all duration-500 z-[60]`}>
-                <button className='relative after:transition-all after:duration-500 hover:after:absolute after:w-10 after:h-10 hover:after:bg-white/20 after:top-1/2 after:-translate-y-1/2 after:left-1/2 after:-translate-x-1/2 after:rounded-full'>
-                    <BsThreeDotsVertical />
-                </button>
+                <Link 
+                    href="https://t.me/cinebox_cinema_bot" 
+                    target="_blank" 
+                    title="Перейти в Telegram-бота"
+                    className="flex items-center justify-center w-10 h-10 rounded-[14px] bg-[#0088cc]/10 border border-[#0088cc]/20 text-[#0088cc] hover:bg-[#0088cc]/20 hover:border-[#0088cc]/40 hover:shadow-[0_0_15px_rgba(0,136,204,0.15)] transition-all duration-300"
+                >
+                    <BsTelegram className="w-5 h-5 drop-shadow-[0_0_4px_rgba(0,136,204,0.3)]" />
+                </Link>
                 <nav className="relative flex items-center">
                     <ul ref={navRef} className='hidden md:flex gap-2 text-sm relative z-10' onMouseLeave={handleMouseLeave}>
                         {navLinks.map((link, idx) => (
