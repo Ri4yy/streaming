@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import MediaCard from '@/components/MediaCard';
 import CatalogFilters from '@/components/CatalogFilters';
@@ -20,13 +21,17 @@ export default async function AnimePage() {
 
     return (  
         <main className='-mt-20'>
-            <section 
-                className='relative bg-no-repeat bg-cover bg-[50%_0] w-full lg:h-screen h-fit pt-40 lg:py-0 md:min-h-[800px] flex flex-col justify-center lg:justify-end overflow-hidden'
-                style={{ backgroundImage: `url('${tmdbApi.getImageUrl(heroAnime?.backdrop_path || heroAnime?.poster_path, 'original')}')` }}
-            >
-                <div className="absolute inset-0 bg-black/60 z-0"></div>
-                <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 xl:w-[1200px] lg:w-[1000px] md:w-[700px] w-[300px] h-[220px] rounded-[1200px] outline outline-[200px] outline-black outline-offset-[200px] blur-[150px] -z-0"></div>
-                <div className="min-[1240px]:pl-[calc((100%-1240px)/2)] min-[768px]:pl-10 min-[320px]:pl-5 flex lg:flex-row flex-col gap-20 z-10 lg:items-end">
+            <section className='relative w-full lg:h-screen h-fit pt-40 lg:py-0 md:min-h-[800px] flex flex-col justify-center lg:justify-end overflow-hidden'>
+                <Image 
+                    src={tmdbApi.getImageUrl(heroAnime?.backdrop_path || heroAnime?.poster_path, 'original')}
+                    alt="Hero"
+                    fill
+                    className="object-cover object-[50%_0] z-0"
+                    priority
+                />
+                <div className="absolute inset-0 bg-black/60 z-10"></div>
+                <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 xl:w-[1200px] lg:w-[1000px] md:w-[700px] w-[300px] h-[220px] rounded-[1200px] outline outline-[200px] outline-black outline-offset-[200px] blur-[150px] z-10"></div>
+                <div className="min-[1240px]:pl-[calc((100%-1240px)/2)] min-[768px]:pl-10 min-[320px]:pl-5 flex lg:flex-row flex-col gap-20 z-20 lg:items-end">
                     <div className="flex flex-col min-[1440px]:w-[40%] lg:w-[50%] min-[1680px]:pb-[200px] lg:pb-[100px] min-[768px]:pr-10 min-[320px]:pr-5">
                         <p className='text-[#CAE962] text-2xl font-bold'>#1 Популярное Аниме</p>
                         <h1 className='xs:text-[64px] text-[48px] font-bold leading-[1.1]'>{heroAnime?.name || heroAnime?.title}</h1>

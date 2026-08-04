@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import MediaCard from '@/components/MediaCard';
 import CatalogFilters from '@/components/CatalogFilters';
 import { tmdbApi } from '@/services/tmdb';
@@ -18,11 +19,16 @@ export default async function MoviesPage() {
     return (
         <main className='-mt-20'>
             <section className='lg:px-[80px] md:px-10 px-5 pt-[100px]'>
-                <div 
-                    className="bg-center bg-cover rounded-2xl h-[700px] w-full relative overflow-hidden"
-                    style={{ backgroundImage: `url('${tmdbApi.getImageUrl(heroMovie?.backdrop_path || heroMovie?.poster_path, 'original')}')` }}
-                >
-                    <div className="absolute md:bottom-5 md:left-5 md:right-5 bottom-0 px-4 py-2.5 bg-black/60 backdrop-blur-md rounded-xl lg:max-w-[700px]">
+                <div className="rounded-2xl h-[700px] w-full relative overflow-hidden">
+                    <Image 
+                        src={tmdbApi.getImageUrl(heroMovie?.backdrop_path || heroMovie?.poster_path, 'original')}
+                        alt="Hero"
+                        fill
+                        className="object-cover object-center z-0"
+                        priority
+                    />
+                    <div className="absolute inset-0 bg-black/20 z-0"></div>
+                    <div className="absolute md:bottom-5 md:left-5 md:right-5 bottom-0 px-4 py-2.5 bg-black/60 backdrop-blur-md rounded-xl lg:max-w-[700px] z-10">
                         <p className='md:text-3xl text-xl font-medium mb-4'>{heroMovie?.title || heroMovie?.name}</p>
                         <p className='md:text-base text-xs text-[#e8dfde] line-clamp-3'>
                             {heroMovie?.overview || "Описание отсутствует."}

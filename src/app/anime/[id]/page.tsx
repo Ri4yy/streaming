@@ -5,8 +5,9 @@ import { AiOutlineHeart } from 'react-icons/ai';
 import DetailTabs from '@/components/DetailTabs';
 import { tmdbApi } from '@/services/tmdb';
 
-export default async function AnimeDetailPage({ params }: { params: { id: string } }) {
-    const anime = await tmdbApi.getDetails(params.id, 'tv');
+export default async function AnimeDetailPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const anime = await tmdbApi.getDetails(id, 'tv');
 
     return (  
         <main className='-mt-20'>

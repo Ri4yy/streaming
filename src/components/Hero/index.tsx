@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { StaggerContainer, StaggerItem } from '@/components/AnimateIn/Stagger';
 import { TMDBMedia, tmdbApi } from '@/services/tmdb';
@@ -6,9 +7,16 @@ import { TMDBMedia, tmdbApi } from '@/services/tmdb';
 export default function Hero({ movie }: { movie: TMDBMedia }) {
     if (!movie) return null;
     return (  
-        <section className='bg-no-repeat bg-cover bg-center w-full h-screen md:min-h-[800px] flex flex-col justify-center relative' style={{ backgroundImage: `url('${tmdbApi.getImageUrl(movie.backdrop_path || movie.poster_path, 'original')}')` }}>
-            <div className="absolute inset-0 bg-black/60 z-0"></div>
-            <StaggerContainer className="container relative z-10">
+        <section className='w-full h-screen md:min-h-[800px] flex flex-col justify-center relative overflow-hidden'>
+            <Image 
+                src={tmdbApi.getImageUrl(movie.backdrop_path || movie.poster_path, 'original')}
+                alt={movie.title || movie.name || 'Hero'}
+                fill
+                className="object-cover object-center absolute inset-0 z-0"
+                priority
+            />
+            <div className="absolute inset-0 bg-black/60 z-10"></div>
+            <StaggerContainer className="container relative z-20">
                 <StaggerItem>
                     <div className="flex md:flex-col flex-row items-center md:items-start gap-x-2 mt-6 md:mt-0">
                         <div className="rounded-lg backdrop-blur-md h-fit bg-white/20 w-fit px-2.5 py-1 text-[#BFBFBF] text-sm">В тренде</div>
