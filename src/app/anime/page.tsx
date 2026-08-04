@@ -34,8 +34,8 @@ export default async function AnimePage() {
                 <div className="min-[1240px]:pl-[calc((100%-1240px)/2)] min-[768px]:pl-10 min-[320px]:pl-5 flex lg:flex-row flex-col gap-20 z-20 lg:items-end">
                     <div className="flex flex-col min-[1440px]:w-[40%] lg:w-[50%] min-[1680px]:pb-[200px] lg:pb-[100px] min-[768px]:pr-10 min-[320px]:pr-5">
                         <p className='text-[#CAE962] text-2xl font-bold'>#1 Популярное Аниме</p>
-                        <h1 className='xs:text-[64px] text-[48px] font-bold leading-[1.1]'>{heroAnime?.name || heroAnime?.title}</h1>
-                        <p className='text-lg font-medium text-[#F8F7F9]/100 p-3 rounded-md bg-white/20 backdrop-blur-sm leading-[1.25] line-clamp-3 mt-4'>
+                        <h1 className='text-[48px] font-bold leading-[1.1]'>{heroAnime?.name || heroAnime?.title}</h1>
+                        <p className='text-lg font-medium text-[#F8F7F9]/100 p-3 rounded-md bg-white/20 backdrop-blur-sm leading-[1.25] line-clamp-4 mt-4'>
                             {heroAnime?.overview || "Описание отсутствует."}
                         </p>
                         <div className="flex items-center mt-3 z-20">
