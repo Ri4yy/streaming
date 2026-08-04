@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import ScrollToTopBtn from "@/components/ScrollToTopBtn";
 
 export const metadata: Metadata = {
@@ -25,11 +23,7 @@ export default function RootLayout({
     <html lang="ru">
       <body className="antialiased flex flex-col min-h-screen">
         <ScrollToTopBtn />
-        <Header />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
+        {children}
       </body>
     </html>
   );
