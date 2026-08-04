@@ -29,6 +29,16 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
+        protocol: 'https',
+        hostname: 'cdn.akamai.steamstatic.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'steamcdn-a.akamaihd.net',
+        pathname: '/**',
+      },
+      {
         protocol: 'http',
         hostname: 'books.google.com',
         pathname: '/**',

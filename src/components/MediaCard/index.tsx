@@ -71,7 +71,7 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
                             }
                         }}
                         onError={() => {
-                            const steamFallback = `https://cdn.cloudflare.steamstatic.com/steam/apps/${id}/header.jpg`;
+                            const steamFallback = `/api/steam/image/${id}`;
                             const defaultFallback = fallbackImg || '/img/poster/spider.jpg';
                             
                             if (type === 'game' && imgSrc !== steamFallback && imgSrc !== defaultFallback) {
