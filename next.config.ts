@@ -8,6 +8,21 @@ const nextConfig: NextConfig = {
         hostname: 'image.tmdb.org',
         pathname: '/t/p/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.cloudflare.steamstatic.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'store.akamai.steamstatic.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'shared.akamai.steamstatic.com',
+        pathname: '/**',
+      },
     ],
   },
 };
