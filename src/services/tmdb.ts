@@ -121,19 +121,25 @@ async function fetchTMDB<T>(endpoint: string, params: Record<string, string> = {
 }
 
 export const tmdbApi = {
-    getTrending: (type: 'movie' | 'tv' | 'all' = 'all', timeWindow: 'day' | 'week' = 'week') => 
-        fetchTMDB<TMDBResponse<TMDBMedia>>(`/trending/${type}/${timeWindow}`),
+    getTrending: (type: 'movie' | 'tv' | 'all' = 'all', timeWindow: 'day' | 'week' = 'week', page = 1) => 
+        fetchTMDB<TMDBResponse<TMDBMedia>>(`/trending/${type}/${timeWindow}`, { page: String(page) }),
     
-    getPopular: (type: 'movie' | 'tv' = 'movie') => 
-        fetchTMDB<TMDBResponse<TMDBMedia>>(`/${type}/popular`),
+    getPopular: (type: 'movie' | 'tv' = 'movie', page = 1) => 
+        fetchTMDB<TMDBResponse<TMDBMedia>>(`/${type}/popular`, { page: String(page) }),
         
-    getTopRated: (type: 'movie' | 'tv' = 'movie') => 
-        fetchTMDB<TMDBResponse<TMDBMedia>>(`/${type}/top_rated`),
+    getManyPopular: async (type: 'movie' | 'tv' = 'movie', pagesCount = 4): Promise<TMDBMedia[]> => {
+        const promises = Array.from({ length: pagesCount }).map((_, i) => tmdbApi.getPopular(type, i + 1));
+        const results = await Promise.all(promises);
+        return results.flatMap(res => res.results);
+    },
+
+    getTopRated: (type: 'movie' | 'tv' = 'movie', page = 1) => 
+        fetchTMDB<TMDBResponse<TMDBMedia>>(`/${type}/top_rated`, { page: String(page) }),
         
-    getUpcoming: () => 
-        fetchTMDB<TMDBResponse<TMDBMedia>>(`/movie/upcoming`),
+    getUpcoming: (page = 1) => 
+        fetchTMDB<TMDBResponse<TMDBMedia>>(`/movie/upcoming`, { page: String(page) }),
         
-    getDiscoverAnime: () => {
+    getDiscoverAnime: (page = 1) => {
         const today = new Date();
         const lastMonth = new Date();
         lastMonth.setMonth(today.getMonth() - 1);
@@ -145,8 +151,15 @@ export const tmdbApi = {
             with_original_language: 'ja',
             sort_by: 'popularity.desc',
             'air_date.gte': lastMonth.toISOString().split('T')[0],
-            'air_date.lte': nextWeek.toISOString().split('T')[0]
+            'air_date.lte': nextWeek.toISOString().split('T')[0],
+            page: String(page)
         });
+    },
+
+    getManyDiscoverAnime: async (pagesCount = 4): Promise<TMDBMedia[]> => {
+        const promises = Array.from({ length: pagesCount }).map((_, i) => tmdbApi.getDiscoverAnime(i + 1));
+        const results = await Promise.all(promises);
+        return results.flatMap(res => res.results);
     },
         
     getDetails: (id: string, type: 'movie' | 'tv' | string) => 
@@ -157,5 +170,14 @@ export const tmdbApi = {
     getImageUrl: (path: string | null, size: 'w500' | 'original' = 'w500') => {
         if (!path) return '/img/poster/spider.jpg';
         return size === 'w500' ? `${TMDB_IMAGE_BASE_URL}${path}` : `${TMDB_IMAGE_ORIGINAL_URL}${path}`;
+    },
+    
+    search: (query: string, type: 'movie' | 'tv' | 'multi' = 'multi', page = 1) =>
+        fetchTMDB<TMDBResponse<TMDBMedia>>(`/search/${type}`, { query, page: String(page) }),
+
+    searchMany: async (query: string, type: 'movie' | 'tv' | 'multi' = 'multi', pagesCount = 4): Promise<TMDBMedia[]> => {
+        const promises = Array.from({ length: pagesCount }).map((_, i) => tmdbApi.search(query, type, i + 1));
+        const results = await Promise.all(promises);
+        return results.flatMap(res => res.results);
     }
 };

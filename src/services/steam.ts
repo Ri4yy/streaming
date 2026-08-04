@@ -105,7 +105,7 @@ export const steamApi = {
     },
 
     // Получить список игр и сразу подгрузить для них полные детали (идеально для каталога)
-    getGamesWithDetails: async (limit: number = 20): Promise<SteamGameDetails[]> => {
+    getGamesWithDetails: async (limit: number = 60): Promise<SteamGameDetails[]> => {
         try {
             const popularGames = await steamApi.getPopularGames();
             // Фильтруем старые игры: берем только те, у которых высокий appid (относительно новые игры)
@@ -136,5 +136,33 @@ export const steamApi = {
     // Вспомогательная функция для больших 16/9 баннеров (высокое качество)
     getHeroImage: (appId: number | string): string => {
         return `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/library_hero.jpg`;
+    },
+
+    // Поиск игр
+    searchGames: async (query: string) => {
+        try {
+            const res = await fetch(`https://steamcommunity.com/actions/SearchApps/${encodeURIComponent(query)}`);
+            if (!res.ok) throw new Error('Steam search failed');
+            return await res.json();
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    },
+
+    // Поиск игр с загрузкой полных деталей
+    searchGamesWithDetails: async (query: string, limit: number = 20): Promise<SteamGameDetails[]> => {
+        try {
+            const searchResults = await steamApi.searchGames(query);
+            const gamesToFetch = searchResults.slice(0, limit);
+            
+            const detailsPromises = gamesToFetch.map((game: any) => steamApi.getGameDetails(game.appid));
+            const detailsResults = await Promise.all(detailsPromises);
+            
+            return detailsResults.filter((game): game is SteamGameDetails => game !== null && game.type === 'game');
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
     }
 };

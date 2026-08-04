@@ -34,11 +34,13 @@ export default function ReleaseSlider({ movies }: { movies: TMDBMedia[] }) {
                             {movies.map((movie) => (
                                 <SwiperSlide key={movie.id}>
                                     <MediaCard 
+                                        id={movie.id}
                                         name={movie.title || movie.name || ''} 
                                         year={movie.release_date ? movie.release_date.split('-')[0] : 'N/A'} 
                                         genre="Кино" 
                                         rate={movie.vote_average || 0} 
                                         img={tmdbApi.getImageUrl(movie.poster_path)}
+                                        type="movie"
                                         href={`/movies/${movie.id}`}
                                     />
                                 </SwiperSlide>

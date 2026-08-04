@@ -4,17 +4,76 @@ import MediaCard from '@/components/MediaCard';
 import CatalogFilters from '@/components/CatalogFilters';
 import { steamApi } from '@/services/steam';
 
-export default async function GamesPage() {
-    // Получаем 20 топовых игр со всеми деталями
-    const games = await steamApi.getGamesWithDetails(24);
+import Pagination from '@/components/Pagination';
+
+export default async function GamesPage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string }> }) {
+    const { q, sort, genres: selectedGenresQuery, page: pageParam } = await searchParams;
+    const page = parseInt(pageParam || '1');
+
+    let allGames = [];
+    
+    if (q) {
+        // Fetch real details for search results
+        allGames = await steamApi.searchGamesWithDetails(q, 20);
+        
+        // Sort search results by date primarily (newest or unreleased first)
+        allGames.sort((a: any, b: any) => {
+            const getYear = (game: any) => {
+                const parts = game.release_date?.date?.split(' ') || [];
+                const year = parseInt(parts[parts.length - 1]);
+                return isNaN(year) ? 9999 : year; // Unreleased or upcoming games often don't have a strict year, putting them first
+            };
+            return getYear(b) - getYear(a);
+        });
+    } else {
+        // Получаем топовые игры со всеми деталями
+        allGames = await steamApi.getGamesWithDetails(60);
+    }
 
     // Первая игра для Hero-баннера
-    const heroGame = games.length > 0 ? games[0] : null;
-    const gamesList = games.length > 0 ? games.slice(1) : [];
+    const heroGame = allGames.length > 0 ? allGames[0] : null;
+    // Keep the hero game in the grid if searching so users don't miss it
+    let gamesList = allGames.length > 0 ? (q ? allGames : allGames.slice(1)) : [];
 
-    // Извлекаем все уникальные жанры из загруженных игр для фильтра
-    const allGenres = Array.from(new Set(games.flatMap(g => g.genres?.map(genre => genre.description) || [])));
-    const arrGenre = allGenres.map((name, index) => ({ id: index + 1, name }));
+    // Извлекаем все уникальные жанры из загруженных игр для фильтра (только если не поиск, так как поиск возвращает фейковые данные)
+    const allGenres = q ? [] : Array.from(new Set(allGames.flatMap((g: any) => g.genres?.map((genre: any) => genre.description) || [])));
+    const arrGenre = allGenres.map((name, index) => ({ id: index + 1, name: name as string }));
+
+    // Local filter by query is removed since we use API search now
+
+    // Filter by genres
+    if (selectedGenresQuery) {
+        const selectedGenres = selectedGenresQuery.split(',');
+        gamesList = gamesList.filter((game: any) => {
+            const gameGenres = game.genres?.map((g: any) => g.description) || [];
+            return selectedGenres.some((g: string) => gameGenres.includes(g));
+        });
+    }
+
+    // Sort
+    if (sort) {
+        gamesList.sort((a: any, b: any) => {
+            const getScore = (game: any) => game.metacritic?.score || 0;
+            if (sort === 'rating') return getScore(b) - getScore(a);
+            if (sort === 'rating_asc') return getScore(a) - getScore(b);
+            
+            // Very rough date parsing, as Steam returns localized strings or different formats
+            const getYear = (game: any) => {
+                const parts = game.release_date?.date?.split(' ') || [];
+                const year = parseInt(parts[parts.length - 1]);
+                return isNaN(year) ? 0 : year;
+            };
+            
+            if (sort === 'date') return getYear(b) - getYear(a);
+            if (sort === 'date_asc') return getYear(a) - getYear(b);
+            
+            return 0;
+        });
+    }
+
+    const ITEMS_PER_PAGE = 20;
+    const totalPages = Math.ceil(gamesList.length / ITEMS_PER_PAGE);
+    const paginatedGames = gamesList.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
     return (
         <main className='-mt-20'>
@@ -55,10 +114,11 @@ export default async function GamesPage() {
             <section className='container lg:py-[120px] md:py-14 py-8'>
                 <CatalogFilters genres={arrGenre} />
 
-                <div className="grid xl:grid-cols-4 lg:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9">
-                    {gamesList.map(game => (
+                <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9">
+                    {paginatedGames.length > 0 ? paginatedGames.map((game: any) => (
                         <MediaCard
                             key={game.steam_appid}
+                            id={game.steam_appid}
                             name={game.name}
                             year={game.release_date?.date?.split(' ')[2] || game.release_date?.date?.split(',')[1]?.trim() || ''}
                             genre={game.genres?.[0]?.description || "Игра"}
@@ -67,8 +127,12 @@ export default async function GamesPage() {
                             type="game"
                             href={`/games/${game.steam_appid}`}
                         />
-                    ))}
+                    )) : (
+                        <p className="text-gray-400 col-span-full">Ничего не найдено.</p>
+                    )}
                 </div>
+                
+                {totalPages > 1 && <Pagination totalPages={totalPages} />}
             </section>
         </main>
     );

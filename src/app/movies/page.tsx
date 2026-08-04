@@ -4,10 +4,22 @@ import MediaCard from '@/components/MediaCard';
 import CatalogFilters from '@/components/CatalogFilters';
 import { tmdbApi } from '@/services/tmdb';
 
-export default async function MoviesPage() {
-    const popularMovies = await tmdbApi.getPopular('movie');
-    const heroMovie = popularMovies.results[0];
-    const moviesList = popularMovies.results.slice(1);
+import Pagination from '@/components/Pagination';
+
+export default async function MoviesPage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string }> }) {
+    const { q, sort, genres, page: pageParam } = await searchParams;
+    const page = parseInt(pageParam || '1');
+
+    let allMovies = [];
+    
+    if (q) {
+        allMovies = await tmdbApi.searchMany(q, 'movie', 4);
+    } else {
+        allMovies = await tmdbApi.getManyPopular('movie', 4);
+    }
+
+    const heroMovie = allMovies.length > 0 ? allMovies[0] : null;
+    let moviesList = allMovies.length > 0 ? (q ? allMovies : allMovies.slice(1)) : [];
 
     let arrGenre = [
         {id: 1, name: 'Боевики'}, {id: 2, name: 'Вестерны'}, {id: 3, name: 'Военное'},
@@ -15,13 +27,44 @@ export default async function MoviesPage() {
         {id: 7, name: 'Драма'}, {id: 8, name: 'Криминал'}, {id: 9, name: 'Ужасы'},
         {id: 10, name: 'Триллеры'}, {id: 11, name: 'Фэнтези'}, {id: 12, name: 'Фантастика'}
     ];
+
+    // Local filter by query is removed since we use API search now
+
+    // Filter by genres
+    if (genres) {
+        const selectedGenres = genres.split(',');
+        moviesList = moviesList.filter(movie => {
+            const movieGenres = movie.genre_ids.map(id => arrGenre.find(g => g.id === id)?.name).filter(Boolean);
+            return selectedGenres.some(g => movieGenres.includes(g));
+        });
+    }
+
+    // Sort
+    if (sort) {
+        moviesList.sort((a, b) => {
+            if (sort === 'rating') return (b.vote_average || 0) - (a.vote_average || 0);
+            if (sort === 'rating_asc') return (a.vote_average || 0) - (b.vote_average || 0);
+            
+            const dateA = new Date(a.release_date || 0).getTime();
+            const dateB = new Date(b.release_date || 0).getTime();
+            
+            if (sort === 'date') return dateB - dateA;
+            if (sort === 'date_asc') return dateA - dateB;
+            
+            return 0;
+        });
+    }
     
+    const ITEMS_PER_PAGE = 20;
+    const totalPages = Math.ceil(moviesList.length / ITEMS_PER_PAGE);
+    const paginatedMovies = moviesList.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
     return (
         <main className='-mt-20'>
             <section className='lg:px-[80px] md:px-10 px-5 pt-[100px]'>
-                <div className="rounded-2xl h-[700px] w-full relative overflow-hidden">
+                <div className="rounded-2xl h-[700px] w-full relative overflow-hidden flex items-center justify-center">
                     <Image 
-                        src={tmdbApi.getImageUrl(heroMovie?.backdrop_path || heroMovie?.poster_path, 'original')}
+                        src={tmdbApi.getImageUrl(heroMovie?.backdrop_path || heroMovie?.poster_path || null, 'original')}
                         alt="Hero"
                         fill
                         className="object-cover object-center z-0"
@@ -39,19 +82,25 @@ export default async function MoviesPage() {
 
             <section className='container lg:py-[120px] md:py-14 py-8'>
                 <CatalogFilters genres={arrGenre} />
-                <div className="grid xl:grid-cols-5 lg:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9">
-                    {moviesList.map(movie => (
+                <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9">
+                    {paginatedMovies.length > 0 ? paginatedMovies.map(movie => (
                         <MediaCard 
                             key={movie.id}
+                            id={movie.id}
                             name={movie.title || movie.name || ''} 
                             year={movie.release_date ? movie.release_date.split('-')[0] : 'N/A'} 
                             genre="Фильм" 
                             rate={movie.vote_average || 0} 
                             img={tmdbApi.getImageUrl(movie.poster_path)}
+                            type="movie"
                             href={`/movies/${movie.id}`}
                         />
-                    ))}
+                    )) : (
+                        <p className="text-gray-400 col-span-full">Ничего не найдено.</p>
+                    )}
                 </div>
+                
+                {totalPages > 1 && <Pagination totalPages={totalPages} />}
             </section>
         </main>
     );

@@ -6,11 +6,25 @@ import CatalogFilters from '@/components/CatalogFilters';
 import AnimeHeroSwiper from '@/components/AnimeHeroSwiper';
 import { tmdbApi } from '@/services/tmdb';
 
-export default async function AnimePage() {
-    const animeData = await tmdbApi.getDiscoverAnime();
-    const heroAnime = animeData.results[0];
-    const swiperAnimes = animeData.results.slice(1, 6);
-    const animeList = animeData.results;
+import Pagination from '@/components/Pagination';
+
+export default async function AnimePage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string }> }) {
+    const { q, sort, genres, page: pageParam } = await searchParams;
+    const page = parseInt(pageParam || '1');
+
+    let allAnime = [];
+
+    if (q) {
+        // We use TMDB multi search but we'd better filter for anime. TMDB search doesn't easily restrict to anime, but we can search 'tv' and maybe it returns some. Actually TMDB doesn't have an 'anime' type, it's just 'tv' with genre 16.
+        const res = await tmdbApi.searchMany(q, 'tv', 4);
+        allAnime = res.filter(item => item.genre_ids?.includes(16));
+    } else {
+        allAnime = await tmdbApi.getManyDiscoverAnime(4);
+    }
+
+    const heroAnime = allAnime.length > 0 ? allAnime[0] : null;
+    const swiperAnimes = allAnime.length > 1 ? allAnime.slice(1, 6) : [];
+    let animeList = allAnime.length > 0 ? (q ? allAnime : allAnime.slice(1)) : [];
 
     let arrGenre = [
         {id: 1, name: 'Вампиры'}, {id: 2, name: 'Безумное'}, {id: 3, name: 'Военное'},
@@ -19,11 +33,42 @@ export default async function AnimePage() {
         {id: 10, name: 'Фантастика'}, {id: 11, name: 'Фэнтези'}, {id: 12, name: 'Школа'}
     ];
 
+    // Local filter by query is removed since we use API search now
+
+    // Filter by genres
+    if (genres) {
+        const selectedGenres = genres.split(',');
+        animeList = animeList.filter(anime => {
+            const animeGenres = anime.genre_ids.map(id => arrGenre.find(g => g.id === id)?.name).filter(Boolean);
+            return selectedGenres.some(g => animeGenres.includes(g));
+        });
+    }
+
+    // Sort
+    if (sort) {
+        animeList.sort((a, b) => {
+            if (sort === 'rating') return (b.vote_average || 0) - (a.vote_average || 0);
+            if (sort === 'rating_asc') return (a.vote_average || 0) - (b.vote_average || 0);
+            
+            const dateA = new Date(a.first_air_date || 0).getTime();
+            const dateB = new Date(b.first_air_date || 0).getTime();
+            
+            if (sort === 'date') return dateB - dateA;
+            if (sort === 'date_asc') return dateA - dateB;
+            
+            return 0;
+        });
+    }
+
+    const ITEMS_PER_PAGE = 20;
+    const totalPages = Math.ceil(animeList.length / ITEMS_PER_PAGE);
+    const paginatedAnime = animeList.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
     return (  
         <main className='-mt-20'>
             <section className='relative w-full lg:h-screen h-fit pt-40 lg:py-0 md:min-h-[800px] flex flex-col justify-center lg:justify-end overflow-hidden'>
                 <Image 
-                    src={tmdbApi.getImageUrl(heroAnime?.backdrop_path || heroAnime?.poster_path, 'original')}
+                    src={tmdbApi.getImageUrl(heroAnime?.backdrop_path || heroAnime?.poster_path || null, 'original')}
                     alt="Hero"
                     fill
                     className="object-cover object-[50%_0] z-0"
@@ -54,7 +99,7 @@ export default async function AnimePage() {
                             <button className='bg-[#CAE962] hover:bg-[#b6d552] active:bg-[#c8de7d] transition-all duration-300 rounded-2xl py-4 px-8 text-[#F8F7F9] hover:text-[#dedede] active:text-[#f6f5f5] text-2xl font-bold [text-shadow:_0_4px_2px_rgb(0,0,0,0.50)] active:[text-shadow:_0_3px_2px_rgb(0,0,0,0.50)] w-fit'>
                                 Смотреть
                             </button>
-                            <Link href={`/anime/${heroAnime?.id}`} className='text-lg hover:text-[#c8de7d] transition-all duration-300'>Подробнее</Link>
+                            {heroAnime && <Link href={`/anime/${heroAnime.id}`} className='text-lg hover:text-[#c8de7d] transition-all duration-300'>Подробнее</Link>}
                         </div>
                     </div>
                     <div className="min-[1440px]:w-[60%] lg:w-[50%] mb-10">
@@ -65,10 +110,11 @@ export default async function AnimePage() {
 
             <section className='container lg:py-[120px] md:py-14 py-8'>
                 <CatalogFilters genres={arrGenre} />
-                <div className="grid xl:grid-cols-4 lg:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9">
-                    {animeList.map(anime => (
+                <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9">
+                    {paginatedAnime.length > 0 ? paginatedAnime.map(anime => (
                         <MediaCard 
                             key={anime.id}
+                            id={anime.id}
                             name={anime.name || anime.title || ''} 
                             year={anime.first_air_date ? anime.first_air_date.split('-')[0] : 'N/A'} 
                             genre="Аниме" 
@@ -77,8 +123,12 @@ export default async function AnimePage() {
                             type="anime"
                             href={`/anime/${anime.id}`}
                         />
-                    ))}
+                    )) : (
+                        <p className="text-gray-400 col-span-full">Ничего не найдено.</p>
+                    )}
                 </div>
+
+                {totalPages > 1 && <Pagination totalPages={totalPages} />}
             </section>
         </main>
     );

@@ -34,6 +34,7 @@ export default function SerialsSlider({ series }: { series: TMDBMedia[] }) {
                     {series.map((show) => (
                         <SwiperSlide key={show.id}>
                             <MediaCard 
+                                id={show.id}
                                 name={show.title || show.name || ''} 
                                 year={show.first_air_date ? show.first_air_date.split('-')[0] : 'N/A'} 
                                 genre="Сериал" 

@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AiOutlineHeart } from 'react-icons/ai';
+import DetailActions from '@/components/DetailActions';
 import { steamApi } from '@/services/steam';
 import { notFound } from 'next/navigation';
 import GameScreenshots from '@/components/GameScreenshots';
@@ -29,11 +29,12 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
                     <div className="max-[1100px]:mt-[40px] w-[30%] h-full max-[1100px]:w-full relative sticky top-[120px]">
                         {/* Изменено на 9/16 постер */}
                         <Image src={steamApi.getVerticalImage(game.steam_appid)} alt={game.name} width={600} height={900} className='rounded-xl w-full h-[600px] object-cover border border-white/10' />
-                        <button className="group hover:scale-105 transition-all duration-500 overflow-hidden flex justify-center items-center absolute bottom-5 left-1/2 -translate-x-1/2 backdrop-blur-md bg-black/40 py-2.5 w-[90%] rounded-lg cursor-pointer border border-white/20 mt-4 relative">
-                            <AiOutlineHeart className='w-5 h-5 group-hover:fill-black transition-all duration-500' />
-                            <span className='whitespace-nowrap pl-3 group-hover:text-black transition-all duration-500'>Добавить в Избранное</span>
-                            <div className="-z-10 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-0 h-0 group-hover:w-[150%] rounded-full group-hover:h-[1000%] bg-white transition-all duration-500"></div>
-                        </button>
+                        <DetailActions 
+                            id={game.steam_appid} 
+                            type="game" 
+                            title={game.name} 
+                            coverUrl={steamApi.getVerticalImage(game.steam_appid)}
+                        />
                     </div>
                     <div className="max-[1100px]:mt-10 w-[70%] max-[1100px]:w-full pr-4 pb-10">
                         <div className="flex md:flex-col flex-row items-center md:items-start gap-x-2">

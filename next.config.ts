@@ -24,6 +24,11 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
+        protocol: 'https',
+        hostname: 'shared.fastly.steamstatic.com',
+        pathname: '/**',
+      },
+      {
         protocol: 'http',
         hostname: 'books.google.com',
         pathname: '/**',

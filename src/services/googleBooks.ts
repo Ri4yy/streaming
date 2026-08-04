@@ -118,11 +118,11 @@ const MOCK_BOOKS: GoogleBook[] = [
 
 export const googleBooksApi = {
     // Получить популярные книги
-    getPopularBooks: async (defaultQuery: string = 'популярные книги', maxResults: number = 40): Promise<GoogleBook[]> => {
+    getPopularBooks: async (defaultQuery: string = 'популярные книги', maxResults: number = 80): Promise<GoogleBook[]> => {
         try {
             // Вместо общих запросов используем специфичные для последних лет, чтобы вытягивать именно новинки
             const fetchQuery = async (query: string) => {
-                const url = `${GOOGLE_BOOKS_API}?q=${encodeURIComponent(query)}&langRestrict=ru&maxResults=${maxResults}&startIndex=0&key=${GOOGLE_BOOKS_API_KEY}`;
+                const url = `${GOOGLE_BOOKS_API}?q=${encodeURIComponent(query)}&langRestrict=ru&maxResults=40&startIndex=0&key=${GOOGLE_BOOKS_API_KEY}`;
                 const res = await fetch(url, { next: { revalidate: 3600 * 24 } });
                 if (!res.ok) return [];
                 const data: GoogleBooksResponse = await res.json();
@@ -143,7 +143,7 @@ export const googleBooksApi = {
             
             // Убираем дубликаты
             const uniqueBooks = Array.from(new Map(allBooks.map(item => [item.id, item])).values());
-            return uniqueBooks;
+            return uniqueBooks.slice(0, maxResults);
         } catch (error) {
             console.error('API Error, falling back to mock data:', error);
             // Если API возвращает ошибку (например, ключ не активирован), отдаем mock-данные
@@ -194,5 +194,18 @@ export const googleBooksApi = {
                '/img/placeholder-book.jpg';
         // Убираем завиток страницы (edge=curl) и увеличиваем размер (zoom=3)
         return url.replace('&edge=curl', '').replace('&zoom=1', '&zoom=3');
+    },
+
+    searchBooks: async (query: string): Promise<GoogleBook[]> => {
+        try {
+            const url = `${GOOGLE_BOOKS_API}?q=${encodeURIComponent(query)}&langRestrict=ru&maxResults=40&key=${GOOGLE_BOOKS_API_KEY}`;
+            const res = await fetch(url);
+            if (!res.ok) return [];
+            const data: GoogleBooksResponse = await res.json();
+            return data.items || [];
+        } catch (error) {
+            console.error('API Error in search:', error);
+            return [];
+        }
     }
 };

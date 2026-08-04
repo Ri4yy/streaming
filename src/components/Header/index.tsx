@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import ModalLogin from '@/components/ModalLogin';
 import ModalSearch from '@/components/ModalSearch';
+import { createClient } from '@/utils/supabase/client';
 
 function useScrollDirection() {
     const [scrollDirection, setScrollDirection] = useState<string | null>(null);
@@ -39,6 +40,26 @@ export default function Header() {
     const [activeLogin, setActiveLogin] = useState(false);
     const [activeSearch, setActiveSearch] = useState(false);
     const [activeMenu, setActiveMenu] = useState(false);
+    
+    const [user, setUser] = useState<any>(null);
+    const supabase = createClient();
+
+    useEffect(() => {
+        supabase.auth.getUser().then(({ data }) => {
+            if (data?.user) setUser(data.user);
+        });
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user || null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, [supabase.auth]);
+
+    const handleSignOut = async () => {
+        await supabase.auth.signOut();
+        window.location.reload();
+    };
 
     const getLinkClass = (path: string) => {
         const isActive = pathname === path;
@@ -65,22 +86,27 @@ export default function Header() {
             </nav>
             <div className="flex md:gap-5 gap-3 items-center ml-auto md:ml-0 md:mr-6 mr-4">
                 <button onClick={() => setActiveSearch(true)}><BsSearch className='xs:block hidden h-5 w-5 hover:fill-[#ff1414] transition-all duration-300'/></button>
-                <button onClick={() => setActiveLogin(true)} className='flex justify-center items-center group md:py-2 md:px-6 rounded-lg md:border-white md:border-[2px] relative overflow-hidden '>
-                    <div className="md:block hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full transition-all duration-500 ease-out group-hover:w-[300px] group-hover:h-[300px] z-0"></div>
-                    <span className='md:block hidden relative z-10 group-hover:text-black transition-colors duration-500 text-sm'>Вход</span>
-                </button>
-                <div className="group relative md:py-5 py-3 after:w-[calc(100%+100px)] after:-translate-x-[100px] after:h-3 after:absolute after:-bottom-3 after:left-0 md:block hidden">
-                    <div className='w-10 h-10 rounded-full hover:outline-offset-1 hover:outline hover:outline-1 transition-all duration-200 cursor-pointer overflow-hidden relative'>
-                        <Image src="/img/profile.png" fill alt="profile" />
+                
+                {!user ? (
+                    <button onClick={() => setActiveLogin(true)} className='flex justify-center items-center group md:py-2 md:px-6 rounded-lg md:border-white md:border-[2px] relative overflow-hidden '>
+                        <div className="md:block hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full transition-all duration-500 ease-out group-hover:w-[300px] group-hover:h-[300px] z-0"></div>
+                        <span className='md:block hidden relative z-10 group-hover:text-black transition-colors duration-500 text-sm'>Вход</span>
+                    </button>
+                ) : (
+                    <div className="group relative md:py-5 py-3 after:w-[calc(100%+100px)] after:-translate-x-[100px] after:h-3 after:absolute after:-bottom-3 after:left-0 md:block hidden">
+                        <div className='w-10 h-10 rounded-full hover:outline-offset-1 hover:outline hover:outline-1 transition-all duration-200 cursor-pointer overflow-hidden relative bg-[#ff1414] flex justify-center items-center text-xl font-bold'>
+                            {user.email?.[0].toUpperCase()}
+                        </div>
+                        <div className="group-hover:flex px-8 py-6 rounded-lg backdrop-blur-md bg-black/80 absolute top-[90px] right-0 hidden min-w-[calc(100%+200px)] ">
+                            <ul className='flex flex-col'>
+                                <li><div className="text-gray-400 text-xs mb-3 border-b border-gray-600 pb-2">{user.email}</div></li>
+                                <li><Link href='/profile?tab=0' className='flex items-center whitespace-nowrap py-2 hover:pl-2 hover:before:w-1.5 hover:before:h-1.5 hover:before:opacity-100 transition-all duration-300 before:transition-all before:duration-300 before:-translate-x-3 before:w-0 before:h-0 before:rounded-full before:bg-red-500 before:opacity-0'>Профиль</Link></li>
+                                <li><Link href='/profile?tab=1' className='flex items-center whitespace-nowrap py-2 hover:pl-2 hover:before:w-1.5 hover:before:h-1.5 hover:before:opacity-100 transition-all duration-300 before:transition-all before:duration-300 before:-translate-x-3 before:w-0 before:h-0 before:rounded-full before:bg-red-500 before:opacity-0'>Избранное</Link></li>
+                                <li><button onClick={handleSignOut} className='flex w-full text-left items-center whitespace-nowrap py-2 hover:pl-2 hover:before:w-1.5 hover:before:h-1.5 hover:before:opacity-100 transition-all duration-300 before:transition-all before:duration-300 before:-translate-x-3 before:w-0 before:h-0 before:rounded-full before:bg-red-500 before:opacity-0 text-red-400'>Выйти</button></li>
+                            </ul>
+                        </div>
                     </div>
-                    <div className="group-hover:flex px-8 py-6 rounded-lg backdrop-blur-md bg-black/50 absolute top-[90px] right-0 hidden min-w-[calc(100%+200px)] ">
-                        <ul className='flex flex-col'>
-                            <li><Link href='/profile?tab=0' className='flex items-center whitespace-nowrap py-2 hover:pl-2 hover:before:w-1.5 hover:before:h-1.5 hover:before:opacity-100 transition-all duration-300 before:transition-all before:duration-300 before:-translate-x-3 before:w-0 before:h-0 before:rounded-full before:bg-red-500 before:opacity-0'>Профиль</Link></li>
-                            <li><Link href='/profile?tab=1' className='flex items-center whitespace-nowrap py-2 hover:pl-2 hover:before:w-1.5 hover:before:h-1.5 hover:before:opacity-100 transition-all duration-300 before:transition-all before:duration-300 before:-translate-x-3 before:w-0 before:h-0 before:rounded-full before:bg-red-500 before:opacity-0'>Избранное</Link></li>
-                            <li><Link href='/profile?tab=3' className='flex items-center whitespace-nowrap py-2 hover:pl-2 hover:before:w-1.5 hover:before:h-1.5 hover:before:opacity-100 transition-all duration-300 before:transition-all before:duration-300 before:-translate-x-3 before:w-0 before:h-0 before:rounded-full before:bg-red-500 before:opacity-0'>Настройки</Link></li>
-                        </ul>
-                    </div>
-                </div>
+                )}
             </div>
             <div className="md:hidden flex justify-center items-center relative md:py-0 py-3" onClick={() => setActiveMenu(true)}>
                 <HiMenu className='cursor-pointer h-6 w-6 z-20' />

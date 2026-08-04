@@ -1,35 +1,43 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Heart } from 'lucide-react';
+import { useUserMedia } from '@/hooks/useUserMedia';
 
 interface MediaCardProps {
+    id: string | number;
     name: string;
     year: string | number;
     genre: string;
     rate: string | number;
     img: string;
-    type?: string;
+    type?: 'movie' | 'tv' | 'anime' | 'game' | 'book';
     href?: string;
 }
 
-export default function MediaCard({ name, year, genre, rate, img, type = "movie", href = "/movies/1" }: MediaCardProps) {
-    const [isFavorite, setIsFavorite] = useState(false);
+export default function MediaCard({ id, name, year, genre, rate, img, type = "movie", href = "/movies/1" }: MediaCardProps) {
+    const { getMedia, toggleFavorite } = useUserMedia();
+    const currentMedia = getMedia(type, String(id));
+    const isFavorite = currentMedia?.is_favorite || false;
 
-    const toggleFavorite = (e: React.MouseEvent) => {
+    const handleToggleFavorite = (e: React.MouseEvent) => {
         e.preventDefault();
-        setIsFavorite(!isFavorite);
+        toggleFavorite(type, String(id), { title: name, cover_url: img });
     };
 
     return (  
         <div className="flex flex-col gap-4 group h-full">
             <div className="w-full relative rounded-lg h-[400px] overflow-hidden">
-                <div className='absolute top-3 right-3 text-white rounded-md backdrop-blur-md bg-black/50 py-1 px-2.5 z-20'>{typeof rate === 'number' ? rate.toFixed(1) : rate}</div>
+                {(rate !== 0 && rate !== '0' && rate !== '0.0' && rate !== 'N/A') && (
+                    <div className='absolute top-3 right-3 text-white rounded-md backdrop-blur-md bg-black/50 py-1 px-2.5 z-20'>
+                        {typeof rate === 'number' ? rate.toFixed(1) : rate}
+                    </div>
+                )}
                 
                 <button 
-                    onClick={toggleFavorite}
+                    onClick={handleToggleFavorite}
                     className='absolute top-3 left-3 rounded-full backdrop-blur-md bg-black/50 p-2 z-20 hover:bg-white/20 transition-all duration-300'
                 >
                     <Heart className={`w-5 h-5 transition-all duration-300 ${isFavorite ? 'fill-red-500 stroke-red-500 scale-110' : 'stroke-white'}`} />

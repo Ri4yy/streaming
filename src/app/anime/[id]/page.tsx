@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AiOutlineHeart } from 'react-icons/ai';
+import DetailActions from '@/components/DetailActions';
 import DetailTabs from '@/components/DetailTabs';
 import { tmdbApi } from '@/services/tmdb';
 
@@ -13,13 +13,14 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ id
         <main className='-mt-20'>
             <section className='max-[1100px]:pb-20 bg-[url(/img/bg.png)] bg-no-repeat bg-cover bg-center w-full min-[1100px]:h-screen md:min-h-[800px] flex flex-col justify-center relative after:absolute after:top-0 after:left-0 after:backdrop-blur-md after:z-10 after:w-full after:h-full overflow-hidden'>
                 <div className="container flex max-[1100px]:flex-col gap-x-20 items-center z-20">
-                    <div className="max-[1100px]:mt-[160px] w-[30%] h-full max-[1100px]:w-full relative">
+                    <div className="max-[1100px]:mt-[160px] w-[30%] h-full max-[1100px]:w-full relative pb-32">
                         <Image src={tmdbApi.getImageUrl(anime.poster_path)} alt="Poster" width={500} height={750} className='rounded-xl w-full object-cover h-[300px] min-[1100px]:h-full' />
-                        <button className="group hover:scale-105 transition-all duration-500 overflow-hidden flex justify-center items-center absolute bottom-5 left-1/2 -translate-x-1/2 backdrop-blur-md bg-black/20 py-2.5 w-[90%] rounded-lg cursor-pointer">
-                            <AiOutlineHeart className='w-5 h-5 group-hover:fill-black transition-all duration-500' />
-                            <span className='whitespace-nowrap pl-3 group-hover:text-black transition-all duration-500'>Добавить в Избранное</span>
-                            <div className="-z-10 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-0 h-0 group-hover:w-[150%] rounded-full group-hover:h-[1000%] bg-white transition-all duration-500"></div>
-                        </button>
+                        <DetailActions 
+                            id={anime.id} 
+                            type="anime" 
+                            title={anime.title || anime.name || ''} 
+                            coverUrl={tmdbApi.getImageUrl(anime.poster_path)}
+                        />
                     </div>
                     <div className="max-[1100px]:mt-10 w-[70%] max-[1100px]:w-full">
                         <div className="flex md:flex-col flex-row items-center md:items-start gap-x-2">

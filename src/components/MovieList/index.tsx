@@ -16,11 +16,13 @@ export default function MovieList({ movies }: { movies: TMDBMedia[] }) {
                     {movies.slice(0, 6).map((movie) => 
                         <StaggerItem key={movie.id} className="h-full">
                             <MediaCard 
+                                id={movie.id}
                                 name={movie.title || movie.name || ''} 
                                 year={movie.release_date ? movie.release_date.split('-')[0] : 'N/A'} 
                                 genre="Кино" 
                                 rate={movie.vote_average || 0} 
                                 img={tmdbApi.getImageUrl(movie.poster_path)}
+                                type="movie"
                                 href={`/movies/${movie.id}`}
                             />
                         </StaggerItem>
