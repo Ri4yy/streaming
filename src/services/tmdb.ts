@@ -133,12 +133,21 @@ export const tmdbApi = {
     getUpcoming: () => 
         fetchTMDB<TMDBResponse<TMDBMedia>>(`/movie/upcoming`),
         
-    getDiscoverAnime: () => 
-        fetchTMDB<TMDBResponse<TMDBMedia>>('/discover/tv', {
+    getDiscoverAnime: () => {
+        const today = new Date();
+        const lastMonth = new Date();
+        lastMonth.setMonth(today.getMonth() - 1);
+        const nextWeek = new Date();
+        nextWeek.setDate(today.getDate() + 7);
+
+        return fetchTMDB<TMDBResponse<TMDBMedia>>('/discover/tv', {
             with_genres: '16', // Animation
             with_original_language: 'ja',
-            sort_by: 'popularity.desc'
-        }),
+            sort_by: 'popularity.desc',
+            'air_date.gte': lastMonth.toISOString().split('T')[0],
+            'air_date.lte': nextWeek.toISOString().split('T')[0]
+        });
+    },
         
     getDetails: (id: string, type: 'movie' | 'tv' | string) => 
         fetchTMDB<TMDBDetail>(`/${type}/${id}`, {
