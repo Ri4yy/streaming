@@ -23,13 +23,15 @@ export default function TWASearchPage() {
       }
       setLoading(true);
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&type=${type}`);
         const data = await res.json();
         
         if (type !== 'all') {
             setResults(data.filter((item: any) => {
                 if (type === 'anime') return item._isAnime;
                 if (type === 'movie' || type === 'tv') return item.media_type === type && !item._isAnime;
+                if (type === 'game') return item.media_type === 'game';
+                if (type === 'book') return item.media_type === 'book';
                 return item.media_type === type;
             }));
         } else {
@@ -60,7 +62,7 @@ export default function TWASearchPage() {
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide">
-        {['all', 'movie', 'tv', 'anime'].map((t) => (
+        {['all', 'movie', 'tv', 'anime', 'game', 'book'].map((t) => (
           <button
             key={t}
             onClick={() => setType(t)}
@@ -76,7 +78,7 @@ export default function TWASearchPage() {
               />
             )}
             <span className="relative z-10">
-              {t === 'all' ? 'Всё' : t === 'movie' ? 'Фильмы' : t === 'tv' ? 'Сериалы' : 'Аниме'}
+              {t === 'all' ? 'Всё' : t === 'movie' ? 'Фильмы' : t === 'tv' ? 'Сериалы' : t === 'anime' ? 'Аниме' : t === 'game' ? 'Игры' : 'Книги'}
             </span>
           </button>
         ))}
@@ -93,15 +95,15 @@ export default function TWASearchPage() {
              // MediaCard links to `/games/123`, which goes to the desktop layout!
              // Wait! If TMA clicks a MediaCard, it opens the desktop layout because it navigates to `/games/123`.
              return (
-              <div key={item.id} className="relative">
+              <div key={item.id || item.steam_appid || item.appid} className="relative">
                  <TWAMediaCard
-                   id={item.id}
-                   name={item.title || item.name}
-                   rate={item.vote_average || 0}
-                   img={item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : (item.imageLinks?.thumbnail || item.header_image || '')}
+                   id={item.id || item.steam_appid || item.appid}
+                   name={item.title || item.name || item.volumeInfo?.title}
+                   rate={item.vote_average || item.volumeInfo?.averageRating || 0}
+                   img={item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : (item.imageLinks?.thumbnail || item.header_image || item.volumeInfo?.imageLinks?.thumbnail || '')}
                    type={item.media_type}
-                   year={new Date(item.release_date || item.first_air_date || item.publishedDate || Date.now()).getFullYear() || ''}
-                   genre={item.genre_ids ? 'Жанр' : ''}
+                   year={new Date(item.release_date?.date || item.release_date || item.first_air_date || item.publishedDate || item.volumeInfo?.publishedDate || Date.now()).getFullYear() || ''}
+                   genre={item.genre_ids ? 'Жанр' : (item.volumeInfo?.authors?.join(', ') || '')}
                  />
               </div>
              )
