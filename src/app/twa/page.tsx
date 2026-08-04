@@ -1,3 +1,5 @@
+"use client";
+
 import { Film, Tv, PlaySquare } from 'lucide-react';
 import SpotlightCards, { SpotlightItem } from '@/components/kokonutui/spotlight-cards';
 
