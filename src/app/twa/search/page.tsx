@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Search as SearchIcon } from 'lucide-react';
+import { motion } from 'framer-motion';
 import TWAMediaCard from '@/components/twa/TWAMediaCard';
 
 export default function TWASearchPage() {
@@ -26,7 +27,11 @@ export default function TWASearchPage() {
         const data = await res.json();
         
         if (type !== 'all') {
-            setResults(data.filter((item: any) => item.media_type === type));
+            setResults(data.filter((item: any) => {
+                if (type === 'anime') return item._isAnime;
+                if (type === 'movie' || type === 'tv') return item.media_type === type && !item._isAnime;
+                return item.media_type === type;
+            }));
         } else {
             setResults(data);
         }
@@ -55,15 +60,24 @@ export default function TWASearchPage() {
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide">
-        {['all', 'movie', 'tv', 'anime', 'game', 'book'].map((t) => (
+        {['all', 'movie', 'tv', 'anime'].map((t) => (
           <button
             key={t}
             onClick={() => setType(t)}
-            className={`px-4 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors ${
-              type === t ? 'bg-red-500 text-white' : 'bg-white/10 text-gray-300'
+            className={`relative px-4 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors ${
+              type === t ? 'text-white' : 'bg-white/10 text-gray-300 hover:text-white'
             }`}
           >
-            {t === 'all' ? 'Всё' : t === 'movie' ? 'Фильмы' : t === 'tv' ? 'Сериалы' : t === 'anime' ? 'Аниме' : t === 'game' ? 'Игры' : 'Книги'}
+            {type === t && (
+              <motion.div
+                layoutId="active-search-tab"
+                className="absolute inset-0 bg-red-500 rounded-full z-0"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
+            <span className="relative z-10">
+              {t === 'all' ? 'Всё' : t === 'movie' ? 'Фильмы' : t === 'tv' ? 'Сериалы' : 'Аниме'}
+            </span>
           </button>
         ))}
       </div>

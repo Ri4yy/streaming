@@ -1,38 +1,35 @@
 "use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { LayoutGrid, Search, Heart } from 'lucide-react';
+import { Toolbar, ToolbarItem } from '@/components/kokonutui/toolbar';
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const router = useRouter();
 
-  const navItems = [
-    { name: 'Каталог', href: '/twa', icon: LayoutGrid },
-    { name: 'Поиск', href: '/twa/search', icon: Search },
-    { name: 'Избранное', href: '/twa/favorites', icon: Heart },
+  const navItems: ToolbarItem[] = [
+    { id: '/twa', title: 'Каталог', icon: LayoutGrid },
+    { id: '/twa/search', title: 'Поиск', icon: Search },
+    { id: '/twa/favorites', title: 'Избранное', icon: Heart },
   ];
 
+  // Determine current active id based on pathname
+  // If not exactly matching one of the tabs, default to '/twa' (or handle subroutes if needed)
+  const activeId = navItems.find(item => item.id === pathname)?.id || '/twa';
+
+  const handleSelect = (itemId: string) => {
+    router.push(itemId);
+  };
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 pt-2 bg-black/60 backdrop-blur-xl border-t border-white/10">
-      <div className="flex justify-between items-center max-w-md mx-auto">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          const Icon = item.icon;
-          
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`flex flex-col items-center justify-center w-full gap-1 transition-colors duration-300 ${
-                isActive ? 'text-red-500' : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              <Icon className={`w-6 h-6 ${isActive ? 'fill-red-500/20' : ''}`} />
-              <span className="text-[10px] font-medium">{item.name}</span>
-            </Link>
-          );
-        })}
+    <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 pt-2">
+      <div className="flex justify-center w-full max-w-md mx-auto">
+        <Toolbar 
+          items={navItems} 
+          defaultSelected={activeId} 
+          onSelect={handleSelect}
+        />
       </div>
     </div>
   );

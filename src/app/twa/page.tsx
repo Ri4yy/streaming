@@ -4,9 +4,7 @@ import { Film, Tv, PlaySquare, Gamepad2, Book } from 'lucide-react';
 const categories = [
   { name: 'Фильмы', href: '/twa/search?type=movie', icon: Film, color: 'from-blue-500 to-cyan-400' },
   { name: 'Сериалы', href: '/twa/search?type=tv', icon: Tv, color: 'from-purple-500 to-pink-500' },
-  { name: 'Аниме', href: '/twa/search?type=anime', icon: PlaySquare, color: 'from-red-500 to-orange-500' },
-  { name: 'Игры', href: '/twa/search?type=game', icon: Gamepad2, color: 'from-green-500 to-emerald-400' },
-  { name: 'Книги', href: '/twa/search?type=book', icon: Book, color: 'from-yellow-500 to-amber-500' },
+  { name: 'Аниме', href: '/twa/search?type=anime', icon: PlaySquare, color: 'from-red-500 to-orange-500' }
 ];
 
 export default function TWACatalogPage() {
