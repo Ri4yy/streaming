@@ -133,6 +133,12 @@ export const tmdbApi = {
         return results.flatMap(res => res.results);
     },
 
+    getManyTrending: async (type: 'movie' | 'tv' | 'all' = 'all', timeWindow: 'day' | 'week' = 'week', pagesCount = 4): Promise<TMDBMedia[]> => {
+        const promises = Array.from({ length: pagesCount }).map((_, i) => tmdbApi.getTrending(type, timeWindow, i + 1));
+        const results = await Promise.all(promises);
+        return results.flatMap(res => res.results);
+    },
+
     getTopRated: (type: 'movie' | 'tv' = 'movie', page = 1) => 
         fetchTMDB<TMDBResponse<TMDBMedia>>(`/${type}/top_rated`, { page: String(page) }),
         

@@ -11,7 +11,7 @@ export default function ModalLogin({ active, setActive }: { active: boolean, set
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
 
     const handleAuth = async (type: 'signin' | 'signup') => {
         setLoading(true);

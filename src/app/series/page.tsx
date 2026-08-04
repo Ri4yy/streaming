@@ -15,7 +15,8 @@ export default async function SeriesPage({ searchParams }: { searchParams: Promi
     if (q) {
         allSeries = await tmdbApi.searchMany(q, 'tv', 4);
     } else {
-        allSeries = await tmdbApi.getManyPopular('tv', 4);
+        // Use trending to avoid showing 2000s series like Breaking Bad as top results
+        allSeries = await tmdbApi.getManyTrending('tv', 'week', 4);
     }
 
     const heroSeries = allSeries.length > 0 ? allSeries[0] : null;

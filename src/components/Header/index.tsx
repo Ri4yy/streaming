@@ -42,7 +42,7 @@ export default function Header() {
     const [activeMenu, setActiveMenu] = useState(false);
     
     const [user, setUser] = useState<any>(null);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
 
     useEffect(() => {
         supabase.auth.getUser().then(({ data }) => {

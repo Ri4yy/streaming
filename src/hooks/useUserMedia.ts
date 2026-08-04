@@ -19,7 +19,7 @@ export function useUserMedia() {
   const [mediaList, setMediaList] = useState<UserMedia[]>([]);
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
 
   useEffect(() => {
     let isMounted = true;
