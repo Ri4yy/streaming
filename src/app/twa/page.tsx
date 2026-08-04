@@ -15,8 +15,6 @@ export default function TWACatalogPage() {
       <h1 className="text-2xl font-bold mb-6">Каталог</h1>
       <SpotlightCards 
         items={categories} 
-        heading={undefined}
-        eyebrow={undefined}
         className="bg-transparent dark:bg-transparent p-0"
       />
     </div>

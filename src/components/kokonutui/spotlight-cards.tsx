@@ -223,15 +223,11 @@ Card.displayName = "Card";
 
 export interface SpotlightCardsProps {
   items?: SpotlightItem[];
-  eyebrow?: string;
-  heading?: string;
   className?: string;
 }
 
 export default function SpotlightCards({
   items = DEFAULT_ITEMS,
-  eyebrow = "Features",
-  heading = "Everything you need",
   className,
 }: SpotlightCardsProps) {
   const [hoveredTitle, setHoveredTitle] = useState<string | null>(null);
@@ -254,22 +250,6 @@ export default function SpotlightCards({
           backgroundSize: "22px 22px",
         }}
       />
-
-      {/* Header */}
-      {(eyebrow || heading) && (
-        <div className="relative mb-6 flex flex-col gap-1.5">
-          {eyebrow && (
-            <p className="font-semibold text-[10px] text-indigo-400/80 uppercase tracking-[0.22em]">
-              {eyebrow}
-            </p>
-          )}
-          {heading && (
-            <h2 className="font-semibold text-[22px] text-white tracking-tight">
-              {heading}
-            </h2>
-          )}
-        </div>
-      )}
 
       {/* Card grid */}
       <div className="relative grid grid-cols-2 gap-3 sm:grid-cols-3">
