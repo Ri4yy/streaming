@@ -35,9 +35,11 @@ export default async function AnimePage() {
                     <div className="flex flex-col min-[1440px]:w-[40%] lg:w-[50%] min-[1680px]:pb-[200px] lg:pb-[100px] min-[768px]:pr-10 min-[320px]:pr-5">
                         <p className='text-[#CAE962] text-2xl font-bold'>#1 Популярное Аниме</p>
                         <h1 className='text-[48px] font-bold leading-[1.1]'>{heroAnime?.name || heroAnime?.title}</h1>
-                        <p className='text-lg font-medium text-[#F8F7F9]/100 p-3 rounded-md bg-white/20 backdrop-blur-sm leading-[1.25] line-clamp-4 mt-4'>
-                            {heroAnime?.overview || "Описание отсутствует."}
-                        </p>
+                        <div className='p-3 rounded-md bg-white/20 backdrop-blur-sm mt-4'>
+                            <p className='text-lg font-medium text-[#F8F7F9]/100 leading-[1.25] line-clamp-4'>
+                                {heroAnime?.overview || "Описание отсутствует."}
+                            </p>
+                        </div>
                         <div className="flex items-center mt-3 z-20">
                             <svg width="43" height="22" viewBox="0 0 43 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M43 1.89083C42.8833 0.922265 42.1751 0.150295 41.2733 0C37.3203 0 5.69694 0 1.74393 0C0.756052 0.164717 0 1.07484 0 2.17169C0 3.935 0 18.0384 0 19.801C0 21.0155 0.925061 22 2.06699 22C5.95494 22 37.0623 22 40.9502 22C42.0017 22 42.8699 21.1643 43 20.0826C43 16.4444 43 3.70955 43 1.89083Z" fill="#F6C700"></path>
