@@ -108,7 +108,7 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
                     </div>
                 </div>
                 
-                {/* <SimilarSlider items={similar} type="game" /> */}
+                <SimilarSlider items={similar} type="game" />
                 </section>
             </div>
         </main>

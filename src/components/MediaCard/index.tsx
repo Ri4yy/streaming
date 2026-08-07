@@ -37,7 +37,7 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
 
     return (  
         <div className="flex flex-col gap-4 group h-full">
-            <div className={`w-full relative rounded-lg overflow-hidden ${size === 'small' ? 'h-[250px]' : 'h-[400px]'}`}>
+            <div className={`w-full relative rounded-lg overflow-hidden ${size === 'small' ? 'h-[300px]' : 'h-[400px]'}`}>
                 {(rate !== 0 && rate !== '0' && rate !== '0.0' && rate !== 'N/A') && (
                     <div className='absolute top-3 right-3 text-white rounded-md backdrop-blur-md bg-black/50 py-1 px-2.5 z-20'>
                         {typeof rate === 'number' ? rate.toFixed(1) : rate}
@@ -64,7 +64,7 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
                         src={imgSrc} 
                         alt={name}
                         fill
-                        className={`flex rounded-lg w-full overflow-hidden transition-all duration-700 z-10 ${size === 'small' ? 'h-[250px]' : 'h-[400px]'} ${isHorizontal ? 'object-contain scale-100 group-hover:scale-105' : 'object-cover group-hover:scale-105'}`} 
+                        className={`flex rounded-lg w-full overflow-hidden transition-all duration-700 z-10 ${size === 'small' ? 'h-[300px]' : 'h-[400px]'} ${isHorizontal ? 'object-contain scale-100 group-hover:scale-105' : 'object-cover group-hover:scale-105'}`} 
                         onLoad={(e) => {
                             const target = e.target as HTMLImageElement;
                             if (target.naturalWidth > target.naturalHeight) {
