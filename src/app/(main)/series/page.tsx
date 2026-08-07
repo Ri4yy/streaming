@@ -35,7 +35,8 @@ export default async function SeriesPage({ searchParams }: { searchParams: Promi
         totalPages = searchRes.total_pages;
     } else {
         const options: Record<string, string> = {
-            without_genres: '16' // Exclude Anime
+            without_genres: '16', // Exclude Anime
+            without_original_language: 'zh' // Exclude Chinese series
         };
 
         if (genres) {
