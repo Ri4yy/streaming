@@ -232,6 +232,15 @@ export async function fetchMoreItems(
     } else {
         const options: Record<string, string> = {};
         
+        if (catalogType === 'tv') {
+            options.without_genres = '16';
+            options.without_original_language = 'zh,th,hi,ar,tl,te,ta,jp';
+            options['vote_count.gte'] = '150';
+        } else if (catalogType === 'movie') {
+            options.without_original_language = 'zh,th,hi,ar,tl,te,ta,jp';
+            options['vote_count.gte'] = '150';
+        }
+        
         if (genres) {
             const selectedGenreNames = genres.split(',');
             const selectedGenreIds = arrGenre
@@ -250,9 +259,22 @@ export async function fetchMoreItems(
             if (sort.includes('rating')) options['vote_count.gte'] = '100';
         } else {
             options.sort_by = 'popularity.desc';
+            if (catalogType === 'anime') {
+                const today = new Date();
+                const lastYear = new Date();
+                lastYear.setFullYear(today.getFullYear() - 1);
+                options['first_air_date.gte'] = lastYear.toISOString().split('T')[0];
+                options['first_air_date.lte'] = today.toISOString().split('T')[0];
+            }
         }
 
-        if (yearMin) options[catalogType === 'movie' ? 'primary_release_date.gte' : 'first_air_date.gte'] = `${yearMin}-01-01`;
+        if (yearMin) {
+            options[catalogType === 'movie' ? 'primary_release_date.gte' : 'first_air_date.gte'] = `${yearMin}-01-01`;
+        } else if (catalogType === 'tv' || catalogType === 'movie') {
+            const currentYear = new Date().getFullYear();
+            options[catalogType === 'movie' ? 'primary_release_date.gte' : 'first_air_date.gte'] = `${currentYear - 6}-01-01`;
+        }
+        
         if (yearMax) options[catalogType === 'movie' ? 'primary_release_date.lte' : 'first_air_date.lte'] = `${yearMax}-12-31`;
         if (ratingMin) options['vote_average.gte'] = ratingMin;
         if (ratingMax) options['vote_average.lte'] = ratingMax;

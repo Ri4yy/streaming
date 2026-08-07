@@ -34,7 +34,10 @@ export default async function MoviesPage({ searchParams }: { searchParams: Promi
         allMovies = searchRes.results;
         totalPages = searchRes.total_pages;
     } else {
-        const options: Record<string, string> = {};
+        const options: Record<string, string> = {
+            without_original_language: 'zh,th,hi,ar,tl,te,ta,jp', // Exclude specific languages by default
+            'vote_count.gte': '150' // Filter out movies with high popularity but no votes
+        };
 
         if (genres) {
             const selectedGenreNames = genres.split(',');
@@ -57,7 +60,12 @@ export default async function MoviesPage({ searchParams }: { searchParams: Promi
             options.sort_by = 'popularity.desc';
         }
 
-        if (yearMin) options['primary_release_date.gte'] = `${yearMin}-01-01`;
+        if (yearMin) {
+            options['primary_release_date.gte'] = `${yearMin}-01-01`;
+        } else {
+            const currentYear = new Date().getFullYear();
+            options['primary_release_date.gte'] = `${currentYear - 6}-01-01`;
+        }
         if (yearMax) options['primary_release_date.lte'] = `${yearMax}-12-31`;
         if (ratingMin) options['vote_average.gte'] = ratingMin;
         if (ratingMax) options['vote_average.lte'] = ratingMax;
