@@ -15,7 +15,8 @@ export default function TrailerModal({ trailerKey }: TrailerModalProps) {
     
     if (!trailerKey) return null;
     
-    const thumbnailUrl = `https://img.youtube.com/vi/${trailerKey}/hqdefault.jpg`;
+    const thumbnailUrl = `https://i.ytimg.com/vi/${trailerKey}/maxresdefault.jpg`;
+    const fallbackUrl = `https://i.ytimg.com/vi/${trailerKey}/hqdefault.jpg`;
 
     return (
         <>
@@ -26,6 +27,11 @@ export default function TrailerModal({ trailerKey }: TrailerModalProps) {
                 >
                     <img 
                         src={thumbnailUrl} 
+                        onError={(e) => {
+                            if (e.currentTarget.src !== fallbackUrl) {
+                                e.currentTarget.src = fallbackUrl;
+                            }
+                        }}
                         alt="Trailer thumbnail" 
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
