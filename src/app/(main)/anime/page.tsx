@@ -104,8 +104,8 @@ export default async function AnimePage({ searchParams }: { searchParams: Promis
                     <div className="flex flex-col min-[1440px]:w-[40%] lg:w-[50%] min-[1680px]:pb-[200px] lg:pb-[100px] min-[768px]:pr-10 min-[320px]:pr-5">
                         <p className='text-[#CAE962] text-2xl font-bold'>#1 Популярное Аниме</p>
                         <h1 className='text-[48px] font-bold leading-[1.1]'>{heroAnime?.name || heroAnime?.title}</h1>
-                        <div className='p-3 rounded-md bg-white/20 backdrop-blur-sm mt-4'>
-                            <p className='text-lg font-medium text-[#F8F7F9]/100 leading-[1.25] line-clamp-4'>
+                        <div className='p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md shadow-inner mt-4'>
+                            <p className='text-lg font-medium text-white/90 leading-[1.5] line-clamp-4'>
                                 {heroAnime?.overview || "Описание отсутствует."}
                             </p>
                         </div>
@@ -119,11 +119,15 @@ export default async function AnimePage({ searchParams }: { searchParams: Promis
                                 {heroAnime?.first_air_date ? heroAnime.first_air_date.split('-')[0] : 'N/A'}
                             </span>
                         </div>
-                        <div className="flex xs:flex-row flex-col xs:items-center gap-3 mt-12">
-                            <button className='bg-[#CAE962] hover:bg-[#b6d552] active:bg-[#c8de7d] transition-all duration-300 rounded-2xl py-4 px-8 text-[#F8F7F9] hover:text-[#dedede] active:text-[#f6f5f5] text-2xl font-bold [text-shadow:_0_4px_2px_rgb(0,0,0,0.50)] active:[text-shadow:_0_3px_2px_rgb(0,0,0,0.50)] w-fit'>
-                                Смотреть
+                        <div className="flex xs:flex-row flex-col xs:items-center gap-4 mt-12 z-20">
+                            <button className='flex gap-2 justify-center items-center group py-3.5 px-10 rounded-xl bg-[#CAE962] hover:bg-[#b6d552] relative overflow-hidden transition-all duration-500 shadow-[0_0_20px_rgba(202,233,98,0.4)] hover:shadow-[0_0_30px_rgba(202,233,98,0.6)] w-fit'>
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full transition-all duration-500 ease-out group-hover:w-[300px] group-hover:h-[300px] z-0"></div>
+                                <span className="relative z-10 text-[#F8F7F9] group-hover:text-black font-bold text-xl drop-shadow-md transition-colors duration-500 [text-shadow:_0_2px_4px_rgb(0,0,0,0.50)] group-hover:[text-shadow:none]">Смотреть</span>
+                                <svg width="24" height="24" className='fill-white group-hover:fill-black z-50 relative drop-shadow-md group-hover:drop-shadow-none transition-colors duration-500' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 19L19 12L8 5V19Z"></path>
+                                </svg>
                             </button>
-                            {heroAnime && <Link href={`/anime/${heroAnime.id}`} className='text-lg hover:text-[#c8de7d] transition-all duration-300'>Подробнее</Link>}
+                            {heroAnime && <Link href={`/anime/${heroAnime.id}`} className='py-3.5 px-8 rounded-xl backdrop-blur-md bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium transition-all duration-300 text-lg'>Подробнее</Link>}
                         </div>
                     </div>
                     <div className="min-[1440px]:w-[60%] lg:w-[50%] mb-10">

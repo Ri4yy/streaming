@@ -34,10 +34,10 @@ export default function Pagination({ totalPages, currentPage, onPageChange }: Pa
                 <button
                     key={`page-${i}`}
                     onClick={() => handlePageChange(i)}
-                    className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors duration-300 ${
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 border backdrop-blur-md shadow-lg ${
                         currentPage === i 
-                        ? 'bg-red-500 text-white font-medium' 
-                        : 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'
+                        ? 'bg-[#ff1414] border-[#ff1414] shadow-[#ff1414]/30 text-white font-medium' 
+                        : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20 text-white/70 hover:text-white'
                     }`}
                 >
                     {i}
@@ -52,7 +52,7 @@ export default function Pagination({ totalPages, currentPage, onPageChange }: Pa
             <button 
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-white transition-colors duration-300"
+                className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-md shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-white transition-all duration-300"
             >
                 <BsChevronLeft />
             </button>
@@ -61,7 +61,7 @@ export default function Pagination({ totalPages, currentPage, onPageChange }: Pa
                 <React.Fragment key="first-page">
                     <button 
                         onClick={() => handlePageChange(1)}
-                        className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-300"
+                        className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-md shadow-lg flex items-center justify-center text-white/70 hover:text-white transition-all duration-300"
                     >
                         1
                     </button>
@@ -76,7 +76,7 @@ export default function Pagination({ totalPages, currentPage, onPageChange }: Pa
                     <span className="text-white/50 px-1">...</span>
                     <button 
                         onClick={() => handlePageChange(totalPages)}
-                        className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-300"
+                        className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-md shadow-lg flex items-center justify-center text-white/70 hover:text-white transition-all duration-300"
                     >
                         {totalPages}
                     </button>
@@ -86,7 +86,7 @@ export default function Pagination({ totalPages, currentPage, onPageChange }: Pa
             <button 
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-white transition-colors duration-300"
+                className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-md shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-white transition-all duration-300"
             >
                 <BsChevronRight />
             </button>

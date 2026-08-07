@@ -80,16 +80,16 @@ export default function ModalSearch({ activeSearch, setActiveSearch }: { activeS
     return (  
         <div className={`${activeSearch ? 'modal__active' : 'modal'} flex justify-center items-center`}>
             <div className={`md:w-3/5 xl:w-2/5 w-[90%] h-fit z-[63] ${activeSearch ? 'flex flex-col gap-4' : 'hidden'} relative`}>
-                <button onClick={() => setActiveSearch(false)} className="flex justify-center items-center absolute -top-14 right-0 backdrop-blur-md bg-white/20 rounded-lg hover:rounded-full transition-all duration-300 w-10 h-10 z-[62]">
+                <button onClick={() => setActiveSearch(false)} className="flex justify-center items-center absolute -top-14 right-0 backdrop-blur-md bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-300 w-10 h-10 z-[62]">
                     <IoClose className=' h-8 w-8' />
                 </button>
                 <form action="#" method="POST" className='w-full flex gap-3 xs:flex-row flex-col' onSubmit={handleSearch}>
                     <div className="relative w-full xs:w-[150px] shrink-0 z-50">
                         <Listbox value={category} onChange={setCategory}>
-                            <Listbox.Button className="relative w-full h-full min-h-[56px] cursor-default rounded-lg bg-[#1E1E20] py-4 pl-5 pr-10 text-left shadow-md focus:outline-none sm:text-sm text-white">
+                            <Listbox.Button className="relative w-full h-full min-h-[56px] cursor-pointer rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300 py-4 pl-5 pr-10 text-left shadow-lg backdrop-blur-md focus:outline-none sm:text-sm text-white flex items-center">
                                 <span className="block truncate font-medium">{category.name}</span>
                                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
-                                    <BsChevronDown className="h-4 w-4 text-gray-500" aria-hidden="true" />
+                                    <BsChevronDown className="h-4 w-4 text-gray-400" aria-hidden="true" />
                                 </span>
                             </Listbox.Button>
                             <Transition
@@ -98,12 +98,12 @@ export default function ModalSearch({ activeSearch, setActiveSearch }: { activeS
                                 leaveFrom="opacity-100"
                                 leaveTo="opacity-0"
                             >
-                                <Listbox.Options className="absolute mt-2 max-h-60 w-full overflow-auto custom-scrollbar rounded-md bg-[#1E1E20] py-2 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm text-white border border-white/10">
+                                <Listbox.Options className="absolute mt-2 max-h-60 w-full overflow-auto custom-scrollbar rounded-2xl bg-black/80 backdrop-blur-3xl py-2 text-base shadow-xl shadow-black/50 ring-1 ring-white/10 focus:outline-none sm:text-sm text-white border border-white/10 z-[70]">
                                     {searchCategories.map((option, index) => (
                                         <Listbox.Option
                                             key={index}
                                             className={({ active }) =>
-                                                `relative cursor-default select-none py-2.5 pl-5 pr-4 ${
+                                                `relative cursor-pointer select-none py-2.5 pl-5 pr-4 transition-colors ${
                                                     active ? 'bg-white/10' : ''
                                                 }`
                                             }
@@ -124,10 +124,10 @@ export default function ModalSearch({ activeSearch, setActiveSearch }: { activeS
                         <input 
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
-                            className='focus:bg-black/50 w-full py-4 px-7 pr-14 rounded-lg backdrop-blur-md bg-black/30 outline-none border border-transparent focus:border-white/30 transition-all duration-300' 
+                            className='w-full py-4 px-7 pr-14 rounded-xl bg-white/5 hover:bg-white/10 focus:bg-white/10 outline-none border border-white/10 hover:border-white/20 focus:border-white/30 transition-all duration-300 text-white placeholder:text-white/50' 
                             name='search' 
                             type="text" 
-                            placeholder='Поиск...' 
+                            placeholder='Найти фильм, сериал, игру...' 
                             autoComplete='off' 
                         />
                         <button type='submit'>
@@ -142,7 +142,7 @@ export default function ModalSearch({ activeSearch, setActiveSearch }: { activeS
 
                 {/* SEARCH RESULTS DROPDOWN */}
                 {results && (
-                    <div className="w-full bg-[#1E1E20] border border-white/10 rounded-xl mt-2 overflow-hidden shadow-2xl flex flex-col max-h-[60vh]">
+                    <div className="w-full bg-black/40 backdrop-blur-3xl border border-white/10 rounded-xl mt-2 overflow-hidden shadow-2xl shadow-black/50 flex flex-col max-h-[60vh]">
                         <div className="overflow-y-auto custom-scrollbar p-2">
                             {category.id === 'search' ? (
                                 // GROUPED RESULTS

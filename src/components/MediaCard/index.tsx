@@ -35,7 +35,7 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
         setImgSrc(img || (type === 'game' ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${id}/header.jpg` : '/img/poster/spider.jpg'));
     }, [img, type, id]);
 
-    return (  
+    return (
         <div className="flex flex-col gap-4 group h-full">
             <div className={`w-full relative rounded-lg overflow-hidden ${size === 'small' ? 'h-[300px]' : 'h-[400px]'}`}>
                 {(rate !== 0 && rate !== '0' && rate !== '0.0' && rate !== 'N/A') && (
@@ -43,8 +43,8 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
                         {typeof rate === 'number' ? rate.toFixed(1) : rate}
                     </div>
                 )}
-                
-                <button 
+
+                <button
                     onClick={handleToggleFavorite}
                     className='absolute top-3 left-3 rounded-full backdrop-blur-md bg-black/50 p-2 z-20 hover:bg-white/20 transition-all duration-300'
                 >
@@ -53,18 +53,18 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
 
                 <Link href={href} className="block w-full h-full relative">
                     {isHorizontal && (
-                        <Image 
-                            src={imgSrc} 
+                        <Image
+                            src={imgSrc}
                             alt={`${name} background`}
                             fill
-                            className='absolute inset-0 object-cover blur-xl opacity-60 scale-150 z-0' 
+                            className='absolute inset-0 object-cover blur-xl opacity-60 scale-150 z-0'
                         />
                     )}
-                    <Image 
-                        src={imgSrc} 
+                    <Image
+                        src={imgSrc}
                         alt={name}
                         fill
-                        className={`flex rounded-lg w-full overflow-hidden transition-all duration-700 z-10 ${size === 'small' ? 'h-[300px]' : 'h-[400px]'} ${isHorizontal ? 'object-contain scale-100 group-hover:scale-105' : 'object-cover group-hover:scale-105'}`} 
+                        className={`flex rounded-lg w-full overflow-hidden transition-all duration-700 z-10 ${size === 'small' ? 'h-[300px]' : 'h-[400px]'} ${isHorizontal ? 'object-contain scale-100 group-hover:scale-105' : 'object-cover group-hover:scale-105'}`}
                         onLoad={(e) => {
                             const target = e.target as HTMLImageElement;
                             if (target.naturalWidth > target.naturalHeight) {
@@ -74,7 +74,7 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
                         onError={() => {
                             const steamFallback = type === 'game' ? (fallbackImg || `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${id}/header.jpg`) : null;
                             const defaultFallback = fallbackImg || '/img/poster/spider.jpg';
-                            
+
                             if (type === 'game' && steamFallback && imgSrc !== steamFallback && imgSrc !== defaultFallback) {
                                 setImgSrc(steamFallback);
                             } else if (imgSrc !== defaultFallback) {

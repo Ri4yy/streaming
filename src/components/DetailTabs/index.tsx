@@ -24,9 +24,9 @@ export default function DetailTabs({ media, type }: { media: TMDBDetail, type: '
                     <Tab as={Fragment}>
                         {({ selected }) => (
                             <button
-                            className={`${selected ? 'border-white text-white' : 'border-[#323234] text-[#cbcbd2]'} py-2.5 px-5 border-b-[2px] xs:w-fit w-full`}
+                                className={`${selected ? 'border-white text-white' : 'border-[#323234] text-[#cbcbd2]'} py-2.5 px-5 border-b-[2px] xs:w-fit w-full`}
                             >
-                            Подробная информация
+                                Подробная информация
                             </button>
                         )}
                     </Tab>
@@ -34,9 +34,9 @@ export default function DetailTabs({ media, type }: { media: TMDBDetail, type: '
                         <Tab as={Fragment}>
                             {({ selected }) => (
                                 <button
-                                className={`${selected ? 'border-white text-white' : 'border-[#323234] text-[#cbcbd2]'} py-2.5 px-5 border-b-[2px] xs:w-fit w-full`}
+                                    className={`${selected ? 'border-white text-white' : 'border-[#323234] text-[#cbcbd2]'} py-2.5 px-5 border-b-[2px] xs:w-fit w-full`}
                                 >
-                                Сезоны и серии
+                                    Сезоны и серии
                                 </button>
                             )}
                         </Tab>
@@ -45,9 +45,9 @@ export default function DetailTabs({ media, type }: { media: TMDBDetail, type: '
                         <Tab as={Fragment}>
                             {({ selected }) => (
                                 <button
-                                className={`${selected ? 'border-white text-white' : 'border-[#323234] text-[#cbcbd2]'} py-2.5 px-5 border-b-[2px] xs:w-fit w-full`}
+                                    className={`${selected ? 'border-white text-white' : 'border-[#323234] text-[#cbcbd2]'} py-2.5 px-5 border-b-[2px] xs:w-fit w-full`}
                                 >
-                                Выход серий
+                                    Выход серий
                                 </button>
                             )}
                         </Tab>

@@ -169,7 +169,7 @@ function CatalogFiltersContent({ genres, hideFilters = false, hideRatingToggle =
                     <input 
                         value={query}
                         onChange={e => setQuery(e.target.value)}
-                        className='focus:bg-black/50 w-full py-4 px-7 pr-14 rounded-lg backdrop-blur-md bg-[#1E1E20] outline-none transition-colors duration-300 border border-transparent focus:border-white/10' 
+                        className='w-full py-4 px-7 pr-14 rounded-xl bg-white/5 hover:bg-white/10 focus:bg-white/10 outline-none border border-white/10 hover:border-white/20 focus:border-white/30 transition-all duration-300 text-white placeholder:text-white/50' 
                         name='search' 
                         type="text" 
                         placeholder='Найти фильм, сериал, игру...' 

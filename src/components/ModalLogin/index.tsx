@@ -67,8 +67,8 @@ export default function ModalLogin({ active, setActive }: { active: boolean, set
 
     return (  
         <div className={`${active ? 'modal__active' : 'modal'} flex justify-center items-center`}>
-            <div className={`bg-black/80 backdrop-blur-xl md:pt-[60px] pt-8 md:px-[50px] px-[30px] md:pb-[50px] pb-6 rounded-2xl min-[440px]:w-[440px] w-[90%] h-fit z-[63] ${active ? 'flex ' : 'hidden'} relative`}>
-                <button onClick={() => setActive(false)} className="flex justify-center items-center absolute top-10 right-12 backdrop-blur-md bg-white/20 rounded-lg hover:rounded-full transition-all duration-300 w-10 h-10 z-[62]">
+            <div className={`bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl shadow-black/50 md:pt-[60px] pt-8 md:px-[50px] px-[30px] md:pb-[50px] pb-6 rounded-2xl min-[440px]:w-[440px] w-[90%] h-fit z-[63] ${active ? 'flex ' : 'hidden'} relative`}>
+                <button onClick={() => setActive(false)} className="flex justify-center items-center absolute top-10 right-12 backdrop-blur-md bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-300 w-10 h-10 z-[62]">
                     <IoClose className=' h-8 w-8' />
                 </button>
                 <form className='flex flex-col gap-8 w-full' onSubmit={(e) => { e.preventDefault(); handleAuth('signin'); }}>
@@ -77,12 +77,12 @@ export default function ModalLogin({ active, setActive }: { active: boolean, set
                     {error && <div className="text-red-500 text-sm text-center">{error}</div>}
 
                     <div className="group relative">
-                        <FaUserAlt className='absolute top-1/2 -translate-y-1/2 left-6 fill-white/50 group-focus-within:fill-white transition-colors duration-300' />
-                        <input value={email} onChange={e => setEmail(e.target.value)} required className='w-full py-[10px] pl-[60px] pr-6 rounded-lg border-[1px] border-white/10 bg-white/5 outline-none focus:border-white/70' name='email' type="email" placeholder='Email' autoComplete='email' />
+                        <FaUserAlt className='absolute top-1/2 -translate-y-1/2 left-6 fill-white/50 group-focus-within:fill-white transition-colors duration-300 z-10' />
+                        <input value={email} onChange={e => setEmail(e.target.value)} required className='w-full py-4 pl-[60px] pr-6 rounded-xl bg-white/5 hover:bg-white/10 focus:bg-white/10 outline-none border border-white/10 hover:border-white/20 focus:border-white/30 transition-all duration-300 text-white placeholder:text-white/50' name='email' type="email" placeholder='Email' autoComplete='email' />
                     </div>
                     <div className="group relative">
-                        <BiSolidLock className='absolute top-1/2 -translate-y-1/2 left-6 h-5 w-5 fill-white/50 group-focus-within:fill-white transition-colors duration-300' />
-                        <input value={password} onChange={e => setPassword(e.target.value)} required className='w-full py-[10px] pl-[60px] pr-6 rounded-lg border-[1px] border-white/10 bg-white/5 outline-none focus:border-white/70' name='password' type="password" placeholder='Пароль' autoComplete='current-password' />
+                        <BiSolidLock className='absolute top-1/2 -translate-y-1/2 left-6 h-5 w-5 fill-white/50 group-focus-within:fill-white transition-colors duration-300 z-10' />
+                        <input value={password} onChange={e => setPassword(e.target.value)} required className='w-full py-4 pl-[60px] pr-6 rounded-xl bg-white/5 hover:bg-white/10 focus:bg-white/10 outline-none border border-white/10 hover:border-white/20 focus:border-white/30 transition-all duration-300 text-white placeholder:text-white/50' name='password' type="password" placeholder='Пароль' autoComplete='current-password' />
                     </div>
                     <div className="flex flex-col gap-4 mt-2">
                         <button type="submit" disabled={loading} className='flex justify-center items-center group py-4 w-full rounded-lg bg-[#ff1414] relative overflow-hidden transition-all duration-500 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100'>

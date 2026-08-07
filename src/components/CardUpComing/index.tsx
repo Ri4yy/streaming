@@ -21,11 +21,11 @@ export default function CardUpComing({ name, desc, rate, img, href = "/movies/1"
         setIsFavorite(!isFavorite);
     };
 
-    return (  
+    return (
         <Link href={href} className='group'>
             <div className="flex flex-col relative w-full h-[350px] overflow-hidden rounded-xl">
                 <Image src={img} alt={name} fill className='absolute top-0 left-0 rounded-xl -z-10 h-full object-cover overflow-hidden w-full' />
-                <button 
+                <button
                     onClick={toggleFavorite}
                     className='absolute top-5 right-5 rounded-full backdrop-blur-md bg-black/50 p-2 z-20 hover:bg-white/20 transition-all duration-300'
                 >

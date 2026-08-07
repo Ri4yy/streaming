@@ -31,7 +31,7 @@ export default function ReleaseSlider({ movies }: { movies: TMDBMedia[] }) {
                         spaceBetween={50}
                         slidesPerView={5}
                         >
-                            <div slot="container-start" className="absolute top-0 left-0 w-full h-[calc(100%-76px)] bg-[#f8f7f9]/10 backdrop-blur-sm rounded-l-lg z-0 pointer-events-none"></div>
+                            <div slot="container-start" className="absolute top-0 left-0 w-full h-[calc(100%-76px)] bg-white/5 backdrop-blur-3xl border border-white/10 shadow-2xl rounded-l-2xl z-0 pointer-events-none"></div>
                             {movies.map((movie) => (
                                 <SwiperSlide key={movie.id}>
                                     <MediaCard 
