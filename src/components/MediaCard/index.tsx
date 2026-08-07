@@ -23,6 +23,7 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
     const { getMedia, toggleFavorite } = useUserMedia();
     const [imgSrc, setImgSrc] = useState(img || (type === 'game' ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${id}/header.jpg` : '/img/poster/spider.jpg'));
     const [isHorizontal, setIsHorizontal] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
     const currentMedia = getMedia(type, String(id));
     const isFavorite = currentMedia?.is_favorite || false;
 
@@ -37,7 +38,12 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
 
     return (
         <div className="flex flex-col gap-4 group h-full">
-            <div className={`w-full relative rounded-lg overflow-hidden ${size === 'small' ? 'h-[300px]' : 'h-[400px]'}`}>
+            <div className={`w-full relative rounded-lg overflow-hidden bg-white/5 ${size === 'small' ? 'h-[300px]' : 'h-[400px]'}`}>
+                {/* Image loading skeleton */}
+                {!isLoaded && (
+                    <div className="absolute inset-0 bg-white/10 animate-pulse z-0"></div>
+                )}
+                
                 {(rate !== 0 && rate !== '0' && rate !== '0.0' && rate !== 'N/A') && (
                     <div className='absolute top-3 right-3 text-white rounded-md backdrop-blur-md bg-black/50 py-1 px-2.5 z-20'>
                         {typeof rate === 'number' ? rate.toFixed(1) : rate}
@@ -64,8 +70,9 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
                         src={imgSrc}
                         alt={name}
                         fill
-                        className={`flex rounded-lg w-full overflow-hidden transition-all duration-700 z-10 ${size === 'small' ? 'h-[300px]' : 'h-[400px]'} ${isHorizontal ? 'object-contain scale-100 group-hover:scale-105' : 'object-cover group-hover:scale-105'}`}
+                        className={`flex rounded-lg w-full overflow-hidden transition-all duration-700 z-10 ${size === 'small' ? 'h-[300px]' : 'h-[400px]'} ${isHorizontal ? 'object-contain scale-100 group-hover:scale-105' : 'object-cover group-hover:scale-105'} ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
                         onLoad={(e) => {
+                            setIsLoaded(true);
                             const target = e.target as HTMLImageElement;
                             if (target.naturalWidth > target.naturalHeight) {
                                 setIsHorizontal(true);
@@ -77,6 +84,7 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
 
                             if (type === 'game' && steamFallback && imgSrc !== steamFallback && imgSrc !== defaultFallback) {
                                 setImgSrc(steamFallback);
+                                setIsHorizontal(true);
                             } else if (imgSrc !== defaultFallback) {
                                 setImgSrc(defaultFallback);
                             }

@@ -74,7 +74,7 @@ export const steamApi = {
             const res = await fetch(`${STEAM_SPY_API}?request=top100in2weeks`, {
                 next: { revalidate: 3600 * 24 } // кэшируем на сутки
             });
-            if (!res.ok) throw new Error('SteamSpy fetch failed');
+            if (!res.ok) return [];
             const data = await res.json();
             return Object.values(data);
         } catch (error) {
@@ -89,7 +89,7 @@ export const steamApi = {
             const res = await fetch(`${STEAM_STORE_API}/appdetails?appids=${appId}&l=russian`, {
                 next: { revalidate: 3600 * 24 }
             });
-            if (!res.ok) throw new Error('Steam Store fetch failed');
+            if (!res.ok) return null;
             const data = await res.json();
             
             // API возвращает объект { [appId]: { success: boolean, data: SteamGameDetails } }
@@ -153,7 +153,7 @@ export const steamApi = {
             const res = await fetch(`https://store.steampowered.com/api/featuredcategories?l=russian`, {
                 next: { revalidate: 3600 * 24 }
             });
-            if (!res.ok) throw new Error('Steam featuredcategories failed');
+            if (!res.ok) return [];
             const data = await res.json();
             
             const newReleases = data.new_releases?.items || [];
@@ -178,7 +178,7 @@ export const steamApi = {
             const res = await fetch('https://store.steampowered.com/search/results?q=&category1=998&filter=popularcomingsoon', {
                 next: { revalidate: 3600 * 24 }
             });
-            if (!res.ok) throw new Error('Steam search fetch failed');
+            if (!res.ok) return [];
             const text = await res.text();
             
             const ids: string[] = [];
@@ -330,7 +330,7 @@ export const steamApi = {
     searchGames: async (query: string) => {
         try {
             const res = await fetch(`https://steamcommunity.com/actions/SearchApps/${encodeURIComponent(query)}`);
-            if (!res.ok) throw new Error('Steam search failed');
+            if (!res.ok) return [];
             return await res.json();
         } catch (error) {
             console.error(error);

@@ -11,6 +11,61 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import MediaCard from '@/components/MediaCard';
 import { User, Heart, Settings } from 'lucide-react';
 
+function ProfileSkeleton() {
+    return (
+        <main className='mt-[120px] mb-[100px]'>
+            <div className="container flex lg:flex-row flex-col gap-20">
+                {/* Left Sidebar Skeleton (Exact match of real tabs) */}
+                <div className="relative z-10 flex flex-col space-y-1 min-w-[280px] h-fit rounded-2xl border border-white/10 bg-black/40 p-2 shadow-xl shadow-black/50 before:content-[''] before:absolute before:inset-0 before:backdrop-blur-3xl before:rounded-2xl before:-z-10">
+                    <div className="flex w-full items-center rounded-xl border border-white/10 bg-white/5 p-3 shadow-sm">
+                        <div className="flex flex-1 items-center gap-3">
+                            <User className="h-4 w-4 text-white/90" />
+                            <span className="whitespace-nowrap font-medium text-sm leading-tight tracking-tight text-white/90">Профиль</span>
+                        </div>
+                    </div>
+                    <div className="my-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent relative z-10" />
+                    <div className="flex w-full items-center rounded-xl border border-transparent p-3 opacity-70">
+                        <div className="flex flex-1 items-center gap-3">
+                            <Heart className="h-4 w-4 text-white/60" />
+                            <span className="whitespace-nowrap font-medium text-sm leading-tight tracking-tight text-white/70">Избранное</span>
+                        </div>
+                    </div>
+                    <div className="my-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent relative z-10" />
+                    <div className="flex w-full items-center rounded-xl border border-transparent p-3 opacity-70">
+                        <div className="flex flex-1 items-center gap-3">
+                            <Settings className="h-4 w-4 text-white/60" />
+                            <span className="whitespace-nowrap font-medium text-sm leading-tight tracking-tight text-white/70">Настройки</span>
+                        </div>
+                    </div>
+                </div>
+                
+                {/* Right Content Skeleton (Exact match of Profile Tab) */}
+                <div className='w-full'>
+                    <div className="flex flex-col p-10 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl animate-pulse">
+                        {/* Avatar */}
+                        <div className='w-[80px] h-[80px] rounded-xl bg-white/10'></div>
+                        {/* Info List */}
+                        <ul className='flex flex-col divide-y-[1px] divide-[#dee2e6]/20 mt-12'>
+                            <li className='flex xs:flex-row flex-col gap-y-1 py-4'>
+                                <span className='text-[#8C8C8C] xs:w-1/3'>Email</span>
+                                <div className='h-5 w-48 bg-white/10 rounded'></div>
+                            </li>
+                            <li className='flex xs:flex-row flex-col gap-y-1 py-4'>
+                                <span className='text-[#8C8C8C] xs:w-1/3'>Статус</span>
+                                <div className='h-5 w-32 bg-white/10 rounded'></div>
+                            </li>
+                            <li className='flex xs:flex-row flex-col gap-y-1 py-4'>
+                                <span className='text-[#8C8C8C] xs:w-1/3'>Всего в Избранном</span>
+                                <div className='h-5 w-24 bg-white/10 rounded'></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    );
+}
+
 function TabCustom({ text, icon: Icon }: { text: string, icon: any }) {
     return (
         <Tab as={Fragment}>
@@ -135,7 +190,7 @@ function ProfileContent() {
     };
 
     if (loading) {
-        return <div className="mt-[120px] mb-[100px] text-center text-white">Загрузка...</div>;
+        return <ProfileSkeleton />;
     }
 
     return (  
@@ -213,7 +268,7 @@ function ProfileContent() {
 
 export default function ProfilePage() {
     return (
-        <React.Suspense fallback={<div className="mt-[120px] mb-[100px] text-center text-white">Загрузка...</div>}>
+        <React.Suspense fallback={<ProfileSkeleton />}>
             <ProfileContent />
         </React.Suspense>
     );
