@@ -127,14 +127,6 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
                         playing: playing,
                         volume: volume,
                         muted: muted,
-                        light: true,
-                        playIcon: (
-                            <div className="absolute inset-0 z-10 flex justify-center items-center cursor-pointer group bg-black/40 hover:bg-black/20 transition-colors">
-                                <button className="w-20 h-20 bg-white/20 group-hover:bg-[#ff1414] backdrop-blur-md rounded-full flex justify-center items-center transition-all duration-300">
-                                    <BsPlayFill className="text-white text-5xl ml-2" />
-                                </button>
-                            </div>
-                        ),
                         onProgress: handleProgress,
                         onDuration: handleDuration,
                         onEnded: () => setPlaying(false),
@@ -147,26 +139,27 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
                         controls: false,
                         config: {
                             youtube: {
-                                playerVars: { rel: 0 }
+                                playerVars: { 
+                                    rel: 0,
+                                    autoplay: autoPlay ? 1 : 0
+                                }
                             }
                         }
                     } as any)}
                 />
             )}
 
-            {/* Click to play/pause overlay (middle of screen) - only active after initial start */}
-            {hasStarted && (
-                <div 
-                    className={`absolute inset-0 z-10 flex justify-center items-center cursor-pointer transition-opacity duration-300 ${!playing || showControls ? 'bg-black/40 opacity-100' : 'opacity-0 pointer-events-none'}`}
-                    onClick={handlePlayPause}
+            {/* Click to play/pause overlay (middle of screen) */}
+            <div 
+                className={`absolute inset-0 z-10 flex justify-center items-center cursor-pointer transition-opacity duration-300 ${!playing || showControls ? 'bg-black/40 opacity-100' : 'opacity-0 pointer-events-none'}`}
+                onClick={handlePlayPause}
+            >
+                <button 
+                    className={`w-20 h-20 bg-white/20 hover:bg-[#ff1414] backdrop-blur-md rounded-full flex justify-center items-center transition-all duration-300 ${!playing ? 'scale-100' : 'scale-75 opacity-0'}`}
                 >
-                    <button 
-                        className={`w-20 h-20 bg-white/20 hover:bg-[#ff1414] backdrop-blur-md rounded-full flex justify-center items-center transition-all duration-300 ${!playing ? 'scale-100' : 'scale-75 opacity-0'}`}
-                    >
-                        <BsPlayFill className="text-white text-5xl ml-2" />
-                    </button>
-                </div>
-            )}
+                    <BsPlayFill className="text-white text-5xl ml-2" />
+                </button>
+            </div>
 
             {/* Bottom Controls Bar */}
             <div 
