@@ -196,9 +196,9 @@ export const googleBooksApi = {
         return url.replace('&edge=curl', '').replace('&zoom=1', '&zoom=3');
     },
 
-    searchBooks: async (query: string): Promise<GoogleBook[]> => {
+    searchBooks: async (query: string, startIndex: number = 0): Promise<GoogleBook[]> => {
         try {
-            const url = `${GOOGLE_BOOKS_API}?q=${encodeURIComponent(query)}&langRestrict=ru&maxResults=40&key=${GOOGLE_BOOKS_API_KEY}`;
+            const url = `${GOOGLE_BOOKS_API}?q=${encodeURIComponent(query)}&langRestrict=ru&maxResults=40&startIndex=${startIndex}&key=${GOOGLE_BOOKS_API_KEY}`;
             const res = await fetch(url);
             if (!res.ok) return [];
             const data: GoogleBooksResponse = await res.json();

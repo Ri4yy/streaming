@@ -318,7 +318,7 @@ export const steamApi = {
 
     // Вспомогательная функция для вертикальных 9/16 обложек
     getVerticalImage: (appId: number | string): string => {
-        return `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/library_600x900_2x.jpg`;
+        return `/api/steam/image/${appId}`;
     },
 
     // Вспомогательная функция для больших 16/9 баннеров (высокое качество)

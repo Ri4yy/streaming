@@ -7,26 +7,26 @@ import CatalogFilters from '@/components/CatalogFilters';
 import AnimeHeroSwiper from '@/components/AnimeHeroSwiper';
 import { tmdbApi } from '@/services/tmdb';
 
-import Pagination from '@/components/Pagination';
+import LoadMoreGrid from '@/components/LoadMoreGrid';
 import WeeklySlider from '@/components/WeeklySlider';
 
 
 export const metadata: Metadata = {
-  title: "Аниме",
-  description: "Смотреть и искать новые и популярные аниме.",
+    title: "Аниме",
+    description: "Смотреть и искать новые и популярные аниме.",
 };
 
-export default async function AnimePage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string }> }) {
-    const { q, sort, genres, page: pageParam } = await searchParams;
+export default async function AnimePage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string, yearMin?: string, yearMax?: string, ratingMin?: string, ratingMax?: string }> }) {
+    const { q, sort, genres, page: pageParam, yearMin, yearMax, ratingMin, ratingMax } = await searchParams;
     const page = parseInt(pageParam || '1');
 
     let allAnime = [];
     let totalPages = 1;
-    
+
     // TMDB TV genre IDs mapped for Anime context
     let arrGenre = [
-        {id: 10759, name: 'Экшен/Приключения'}, {id: 35, name: 'Комедия'}, {id: 18, name: 'Драма'},
-        {id: 9648, name: 'Детективы'}, {id: 10765, name: 'Фэнтези/Фантастика'}, {id: 10768, name: 'Военное'}
+        { id: 10759, name: 'Экшен/Приключения' }, { id: 35, name: 'Комедия' }, { id: 18, name: 'Драма' },
+        { id: 9648, name: 'Детективы' }, { id: 10765, name: 'Фэнтези/Фантастика' }, { id: 10768, name: 'Военное' }
     ];
 
     if (q) {
@@ -38,7 +38,7 @@ export default async function AnimePage({ searchParams }: { searchParams: Promis
             with_genres: '16',
             with_original_language: 'ja'
         };
-        
+
         if (genres) {
             const selectedGenreNames = genres.split(',');
             const selectedGenreIds = arrGenre
@@ -49,7 +49,7 @@ export default async function AnimePage({ searchParams }: { searchParams: Promis
                 options.with_genres = `16,${selectedGenreIds.join(',')}`;
             }
         }
-        
+
         if (sort) {
             if (sort === 'rating') options.sort_by = 'vote_average.desc';
             if (sort === 'rating_asc') options.sort_by = 'vote_average.asc';
@@ -66,7 +66,13 @@ export default async function AnimePage({ searchParams }: { searchParams: Promis
             options['first_air_date.lte'] = today.toISOString().split('T')[0];
             options.sort_by = 'popularity.desc'; // Recent AND popular
         }
-        
+
+        if (yearMin) options['first_air_date.gte'] = `${yearMin}-01-01`;
+        if (yearMax) options['first_air_date.lte'] = `${yearMax}-12-31`;
+        if (ratingMin) options['vote_average.gte'] = ratingMin;
+        if (ratingMax) options['vote_average.lte'] = ratingMax;
+        if (ratingMin || ratingMax) options['vote_count.gte'] = '10';
+
         const discoverRes = await tmdbApi.getDiscoverPaginated('tv', options, page);
         allAnime = discoverRes.results;
         totalPages = discoverRes.total_pages;
@@ -75,17 +81,17 @@ export default async function AnimePage({ searchParams }: { searchParams: Promis
     // Hero item
     const heroAnime = allAnime.length > 0 ? allAnime[0] : null;
     const swiperAnimes = allAnime.length > 1 ? allAnime.slice(1, 6) : [];
-    
+
     // Weekly slider items
     const trendingRes = await tmdbApi.getTrending('tv', 'week', 1);
     const weeklyAnime = trendingRes.results.filter((item: any) => item.genre_ids?.includes(16) || item.original_language === 'ja').slice(0, 20);
 
     let paginatedAnime = allAnime.length > 0 ? (q ? allAnime : allAnime.slice(1)) : [];
 
-    return (  
+    return (
         <main>
             <section className='relative w-full lg:h-screen h-fit pt-40 lg:py-0 md:min-h-[800px] flex flex-col justify-center lg:justify-end overflow-hidden'>
-                <Image 
+                <Image
                     src={tmdbApi.getImageUrl(heroAnime?.backdrop_path || heroAnime?.poster_path || null, 'original')}
                     alt="Hero"
                     fill
@@ -127,30 +133,26 @@ export default async function AnimePage({ searchParams }: { searchParams: Promis
             </section>
 
             <section className='container lg:pb-[120px] md:pb-14 pb-8'>
-                {!q && !genres && !sort && weeklyAnime.length > 0 && (
+                {!q && weeklyAnime.length > 0 && (
                     <WeeklySlider items={weeklyAnime} type="anime" />
                 )}
 
                 <CatalogFilters genres={arrGenre} />
-                <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9">
-                    {paginatedAnime.length > 0 ? paginatedAnime.map((anime, index) => (
-                        <MediaCard 
-                            key={`${anime.id}-${index}`}
-                            id={anime.id}
-                            name={anime.name || anime.title || ''} 
-                            year={anime.first_air_date ? anime.first_air_date.split('-')[0] : 'N/A'} 
-                            genre="Аниме" 
-                            rate={anime.vote_average || 0} 
-                            img={tmdbApi.getImageUrl(anime.poster_path)} 
-                            type="anime"
-                            href={`/anime/${anime.id}`}
-                        />
-                    )) : (
-                        <p className="text-gray-400 col-span-full">Ничего не найдено.</p>
-                    )}
-                </div>
 
-                {totalPages > 1 && <Pagination totalPages={totalPages} />}
+                <LoadMoreGrid
+                    initialItems={paginatedAnime.map((anime: any) => ({
+                        id: anime.id,
+                        name: anime.name || anime.title || '',
+                        year: anime.first_air_date ? anime.first_air_date.split('-')[0] : 'N/A',
+                        genre: "Аниме",
+                        rate: anime.vote_average || 0,
+                        img: tmdbApi.getImageUrl(anime.poster_path),
+                        type: 'anime',
+                        href: `/anime/${anime.id}`
+                    }))}
+                    catalogType="anime"
+                    totalPages={totalPages}
+                />
             </section>
         </main>
     );

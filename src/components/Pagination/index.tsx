@@ -6,22 +6,16 @@ import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 
 interface PaginationProps {
     totalPages: number;
+    currentPage: number;
+    onPageChange: (page: number) => void;
 }
 
-function PaginationContent({ totalPages }: PaginationProps) {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    
-    const currentPage = parseInt(searchParams.get('page') || '1');
-
+export default function Pagination({ totalPages, currentPage, onPageChange }: PaginationProps) {
     if (totalPages <= 1) return null;
 
     const handlePageChange = (page: number) => {
         if (page < 1 || page > totalPages) return;
-        
-        const params = new URLSearchParams(searchParams.toString());
-        params.set('page', page.toString());
-        router.push(`?${params.toString()}`, { scroll: true });
+        onPageChange(page);
     };
 
     const renderPageNumbers = () => {
@@ -54,7 +48,7 @@ function PaginationContent({ totalPages }: PaginationProps) {
     };
 
     return (
-        <div className="flex items-center justify-center gap-2 mt-12 mb-8">
+        <div className="flex items-center justify-center gap-2 mt-6">
             <button 
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -97,13 +91,5 @@ function PaginationContent({ totalPages }: PaginationProps) {
                 <BsChevronRight />
             </button>
         </div>
-    );
-}
-
-export default function Pagination({ totalPages }: PaginationProps) {
-    return (
-        <Suspense fallback={<div className="h-10 w-full animate-pulse mt-12 mb-8"></div>}>
-            <PaginationContent totalPages={totalPages} />
-        </Suspense>
     );
 }

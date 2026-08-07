@@ -5,28 +5,28 @@ import MediaCard from '@/components/MediaCard';
 import CatalogFilters from '@/components/CatalogFilters';
 import { tmdbApi } from '@/services/tmdb';
 
-import Pagination from '@/components/Pagination';
+import LoadMoreGrid from '@/components/LoadMoreGrid';
 import WeeklySlider from '@/components/WeeklySlider';
 
 
 export const metadata: Metadata = {
-  title: "Фильмы",
-  description: "Смотреть и искать лучшие фильмы в высоком качестве.",
+    title: "Фильмы",
+    description: "Смотреть и искать лучшие фильмы в высоком качестве.",
 };
 
-export default async function MoviesPage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string }> }) {
-    const { q, sort, genres, page: pageParam } = await searchParams;
+export default async function MoviesPage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string, yearMin?: string, yearMax?: string, ratingMin?: string, ratingMax?: string }> }) {
+    const { q, sort, genres, page: pageParam, yearMin, yearMax, ratingMin, ratingMax } = await searchParams;
     const page = parseInt(pageParam || '1');
 
     let allMovies = [];
     let totalPages = 1;
-    
+
     // TMDB genre IDs for movies
     let arrGenre = [
-        {id: 28, name: 'Боевики'}, {id: 37, name: 'Вестерны'}, {id: 10752, name: 'Военное'},
-        {id: 9648, name: 'Детективы'}, {id: 99, name: 'Документальное'}, {id: 35, name: 'Комедия'},
-        {id: 18, name: 'Драма'}, {id: 80, name: 'Криминал'}, {id: 27, name: 'Ужасы'},
-        {id: 53, name: 'Триллеры'}, {id: 14, name: 'Фэнтези'}, {id: 878, name: 'Фантастика'}
+        { id: 28, name: 'Боевики' }, { id: 37, name: 'Вестерны' }, { id: 10752, name: 'Военное' },
+        { id: 9648, name: 'Детективы' }, { id: 99, name: 'Документальное' }, { id: 35, name: 'Комедия' },
+        { id: 18, name: 'Драма' }, { id: 80, name: 'Криминал' }, { id: 27, name: 'Ужасы' },
+        { id: 53, name: 'Триллеры' }, { id: 14, name: 'Фэнтези' }, { id: 878, name: 'Фантастика' }
     ];
 
     if (q) {
@@ -35,7 +35,7 @@ export default async function MoviesPage({ searchParams }: { searchParams: Promi
         totalPages = searchRes.total_pages;
     } else {
         const options: Record<string, string> = {};
-        
+
         if (genres) {
             const selectedGenreNames = genres.split(',');
             const selectedGenreIds = arrGenre
@@ -45,7 +45,7 @@ export default async function MoviesPage({ searchParams }: { searchParams: Promi
                 options.with_genres = selectedGenreIds.join(',');
             }
         }
-        
+
         if (sort) {
             if (sort === 'rating') options.sort_by = 'vote_average.desc';
             if (sort === 'rating_asc') options.sort_by = 'vote_average.asc';
@@ -56,7 +56,13 @@ export default async function MoviesPage({ searchParams }: { searchParams: Promi
         } else {
             options.sort_by = 'popularity.desc';
         }
-        
+
+        if (yearMin) options['primary_release_date.gte'] = `${yearMin}-01-01`;
+        if (yearMax) options['primary_release_date.lte'] = `${yearMax}-12-31`;
+        if (ratingMin) options['vote_average.gte'] = ratingMin;
+        if (ratingMax) options['vote_average.lte'] = ratingMax;
+        if (ratingMin || ratingMax) options['vote_count.gte'] = '10'; // Ensure we don't get 10.0 ratings with 1 vote
+
         const discoverRes = await tmdbApi.getDiscoverPaginated('movie', options, page);
         allMovies = discoverRes.results;
         totalPages = discoverRes.total_pages;
@@ -73,7 +79,7 @@ export default async function MoviesPage({ searchParams }: { searchParams: Promi
         <main>
             <section className='lg:px-[80px] md:px-10 px-5 pt-[120px]'>
                 <div className="rounded-2xl h-[700px] w-full relative overflow-hidden flex items-center justify-center">
-                    <Image 
+                    <Image
                         src={tmdbApi.getImageUrl(heroMovie?.backdrop_path || heroMovie?.poster_path || null, 'original')}
                         alt="Hero"
                         fill
@@ -91,30 +97,26 @@ export default async function MoviesPage({ searchParams }: { searchParams: Promi
             </section>
 
             <section className='container lg:pb-[120px] md:pb-14 pb-8'>
-                {!q && !genres && !sort && (
+                {!q && (
                     <WeeklySlider items={weeklyMovies} type="movie" />
                 )}
-                
+
                 <CatalogFilters genres={arrGenre} />
-                <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9">
-                    {paginatedMovies.length > 0 ? paginatedMovies.map((movie, index) => (
-                        <MediaCard 
-                            key={`${movie.id}-${index}`}
-                            id={movie.id}
-                            name={movie.title || movie.name || ''} 
-                            year={movie.release_date ? movie.release_date.split('-')[0] : 'N/A'} 
-                            genre="Фильм" 
-                            rate={movie.vote_average || 0} 
-                            img={tmdbApi.getImageUrl(movie.poster_path)}
-                            type="movie"
-                            href={`/movies/${movie.id}`}
-                        />
-                    )) : (
-                        <p className="text-gray-400 col-span-full">Ничего не найдено.</p>
-                    )}
-                </div>
-                
-                {totalPages > 1 && <Pagination totalPages={totalPages} />}
+
+                <LoadMoreGrid
+                    initialItems={paginatedMovies.map((movie: any) => ({
+                        id: movie.id,
+                        name: movie.title || movie.name || '',
+                        year: movie.release_date ? movie.release_date.split('-')[0] : 'N/A',
+                        genre: "Фильм",
+                        rate: movie.vote_average || 0,
+                        img: tmdbApi.getImageUrl(movie.poster_path),
+                        type: 'movie',
+                        href: `/movies/${movie.id}`
+                    }))}
+                    catalogType="movie"
+                    totalPages={totalPages}
+                />
             </section>
         </main>
     );
