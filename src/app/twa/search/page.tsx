@@ -66,14 +66,16 @@ export default function TWASearchPage() {
           <button
             key={t}
             onClick={() => setType(t)}
-            className={`relative px-4 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors ${
-              type === t ? 'text-white' : 'bg-white/10 text-gray-300 hover:text-white'
+            className={`relative px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 whitespace-nowrap ${
+              type === t 
+                ? 'text-white' 
+                : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white backdrop-blur-md shadow-sm'
             }`}
           >
             {type === t && (
               <motion.div
                 layoutId="active-search-tab"
-                className="absolute inset-0 bg-red-500 rounded-full z-0"
+                className="absolute inset-0 bg-[#ff1414]/20 border border-[#ff1414]/40 rounded-xl z-0 backdrop-blur-md shadow-sm"
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
