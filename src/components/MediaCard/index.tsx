@@ -51,7 +51,7 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
                     <Heart className={`w-5 h-5 transition-all duration-300 ${isFavorite ? 'fill-red-500 stroke-red-500 scale-110' : 'stroke-white'}`} />
                 </button>
 
-                <Link href={href}>
+                <Link href={href} className="block w-full h-full relative">
                     {isHorizontal && (
                         <Image 
                             src={imgSrc} 
