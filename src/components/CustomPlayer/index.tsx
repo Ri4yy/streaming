@@ -12,6 +12,7 @@ interface CustomPlayerProps {
 export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProps) {
     const playerRef = useRef<HTMLVideoElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const [isMounted, setIsMounted] = useState(false);
     
     const [playing, setPlaying] = useState(autoPlay);
     const [volume, setVolume] = useState(0.8);
@@ -24,6 +25,7 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
     const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
+        setIsMounted(true);
         const handleFullscreenChange = () => {
             setIsFullscreen(!!document.fullscreenElement);
         };
@@ -47,10 +49,9 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
         }
     };
 
-    const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
-        if (duration > 0) {
-            setPlayed(e.currentTarget.currentTime / duration);
-        }
+    const handleProgress = (state: { played: number, playedSeconds: number }) => {
+        if (!playing) return;
+        setPlayed(state.played);
     };
 
     const handleSeekChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,8 +64,8 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
         }
     };
 
-    const handleDurationChange = (e: React.SyntheticEvent<HTMLVideoElement>) => {
-        setDuration(e.currentTarget.duration);
+    const handleDuration = (duration: number) => {
+        setDuration(duration);
     };
 
     const toggleFullscreen = () => {
@@ -115,25 +116,32 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
             }}
         >
             {/* Player */}
-            <ReactPlayer
-                ref={playerRef}
-                src={url}
-                playing={playing}
-                volume={volume}
-                muted={muted}
-                onTimeUpdate={handleTimeUpdate}
-                onDurationChange={handleDurationChange}
-                onEnded={() => setPlaying(false)}
-                onPlay={() => setPlaying(true)}
-                onPause={() => setPlaying(false)}
-                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-                controls={false} // Use custom controls
-                config={{
-                    youtube: {
-                        rel: 0
-                    }
-                }}
-            />
+            {isMounted && (
+                // @ts-ignore
+                <ReactPlayer
+                    ref={playerRef}
+                    url={url}
+                    width="100%"
+                    height="100%"
+                    playing={playing}
+                    volume={volume}
+                    muted={muted}
+                    light={true} // Fetch and show thumbnail before playing, fixes black screen issues
+                    playIcon={<React.Fragment></React.Fragment>} // Hide default play icon since we have our own
+                    onProgress={handleProgress as any}
+                    onDuration={handleDuration as any}
+                    onEnded={() => setPlaying(false)}
+                    onPlay={() => setPlaying(true)}
+                    onPause={() => setPlaying(false)}
+                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                    controls={false}
+                    config={{
+                        youtube: {
+                            playerVars: { rel: 0 }
+                        }
+                    } as any}
+                />
+            )}
 
             {/* Click to play/pause overlay (middle of screen) */}
             <div 

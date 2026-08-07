@@ -76,7 +76,7 @@ export default function TrailerModal({ trailerKey }: TrailerModalProps) {
                                         <IoClose size={40} />
                                     </button>
                                     <div className="w-full aspect-video relative rounded-2xl overflow-hidden">
-                                        {isOpen && <CustomPlayer url={`https://www.youtube.com/watch?v=${trailerKey}`} autoPlay />}
+                                        {isOpen && <CustomPlayer url={`https://www.youtube.com/watch?v=${trailerKey}`} />}
                                     </div>
                                 </Dialog.Panel>
                             </Transition.Child>
