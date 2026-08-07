@@ -21,7 +21,7 @@ export default function AnimeLoading() {
                             <div className="h-8 w-16 bg-white/10 rounded"></div>
                         </div>
                         <div className="flex xs:flex-row flex-col xs:items-center gap-4 mt-12">
-                            <div className="h-14 w-40 bg-[#CAE962]/50 rounded-xl"></div>
+                            <div className="h-14 w-40 bg-[#ff1414]/50 rounded-xl"></div>
                             <div className="h-14 w-40 bg-white/10 border border-white/10 rounded-xl"></div>
                         </div>
                     </div>
