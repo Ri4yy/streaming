@@ -57,7 +57,6 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
                             src={imgSrc} 
                             alt={`${name} background`}
                             fill
-                            unoptimized
                             className='absolute inset-0 object-cover blur-xl opacity-60 scale-150 z-0' 
                         />
                     )}
@@ -65,7 +64,6 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
                         src={imgSrc} 
                         alt={name}
                         fill
-                        unoptimized
                         className={`flex rounded-lg w-full overflow-hidden transition-all duration-700 z-10 ${size === 'small' ? 'h-[250px]' : 'h-[400px]'} ${isHorizontal ? 'object-contain scale-100 group-hover:scale-105' : 'object-cover group-hover:scale-105'}`} 
                         onLoad={(e) => {
                             const target = e.target as HTMLImageElement;
