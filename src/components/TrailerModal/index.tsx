@@ -35,7 +35,7 @@ export default function TrailerModal({ trailerKey }: TrailerModalProps) {
                         alt="Trailer thumbnail" 
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex justify-center items-center">
+                    <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors flex justify-center items-center">
                         <button className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex justify-center items-center group-hover:bg-[#ff1414] transition-colors duration-300">
                             <BsPlayFill className="text-white text-3xl ml-1" />
                         </button>

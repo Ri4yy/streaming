@@ -118,8 +118,6 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
             <ReactPlayer
                 ref={playerRef}
                 src={url}
-                width="100%"
-                height="100%"
                 playing={playing}
                 volume={volume}
                 muted={muted}
@@ -128,7 +126,7 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
                 onEnded={() => setPlaying(false)}
                 onPlay={() => setPlaying(true)}
                 onPause={() => setPlaying(false)}
-                style={{ position: 'absolute', top: 0, left: 0 }}
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
                 controls={false} // Use custom controls
                 config={{
                     youtube: {
