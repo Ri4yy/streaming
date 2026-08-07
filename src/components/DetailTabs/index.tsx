@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { FaUserAlt } from 'react-icons/fa';
 import { FaMessage } from 'react-icons/fa6';
 import { MdEmail } from 'react-icons/md';
-import CustomPlayer from '@/components/CustomPlayer';
 import { TMDBDetail, tmdbApi } from '@/services/tmdb';
 
 export default function DetailTabs({ media, type }: { media: TMDBDetail, type: 'movie' | 'tv' | 'anime' }) {
@@ -15,8 +14,6 @@ export default function DetailTabs({ media, type }: { media: TMDBDetail, type: '
     const minutes = runtime % 60;
     const runtimeStr = hours > 0 ? `${hours} часа ${minutes} мин.` : `${minutes} мин.`;
     const releaseYear = (media.release_date || media.first_air_date || '').split('-')[0];
-
-    const trailer = media.videos?.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube');
 
     const isOngoing = (type === 'tv' || type === 'anime') && media.status === 'Returning Series';
 
@@ -62,11 +59,6 @@ export default function DetailTabs({ media, type }: { media: TMDBDetail, type: '
                             <p className='text-[#8C8C8C] leading-[1.6]'>
                                 {media.overview || "Описание отсутствует."}
                             </p>
-                            {trailer && (
-                                <div className="mt-10 w-full rounded-xl overflow-hidden shadow-2xl shadow-black/50 border border-white/5">
-                                    <CustomPlayer url={`https://www.youtube.com/watch?v=${trailer.key}`} />
-                                </div>
-                            )}
                             <ul className='flex flex-col divide-y-[1px] divide-[#dee2e6]/20 mt-12'>
                                 <li className='flex xs:flex-row flex-col gap-y-1 py-2.5'>
                                     <span className='text-[#8C8C8C] xs:w-1/2'>Год производства</span>

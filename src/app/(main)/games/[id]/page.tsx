@@ -31,17 +31,21 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
     }
 
     return (
-        <main>
-            <section className='pb-20 pt-[120px] md:pt-[150px] bg-no-repeat bg-cover bg-center w-full min-h-screen relative overflow-hidden'>
+        <main className="relative min-h-screen">
+            <div className="fixed inset-0 z-0 pointer-events-none">
                 <Image
                     src={game.background_raw || game.background || game.header_image}
                     alt={game.name}
                     fill
-                    className="absolute top-0 object-cover object-center z-0 opacity-40 blur-md !h-auto"
+                    className="object-cover opacity-40 blur-md"
                     priority
                 />
-                <div className="absolute inset-0 bg-black/50 z-10"></div>
-                <div className="container flex max-[1100px]:flex-col gap-x-20 items-start z-20 relative">
+                <div className="absolute inset-0 bg-black/50"></div>
+            </div>
+
+            <div className="relative z-20">
+                <section className='pb-20 pt-[120px] md:pt-[150px] w-full min-h-screen'>
+                    <div className="container flex max-[1100px]:flex-col gap-x-20 items-start">
                     <div className="max-[1100px]:mt-[40px] w-[30%] h-full max-[1100px]:w-full relative sticky top-[120px]">
                         {/* Постер с фоллбеком */}
                         <GamePoster 
@@ -100,7 +104,8 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
                         <GameScreenshots screenshots={game.screenshots} />
                     </div>
                 </div>
-            </section>
+                </section>
+            </div>
         </main>
     );
 }

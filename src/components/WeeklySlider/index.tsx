@@ -41,7 +41,7 @@ export default function WeeklySlider({ items, type, title = "Новинки не
                             img={item.img || tmdbApi.getImageUrl(item.poster_path)}
                             fallbackImg={item.fallbackImg}
                             type={type}
-                            href={`/${type === 'tv' ? 'series' : type + 's'}/${item.id}`}
+                            href={`/${type === 'tv' ? 'series' : (type === 'anime' ? 'anime' : type + 's')}/${item.id}`}
                         />
                     </SwiperSlide>
                 ))}

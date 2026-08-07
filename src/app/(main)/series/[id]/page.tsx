@@ -4,6 +4,7 @@ import Link from 'next/link';
 import DetailActions from '@/components/DetailActions';
 import DetailTabs from '@/components/DetailTabs';
 import FramesSlider from '@/components/FramesSlider';
+import TrailerModal from '@/components/TrailerModal';
 import { tmdbApi } from '@/services/tmdb';
 import type { Metadata } from 'next';
 
@@ -19,12 +20,25 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function SeriesDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const series = await tmdbApi.getDetails(id, 'tv');
+    const trailer = series.videos?.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube');
 
     return (  
-        <main>
-            <section className='pt-[120px] max-[1100px]:pb-20 bg-[url(/img/bg.png)] bg-no-repeat bg-cover bg-center w-full min-[1100px]:h-screen md:min-h-[800px] flex flex-col justify-center relative after:absolute after:top-0 after:left-0 after:backdrop-blur-md after:z-10 after:w-full after:h-full overflow-hidden'>
-                <div className="container flex max-[1100px]:flex-col gap-x-20 items-center z-20">
-                    <div className="max-[1100px]:mt-[160px] w-[30%] h-full max-[1100px]:w-full relative pb-32">
+        <main className="relative min-h-screen">
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                <Image
+                    src={tmdbApi.getImageUrl(series.backdrop_path || series.poster_path, 'original')}
+                    alt={series.title || series.name || ''}
+                    fill
+                    className="object-cover opacity-40 blur-md"
+                    priority
+                />
+                <div className="absolute inset-0 bg-black/50"></div>
+            </div>
+
+            <div className="relative z-20">
+                <section className='pt-[120px] max-[1100px]:pb-20 w-full min-[1100px]:h-screen md:min-h-[800px] flex flex-col justify-center'>
+                    <div className="container flex max-[1100px]:flex-col gap-x-20 items-center">
+                        <div className="max-[1100px]:mt-[160px] w-[30%] h-full max-[1100px]:w-full relative pb-32">
                         <Image src={tmdbApi.getImageUrl(series.poster_path)} alt="Poster" width={500} height={750} className='rounded-xl w-full object-cover h-[300px] min-[1100px]:h-full' />
                         <DetailActions 
                             id={series.id} 
@@ -78,6 +92,7 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ i
                                 </li>
                             ))}
                         </ul>
+                        {trailer && <TrailerModal trailerKey={trailer.key} />}
                     </div>
                 </div>
             </section>
@@ -87,6 +102,7 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ i
             )}
             
             <DetailTabs media={series} type="tv" />
+            </div>
         </main>
     );
 }
