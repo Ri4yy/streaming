@@ -6,6 +6,7 @@ import DetailTabs from '@/components/DetailTabs';
 import FramesSlider from '@/components/FramesSlider';
 import TrailerModal from '@/components/TrailerModal';
 import SimilarSlider from '@/components/SimilarSlider';
+import KinoboxPlayer from '@/components/KinoboxPlayer';
 import { tmdbApi } from '@/services/tmdb';
 import type { Metadata } from 'next';
 
@@ -107,6 +108,8 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ id
                 <FramesSlider images={anime.images.backdrops} />
             )}
             
+            <KinoboxPlayer tmdbId={anime.id} />
+
             <DetailTabs media={anime} type="anime" />
             
             <SimilarSlider items={similar} type="anime" />

@@ -6,6 +6,7 @@ import DetailTabs from '@/components/DetailTabs';
 import FramesSlider from '@/components/FramesSlider';
 import TrailerModal from '@/components/TrailerModal';
 import SimilarSlider from '@/components/SimilarSlider';
+import KinoboxPlayer from '@/components/KinoboxPlayer';
 import { tmdbApi } from '@/services/tmdb';
 import type { Metadata } from 'next';
 
@@ -103,6 +104,8 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ i
                 <FramesSlider images={series.images.backdrops} />
             )}
             
+            <KinoboxPlayer tmdbId={series.id} />
+
             <DetailTabs media={series} type="tv" />
             
             <SimilarSlider items={similar} type="tv" />

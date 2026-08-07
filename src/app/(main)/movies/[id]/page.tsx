@@ -6,6 +6,7 @@ import DetailTabs from '@/components/DetailTabs';
 import FramesSlider from '@/components/FramesSlider';
 import TrailerModal from '@/components/TrailerModal';
 import SimilarSlider from '@/components/SimilarSlider';
+import KinoboxPlayer from '@/components/KinoboxPlayer';
 import { tmdbApi } from '@/services/tmdb';
 import type { Metadata } from 'next';
 
@@ -91,6 +92,8 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
             {movie.images?.backdrops && movie.images.backdrops.length > 0 && (
                 <FramesSlider images={movie.images.backdrops} />
             )}
+
+            <KinoboxPlayer tmdbId={movie.id} />
             
             <DetailTabs media={movie} type="movie" />
             
