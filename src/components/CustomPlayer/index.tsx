@@ -117,29 +117,30 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
         >
             {/* Player */}
             {isMounted && (
-                // @ts-ignore
                 <ReactPlayer
-                    ref={playerRef}
-                    url={url}
-                    width="100%"
-                    height="100%"
-                    playing={playing}
-                    volume={volume}
-                    muted={muted}
-                    light={true} // Fetch and show thumbnail before playing, fixes black screen issues
-                    playIcon={<React.Fragment></React.Fragment>} // Hide default play icon since we have our own
-                    onProgress={handleProgress as any}
-                    onDuration={handleDuration as any}
-                    onEnded={() => setPlaying(false)}
-                    onPlay={() => setPlaying(true)}
-                    onPause={() => setPlaying(false)}
-                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-                    controls={false}
-                    config={{
-                        youtube: {
-                            playerVars: { rel: 0 }
+                    {...({
+                        ref: playerRef,
+                        url: url,
+                        width: "100%",
+                        height: "100%",
+                        playing: playing,
+                        volume: volume,
+                        muted: muted,
+                        light: true,
+                        playIcon: <React.Fragment></React.Fragment>,
+                        onProgress: handleProgress,
+                        onDuration: handleDuration,
+                        onEnded: () => setPlaying(false),
+                        onPlay: () => setPlaying(true),
+                        onPause: () => setPlaying(false),
+                        style: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' },
+                        controls: false,
+                        config: {
+                            youtube: {
+                                playerVars: { rel: 0 }
+                            }
                         }
-                    } as any}
+                    } as any)}
                 />
             )}
 
