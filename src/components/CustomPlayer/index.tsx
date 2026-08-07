@@ -21,6 +21,7 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
     const [duration, setDuration] = useState(0);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [showControls, setShowControls] = useState(true);
+    const [hasStarted, setHasStarted] = useState(false);
     
     const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -127,11 +128,20 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
                         volume: volume,
                         muted: muted,
                         light: true,
-                        playIcon: <React.Fragment></React.Fragment>,
+                        playIcon: (
+                            <div className="absolute inset-0 z-10 flex justify-center items-center cursor-pointer group bg-black/40 hover:bg-black/20 transition-colors">
+                                <button className="w-20 h-20 bg-white/20 group-hover:bg-[#ff1414] backdrop-blur-md rounded-full flex justify-center items-center transition-all duration-300">
+                                    <BsPlayFill className="text-white text-5xl ml-2" />
+                                </button>
+                            </div>
+                        ),
                         onProgress: handleProgress,
                         onDuration: handleDuration,
                         onEnded: () => setPlaying(false),
-                        onPlay: () => setPlaying(true),
+                        onPlay: () => {
+                            setHasStarted(true);
+                            setPlaying(true);
+                        },
                         onPause: () => setPlaying(false),
                         style: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' },
                         controls: false,
@@ -144,17 +154,19 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
                 />
             )}
 
-            {/* Click to play/pause overlay (middle of screen) */}
-            <div 
-                className={`absolute inset-0 z-10 flex justify-center items-center cursor-pointer transition-opacity duration-300 ${!playing || showControls ? 'bg-black/40 opacity-100' : 'opacity-0 pointer-events-none'}`}
-                onClick={handlePlayPause}
-            >
-                <button 
-                    className={`w-20 h-20 bg-white/20 hover:bg-[#ff1414] backdrop-blur-md rounded-full flex justify-center items-center transition-all duration-300 ${!playing ? 'scale-100' : 'scale-75 opacity-0'}`}
+            {/* Click to play/pause overlay (middle of screen) - only active after initial start */}
+            {hasStarted && (
+                <div 
+                    className={`absolute inset-0 z-10 flex justify-center items-center cursor-pointer transition-opacity duration-300 ${!playing || showControls ? 'bg-black/40 opacity-100' : 'opacity-0 pointer-events-none'}`}
+                    onClick={handlePlayPause}
                 >
-                    <BsPlayFill className="text-white text-5xl ml-2" />
-                </button>
-            </div>
+                    <button 
+                        className={`w-20 h-20 bg-white/20 hover:bg-[#ff1414] backdrop-blur-md rounded-full flex justify-center items-center transition-all duration-300 ${!playing ? 'scale-100' : 'scale-75 opacity-0'}`}
+                    >
+                        <BsPlayFill className="text-white text-5xl ml-2" />
+                    </button>
+                </div>
+            )}
 
             {/* Bottom Controls Bar */}
             <div 
