@@ -115,14 +115,20 @@ export function useUserMedia() {
 
     if (existingIndex >= 0) {
       updatedItem = { ...newList[existingIndex], ...mediaItem };
+      if (mediaItem.status) {
+        updatedItem.is_favorite = true;
+      }
       newList[existingIndex] = updatedItem;
     } else {
       updatedItem = {
         title: mediaItem.title || 'Unknown',
         status: 'planned',
-        is_favorite: false,
+        is_favorite: mediaItem.status ? true : false,
         ...mediaItem
       } as UserMedia;
+      if (mediaItem.status) {
+        updatedItem.is_favorite = true;
+      }
       newList.push(updatedItem);
     }
     

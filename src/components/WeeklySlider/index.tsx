@@ -18,8 +18,9 @@ export default function WeeklySlider({ items, type, title = "Новинки не
             <Swiper
                 modules={[Navigation]}
                 spaceBetween={20}
-                slidesPerView={2}
+                slidesPerView={1.2}
                 breakpoints={{
+                    480: { slidesPerView: 2 },
                     640: { slidesPerView: 3 },
                     768: { slidesPerView: 4 },
                     1024: { slidesPerView: 5 },

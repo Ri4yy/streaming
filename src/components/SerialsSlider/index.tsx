@@ -26,9 +26,9 @@ export default function SerialsSlider({ series }: { series: TMDBMedia[] }) {
                 slidesPerView={5}
                 className='flex flex-col'
                 >
-                    <div className="flex justify-between items-center order-1 mb-12 pt-2">
-                        <h2 className='md:text-[32px] text-2xl leading-[1.2] font-bold whitespace-nowrap'>Лучшие сериалы</h2>
-                        <div className="h-[1px] w-full bg-[#323234] mx-10"></div>
+                    <div slot="container-start" className="flex justify-between items-center mb-8 md:mb-12 pt-2 gap-4">
+                        <h2 className='md:text-[32px] text-xl xs:text-2xl leading-[1.2] font-bold whitespace-nowrap'>Лучшие сериалы</h2>
+                        <div className="hidden sm:block h-[1px] w-full bg-[#323234] mx-10"></div>
                         <SwiperNavButtons />
                     </div>
                     {series.map((show) => (

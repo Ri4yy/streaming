@@ -41,6 +41,7 @@ export default function Header() {
     const [activeLogin, setActiveLogin] = useState(false);
     const [activeSearch, setActiveSearch] = useState(false);
     const [activeMenu, setActiveMenu] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
 
     const [user, setUser] = useState<any>(null);
     const [supabase] = useState(() => createClient());
@@ -153,7 +154,7 @@ export default function Header() {
                         ))}
                     </ul>
                     <div
-                        className="absolute hidden md:block top-1/2 -translate-y-1/2 h-[36px] bg-white/20 backdrop-blur-xl border border-white/10 rounded-lg shadow-sm transition-all duration-300 ease-out z-0 pointer-events-none"
+                        className="absolute hidden md:block top-1/2 -translate-y-1/2 h-[36px] bg-[#ff1414]/20 backdrop-blur-xl border border-[#ff1414]/40 rounded-xl shadow-[0_0_15px_rgba(255,20,20,0.15)] transition-all duration-300 ease-out z-0 pointer-events-none"
                         style={{ left: pillStyle.left, width: pillStyle.width, opacity: pillStyle.opacity }}
                     />
                 </nav>
@@ -161,9 +162,14 @@ export default function Header() {
                     <button onClick={() => setActiveSearch(true)}><BsSearch className='xs:block hidden h-5 w-5 text-white/70 hover:text-[#ff1414] hover:drop-shadow-[0_0_8px_rgba(255,20,20,0.8)] transition-all duration-300' /></button>
 
                     {!user ? (
-                        <div className="group relative md:py-1 py-1 after:w-[calc(100%+100px)] after:-translate-x-[100px] after:h-4 after:absolute after:-bottom-4 after:left-0 md:block hidden z-[70]">
+                        <div 
+                            className="group relative md:py-1 py-1 after:w-[calc(100%+100px)] after:-translate-x-[100px] after:h-4 after:absolute after:-bottom-4 after:left-0 z-[70]"
+                            onMouseEnter={() => setUserMenuOpen(true)}
+                            onMouseLeave={() => setUserMenuOpen(false)}
+                        >
                             {/* Trigger */}
                             <button
+                                onClick={() => setUserMenuOpen(!userMenuOpen)}
                                 className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-2 transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover:shadow-lg focus:outline-none backdrop-blur-md"
                                 type="button"
                             >
@@ -182,17 +188,12 @@ export default function Header() {
                                 </div>
                             </button>
 
-                            {/* Bending line indicator on the right */}
-                            <div className="absolute top-1/2 -right-3 -translate-y-1/2 transition-all duration-300 opacity-0 group-hover:opacity-100 pointer-events-none">
-                                <svg aria-hidden="true" className="transition-all duration-300 scale-90 group-hover:scale-110 text-white/30 group-hover:text-white/60" fill="none" height="24" viewBox="0 0 12 24" width="12">
-                                    <path d="M2 4C6 8 6 16 2 20" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
-                                </svg>
-                            </div>
-
                             {/* Dropdown Content */}
-                            <div className="absolute top-[calc(100%+8px)] right-0 hidden group-hover:block min-w-[240px] origin-top-right rounded-2xl border border-white/10 bg-black/40 p-2 shadow-xl shadow-black/50 transition-all duration-300 z-50 before:content-[''] before:absolute before:inset-0 before:backdrop-blur-3xl before:rounded-2xl before:-z-10">
+                            <div 
+                                className={`absolute top-[calc(100%+8px)] right-0 ${userMenuOpen ? 'block' : 'hidden'} min-w-[240px] origin-top-right rounded-2xl border border-white/10 bg-black/40 p-2 shadow-xl shadow-black/50 transition-all duration-300 z-50 before:content-[''] before:absolute before:inset-0 before:backdrop-blur-3xl before:rounded-2xl before:-z-10`}
+                            >
                                 <div className="space-y-1 relative z-10">
-                                    <Link href="/profile?tab=1" className="group/item flex cursor-pointer items-center rounded-xl border border-transparent p-3 transition-all duration-200 hover:border-white/10 hover:bg-white/5 hover:shadow-sm">
+                                    <Link href="/profile?tab=1" onClick={() => setUserMenuOpen(false)} className="group/item flex cursor-pointer items-center rounded-xl border border-transparent p-3 transition-all duration-200 hover:border-white/10 hover:bg-white/5 hover:shadow-sm">
                                         <div className="flex flex-1 items-center gap-3">
                                             <Heart className="h-4 w-4 text-white/60 group-hover/item:text-white/90 transition-colors" />
                                             <span className="whitespace-nowrap font-medium text-sm text-white/70 leading-tight tracking-tight transition-colors group-hover/item:text-white/90">Избранное</span>
@@ -202,16 +203,19 @@ export default function Header() {
 
                                 <div className="my-2 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent relative z-10" />
 
-                                <button onClick={() => setActiveLogin(true)} className="group/item flex w-full cursor-pointer items-center gap-3 rounded-xl border border-transparent bg-white/5 p-3 transition-all duration-200 hover:border-white/20 hover:bg-white/10 hover:shadow-sm" type="button">
+                                <button onClick={() => { setActiveLogin(true); setUserMenuOpen(false); }} className="group/item flex w-full cursor-pointer items-center gap-3 rounded-xl border border-transparent bg-white/5 p-3 transition-all duration-200 hover:border-white/20 hover:bg-white/10 hover:shadow-sm" type="button">
                                     <LogIn className="h-4 w-4 text-white/90 transition-colors" />
                                     <span className="font-medium text-white/90 text-sm transition-colors">Вход</span>
                                 </button>
                             </div>
                         </div>
                     ) : (
-                        <div className="group relative md:py-1 py-1 after:w-[calc(100%+100px)] after:-translate-x-[100px] after:h-4 after:absolute after:-bottom-4 after:left-0 md:block hidden z-[70]">
+                        <div className="group relative md:py-1 py-1 after:w-[calc(100%+100px)] after:-translate-x-[100px] after:h-4 after:absolute after:-bottom-4 after:left-0 z-[70]">
                             {/* Trigger */}
                             <button
+                                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                                onMouseEnter={() => setUserMenuOpen(true)}
+                                onMouseLeave={() => setUserMenuOpen(false)}
                                 className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-2 transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover:shadow-lg focus:outline-none backdrop-blur-md"
                                 type="button"
                             >
@@ -230,23 +234,20 @@ export default function Header() {
                                 </div>
                             </button>
 
-                            {/* Bending line indicator on the right */}
-                            <div className="absolute top-1/2 -right-3 -translate-y-1/2 transition-all duration-300 opacity-0 group-hover:opacity-100 pointer-events-none">
-                                <svg aria-hidden="true" className="transition-all duration-300 scale-90 group-hover:scale-110 text-white/30 group-hover:text-white/60" fill="none" height="24" viewBox="0 0 12 24" width="12">
-                                    <path d="M2 4C6 8 6 16 2 20" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
-                                </svg>
-                            </div>
-
                             {/* Dropdown Content */}
-                            <div className="absolute top-[calc(100%+8px)] right-0 hidden group-hover:block min-w-[240px] origin-top-right rounded-2xl border border-white/10 bg-black/40 p-2 shadow-xl shadow-black/50 transition-all duration-300 z-50 before:content-[''] before:absolute before:inset-0 before:backdrop-blur-3xl before:rounded-2xl before:-z-10">
+                            <div 
+                                onMouseEnter={() => setUserMenuOpen(true)}
+                                onMouseLeave={() => setUserMenuOpen(false)}
+                                className={`absolute top-[calc(100%+8px)] right-0 ${userMenuOpen ? 'block' : 'hidden'} min-w-[240px] origin-top-right rounded-2xl border border-white/10 bg-black/40 p-2 shadow-xl shadow-black/50 transition-all duration-300 z-50 before:content-[''] before:absolute before:inset-0 before:backdrop-blur-3xl before:rounded-2xl before:-z-10`}
+                            >
                                 <div className="space-y-1 relative z-10">
-                                    <Link href="/profile?tab=0" className="group/item flex cursor-pointer items-center rounded-xl border border-transparent p-3 transition-all duration-200 hover:border-white/10 hover:bg-white/5 hover:shadow-sm">
+                                    <Link href="/profile?tab=0" onClick={() => setUserMenuOpen(false)} className="group/item flex cursor-pointer items-center rounded-xl border border-transparent p-3 transition-all duration-200 hover:border-white/10 hover:bg-white/5 hover:shadow-sm">
                                         <div className="flex flex-1 items-center gap-3">
                                             <User className="h-4 w-4 text-white/60 group-hover/item:text-white/90 transition-colors" />
                                             <span className="whitespace-nowrap font-medium text-sm text-white/70 leading-tight tracking-tight transition-colors group-hover/item:text-white/90">Профиль</span>
                                         </div>
                                     </Link>
-                                    <Link href="/profile?tab=1" className="group/item flex cursor-pointer items-center rounded-xl border border-transparent p-3 transition-all duration-200 hover:border-white/10 hover:bg-white/5 hover:shadow-sm">
+                                    <Link href="/profile?tab=1" onClick={() => setUserMenuOpen(false)} className="group/item flex cursor-pointer items-center rounded-xl border border-transparent p-3 transition-all duration-200 hover:border-white/10 hover:bg-white/5 hover:shadow-sm">
                                         <div className="flex flex-1 items-center gap-3">
                                             <Heart className="h-4 w-4 text-white/60 group-hover/item:text-white/90 transition-colors" />
                                             <span className="whitespace-nowrap font-medium text-sm text-white/70 leading-tight tracking-tight transition-colors group-hover/item:text-white/90">Избранное</span>
@@ -256,7 +257,7 @@ export default function Header() {
 
                                 <div className="my-2 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent relative z-10" />
 
-                                <button onClick={handleSignOut} className="group/item flex w-full cursor-pointer items-center gap-3 rounded-xl border border-transparent bg-red-500/10 p-3 transition-all duration-200 hover:border-red-500/30 hover:bg-red-500/20 hover:shadow-sm" type="button">
+                                <button onClick={() => { handleSignOut(); setUserMenuOpen(false); }} className="group/item flex w-full cursor-pointer items-center gap-3 rounded-xl border border-transparent bg-red-500/10 p-3 transition-all duration-200 hover:border-red-500/30 hover:bg-red-500/20 hover:shadow-sm" type="button">
                                     <LogOut className="h-4 w-4 text-red-500 group-hover/item:text-red-400 transition-colors" />
                                     <span className="font-medium text-red-500 text-sm group-hover/item:text-red-400 transition-colors">Выйти</span>
                                 </button>
@@ -264,11 +265,28 @@ export default function Header() {
                         </div>
                     )}
                 </div>
-                <div className="md:hidden flex justify-center items-center relative md:py-0 py-3" onClick={() => setActiveMenu(true)}>
+                <div className="md:hidden flex justify-center items-center relative md:py-0 py-3" onClick={() => setActiveMenu(!activeMenu)}>
                     <HiMenu className='cursor-pointer h-6 w-6 z-20' />
                     <div className="absolute backdrop-blur-md bg-white/20 rounded-md w-8 h-8"></div>
                 </div>
             </header>
+
+            {/* Mobile Menu Overlay */}
+            {activeMenu && (
+                <div className="fixed inset-0 z-[55] bg-black/80 backdrop-blur-md flex flex-col items-center justify-center md:hidden pt-20 transition-all duration-300">
+                    <button className="absolute top-6 right-6 text-white text-3xl" onClick={() => setActiveMenu(false)}>&times;</button>
+                    <ul className="flex flex-col gap-6 text-center text-xl font-medium">
+                        {navLinks.map(link => (
+                            <li key={link.path}>
+                                <Link href={link.path} onClick={() => setActiveMenu(false)} className={`transition-colors duration-300 ${pathname === link.path ? 'text-white' : 'text-white/70 hover:text-white'}`}>
+                                    {link.label}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
             <ModalLogin active={activeLogin} setActive={setActiveLogin} />
             <ModalSearch activeSearch={activeSearch} setActiveSearch={setActiveSearch} />
         </>

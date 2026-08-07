@@ -9,8 +9,8 @@ export default function FilmsOfWeek({ movie }: { movie: TMDBMedia }) {
         <div className="xs:py-[120px] py-20 bg-[linear-gradient(90deg,#e6aa9d_0%,#be5d6c_100%)] mt-[100px]">
             <div className="container flex md:flex-row flex-col justify-between items-center gap-x-14">
                 <div className="md:w-2/5">
-                    <div className="rounded-lg backdrop-blur-md bg-white/10 w-fit px-2.5 py-1 text-white/80 text-sm">В тренде</div>
-                    <h3 className='font-bold text-[32px] mt-3'>{movie.title || movie.name}</h3>
+                    <div className="rounded-lg backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg w-fit px-3 py-1 text-white/90 text-sm font-medium">В тренде</div>
+                    <h3 className='font-bold text-[32px] mt-4'>{movie.title || movie.name}</h3>
                     <div className="flex items-center mt-3">
                         <svg width="43" height="22" viewBox="0 0 43 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M43 1.89083C42.8833 0.922265 42.1751 0.150295 41.2733 0C37.3203 0 5.69694 0 1.74393 0C0.756052 0.164717 0 1.07484 0 2.17169C0 3.935 0 18.0384 0 19.801C0 21.0155 0.925061 22 2.06699 22C5.95494 22 37.0623 22 40.9502 22C42.0017 22 42.8699 21.1643 43 20.0826C43 16.4444 43 3.70955 43 1.89083Z" fill="#F6C700"></path>
@@ -27,7 +27,7 @@ export default function FilmsOfWeek({ movie }: { movie: TMDBMedia }) {
                     </p>
                     <div className="flex md:flex-row flex-col md:items-center gap-x-6 gap-y-2">
                         <div className="flex items-center gap-x-6">
-                            <Link href={`/movies/${movie.id}`} className='hover:text-[#ff1414] transition-all duration-300'>Подробнее</Link>
+                            <Link href={`/movies/${movie.id}`} className='px-6 py-2.5 rounded-xl backdrop-blur-md bg-white/10 border border-white/20 shadow-lg hover:bg-white/20 hover:border-white/30 transition-all duration-300 text-white font-medium'>Подробнее</Link>
                         </div>
                     </div>
                 </div>

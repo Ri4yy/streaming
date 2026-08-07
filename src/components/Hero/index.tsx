@@ -59,12 +59,12 @@ export default function Hero({ movies }: { movies: TMDBMedia[] }) {
                         
                         <div className="container relative z-20 mx-auto h-full flex flex-col justify-center" data-swiper-parallax="-50%">
                             <div className="flex md:flex-col flex-row items-center md:items-start gap-x-2 mt-6 md:mt-0 mb-4" data-swiper-parallax="-100">
-                                <div className="rounded-lg backdrop-blur-md h-fit bg-[#ff1414]/90 w-fit px-3 py-1 text-white text-xs font-bold uppercase tracking-wider mb-2 shadow-lg">
+                                <div className="rounded-lg backdrop-blur-xl h-fit bg-[#ff1414]/30 border border-[#ff1414]/50 w-fit px-3 py-1 text-white text-xs font-bold uppercase tracking-wider mb-2 shadow-[0_0_15px_rgba(255,20,20,0.3)]">
                                     Топ новинка
                                 </div>
                                 <div className="flex items-center gap-x-2 md:mt-2">
-                                    <div className="rounded-md bg-[#2BB157] w-fit px-2.5 py-1 text-white text-sm uppercase font-bold shadow-md">{movie.media_type === 'tv' ? 'Сериал' : 'Кино'}</div>
-                                    <div className="rounded-md bg-[#4A90E2] w-fit px-2.5 py-1 text-white text-sm uppercase font-bold shadow-md">4K</div>
+                                    <div className="rounded-lg backdrop-blur-md bg-white/10 border border-white/20 w-fit px-3 py-1 text-white text-sm uppercase font-bold shadow-lg">{movie.media_type === 'tv' ? 'Сериал' : 'Кино'}</div>
+                                    <div className="rounded-lg backdrop-blur-md bg-white/10 border border-white/20 w-fit px-3 py-1 text-white text-sm uppercase font-bold shadow-lg">4K</div>
                                 </div>
                             </div>
                             

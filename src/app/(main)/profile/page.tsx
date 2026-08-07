@@ -34,7 +34,7 @@ function SubTabCustom({ text }: { text: string }) {
     return (
         <Tab as={Fragment}>
             {({ selected }) => (
-                <button className={`px-4 py-2 rounded-lg font-medium transition-colors ${selected ? 'bg-red-500 text-white' : 'bg-white/10 text-gray-300 hover:bg-white/20'}`}>
+                <button className={`px-4 py-2.5 rounded-xl font-medium transition-all duration-300 border backdrop-blur-md shadow-sm ${selected ? 'bg-[#ff1414]/20 border-[#ff1414]/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}>
                     {text}
                 </button>
             )}
@@ -71,31 +71,31 @@ function ProfileContent() {
                 <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
                     <button 
                         onClick={() => setStatusFilter('all')}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${statusFilter === 'all' ? 'bg-red-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'all' ? 'bg-[#ff1414]/20 border-[#ff1414]/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
                     >
                         Все ({items.length})
                     </button>
                     <button 
                         onClick={() => setStatusFilter('planned')}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${statusFilter === 'planned' ? 'bg-red-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'planned' ? 'bg-[#ff1414]/20 border-[#ff1414]/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
                     >
                         В планах ({items.filter(i => i.status === 'planned').length})
                     </button>
                     <button 
                         onClick={() => setStatusFilter('watching')}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${statusFilter === 'watching' ? 'bg-red-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'watching' ? 'bg-[#ff1414]/20 border-[#ff1414]/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
                     >
                         Смотрю ({items.filter(i => i.status === 'watching').length})
                     </button>
                     <button 
                         onClick={() => setStatusFilter('completed')}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${statusFilter === 'completed' ? 'bg-red-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'completed' ? 'bg-[#ff1414]/20 border-[#ff1414]/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
                     >
                         Просмотрено ({items.filter(i => i.status === 'completed').length})
                     </button>
                     <button 
                         onClick={() => setStatusFilter('dropped')}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${statusFilter === 'dropped' ? 'bg-red-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'dropped' ? 'bg-[#ff1414]/20 border-[#ff1414]/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
                     >
                         Брошено ({items.filter(i => i.status === 'dropped').length})
                     </button>
@@ -151,7 +151,7 @@ function ProfileContent() {
                     </Tab.List>
                     <Tab.Panels className='w-full'>
                         <Tab.Panel>
-                            <div className="flex flex-col p-10 rounded-xl bg-[#161618]">
+                            <div className="flex flex-col p-10 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl">
                                 <div className='w-[80px] h-[80px] rounded-xl bg-red-500 flex justify-center items-center text-3xl font-bold'>
                                     {user?.email?.[0].toUpperCase() || 'G'}
                                 </div>
@@ -192,7 +192,7 @@ function ProfileContent() {
                         </Tab.Panel>
 
                         <Tab.Panel>
-                            <div className="flex flex-col p-10 rounded-xl bg-[#161618]">
+                            <div className="flex flex-col p-10 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl">
                                 <h2 className="text-xl font-medium mb-6">Настройки аккаунта</h2>
                                 {user ? (
                                     <p className="text-gray-400">Настройки доступны только для демо-режима.</p>
