@@ -4,8 +4,6 @@ import React, { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { BsPlayFill } from 'react-icons/bs';
 import { IoClose } from 'react-icons/io5';
-import CustomPlayer from '@/components/CustomPlayer';
-
 interface TrailerModalProps {
     trailerKey: string;
 }
@@ -76,7 +74,17 @@ export default function TrailerModal({ trailerKey }: TrailerModalProps) {
                                         <IoClose size={40} />
                                     </button>
                                     <div className="w-full aspect-video relative rounded-2xl overflow-hidden">
-                                        {isOpen && <CustomPlayer url={`https://www.youtube.com/watch?v=${trailerKey}`} />}
+                                        {isOpen && (
+                                            <iframe 
+                                                width="100%" 
+                                                height="100%" 
+                                                src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`} 
+                                                title="YouTube video player" 
+                                                frameBorder="0" 
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                                allowFullScreen
+                                            ></iframe>
+                                        )}
                                     </div>
                                 </Dialog.Panel>
                             </Transition.Child>
