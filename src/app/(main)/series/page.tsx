@@ -36,7 +36,8 @@ export default async function SeriesPage({ searchParams }: { searchParams: Promi
     } else {
         const options: Record<string, string> = {
             without_genres: '16', // Exclude Anime
-            without_original_language: 'zh' // Exclude Chinese series
+            without_original_language: 'zh,th,hi,ar,tl,te,ta,jp', // Exclude CN, TH, IN, EG, PH
+            'vote_count.gte': '150' // Filter out daily local soaps that have high popularity but no votes
         };
 
         if (genres) {
