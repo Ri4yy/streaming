@@ -18,7 +18,7 @@ export default function FramesSlider({ images }: FramesSliderProps) {
 
     return (
         <section className='container py-12 relative'>
-            <h2 className='text-2xl font-bold mb-6'>Кадры</h2>
+
             <Swiper
                 modules={[Navigation]}
                 spaceBetween={20}

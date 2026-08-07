@@ -15,12 +15,11 @@ export default function TrailerModal({ trailerKey }: TrailerModalProps) {
     
     if (!trailerKey) return null;
     
-    const thumbnailUrl = `https://img.youtube.com/vi/${trailerKey}/mqdefault.jpg`;
+    const thumbnailUrl = `https://img.youtube.com/vi/${trailerKey}/hqdefault.jpg`;
 
     return (
         <>
             <div className="mt-10">
-                <h3 className="text-xl font-bold mb-4 text-white">Трейлер</h3>
                 <div 
                     className="relative w-[280px] h-[158px] rounded-xl overflow-hidden cursor-pointer group shadow-lg"
                     onClick={() => setIsOpen(true)}
@@ -71,7 +70,7 @@ export default function TrailerModal({ trailerKey }: TrailerModalProps) {
                                         <IoClose size={40} />
                                     </button>
                                     <div className="w-full aspect-video relative rounded-2xl overflow-hidden">
-                                        {isOpen && <CustomPlayer url={`https://www.youtube.com/watch?v=${trailerKey}`} />}
+                                        {isOpen && <CustomPlayer url={`https://www.youtube.com/watch?v=${trailerKey}`} autoPlay />}
                                     </div>
                                 </Dialog.Panel>
                             </Transition.Child>

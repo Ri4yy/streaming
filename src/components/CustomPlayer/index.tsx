@@ -6,13 +6,14 @@ import { BsPlayFill, BsPauseFill, BsVolumeUpFill, BsVolumeMuteFill, BsFullscreen
 
 interface CustomPlayerProps {
     url: string;
+    autoPlay?: boolean;
 }
 
-export default function CustomPlayer({ url }: CustomPlayerProps) {
+export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProps) {
     const playerRef = useRef<HTMLVideoElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     
-    const [playing, setPlaying] = useState(false);
+    const [playing, setPlaying] = useState(autoPlay);
     const [volume, setVolume] = useState(0.8);
     const [muted, setMuted] = useState(false);
     const [played, setPlayed] = useState(0);
