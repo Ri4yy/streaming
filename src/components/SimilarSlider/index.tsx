@@ -62,6 +62,7 @@ export default function SimilarSlider({ items, type }: SimilarSliderProps) {
                             genre: item.genres?.[0]?.description || 'Игра',
                             rate: 0, // Not available easily on basic details
                             img: steamApi.getVerticalImage(item.steam_appid),
+                            fallbackImg: item.header_image,
                             href: `/games/${item.steam_appid}`
                         };
                     }

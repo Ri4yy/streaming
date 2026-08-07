@@ -91,6 +91,38 @@
     scrollbar-width: thin;
     scrollbar-color: #ef4444 transparent;
   }
+
+  /* Steam Description Content Styles */
+  .description-content h1,
+  .description-content h2 {
+    @apply text-2xl font-bold mt-8 mb-4 text-white;
+  }
+  .description-content h3,
+  .description-content h4 {
+    @apply text-xl font-bold mt-6 mb-3 text-white;
+  }
+  .description-content p {
+    @apply mb-4 leading-relaxed;
+  }
+  .description-content img {
+    @apply rounded-xl my-6 max-w-full h-auto shadow-lg border border-white/10;
+  }
+  .description-content ul {
+    @apply list-disc list-outside mb-4 ml-6;
+  }
+  .description-content li {
+    @apply mb-2;
+  }
+  .description-content strong,
+  .description-content b {
+    @apply text-white font-semibold;
+  }
+  .description-content a {
+    @apply text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors;
+  }
+  .description-content blockquote {
+    @apply border-l-4 border-[#ff1414] pl-4 italic my-4 text-white/80;
+  }
 }
 
 @theme inline {

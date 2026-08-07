@@ -76,7 +76,7 @@ const mockMedia: TMDBDetail = {
     poster_path: null,
     backdrop_path: null,
     genre_ids: [28, 12, 16],
-    genres: [{id: 28, name: 'Экшен'}, {id: 16, name: 'Мультфильм'}],
+    genres: [{ id: 28, name: 'Экшен' }, { id: 16, name: 'Мультфильм' }],
     popularity: 100,
     release_date: "2023-05-31",
     vote_average: 8.4,
@@ -93,7 +93,7 @@ const mockMedia: TMDBDetail = {
 
 async function fetchTMDB<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {
     const url = new URL(`${TMDB_API_BASE_URL}${endpoint}`);
-    
+
     // Add default params
     Object.entries({ ...defaultParams, ...params }).forEach(([key, value]) => {
         url.searchParams.append(key, value);
@@ -115,7 +115,7 @@ async function fetchTMDB<T>(endpoint: string, params: Record<string, string> = {
         return response.json();
     } catch (error) {
         console.error(`Fetch failed for ${endpoint}:`, error);
-        
+
         // Return fallback mock data to prevent app crash
         // This object satisfies both list response and detail response
         const mockFallback: any = {
@@ -130,12 +130,12 @@ async function fetchTMDB<T>(endpoint: string, params: Record<string, string> = {
 }
 
 export const tmdbApi = {
-    getTrending: (type: 'movie' | 'tv' | 'all' = 'all', timeWindow: 'day' | 'week' = 'week', page = 1) => 
+    getTrending: (type: 'movie' | 'tv' | 'all' = 'all', timeWindow: 'day' | 'week' = 'week', page = 1) =>
         fetchTMDB<TMDBResponse<TMDBMedia>>(`/trending/${type}/${timeWindow}`, { page: String(page) }),
-    
-    getPopular: (type: 'movie' | 'tv' = 'movie', page = 1) => 
+
+    getPopular: (type: 'movie' | 'tv' = 'movie', page = 1) =>
         fetchTMDB<TMDBResponse<TMDBMedia>>(`/${type}/popular`, { page: String(page) }),
-        
+
     getManyPopular: async (type: 'movie' | 'tv' = 'movie', pagesCount = 4): Promise<TMDBMedia[]> => {
         const promises = Array.from({ length: pagesCount }).map((_, i) => tmdbApi.getPopular(type, i + 1));
         const results = await Promise.all(promises);
@@ -148,12 +148,12 @@ export const tmdbApi = {
         return results.flatMap(res => res.results);
     },
 
-    getTopRated: (type: 'movie' | 'tv' = 'movie', page = 1) => 
+    getTopRated: (type: 'movie' | 'tv' = 'movie', page = 1) =>
         fetchTMDB<TMDBResponse<TMDBMedia>>(`/${type}/top_rated`, { page: String(page) }),
-        
-    getUpcoming: (page = 1) => 
+
+    getUpcoming: (page = 1) =>
         fetchTMDB<TMDBResponse<TMDBMedia>>(`/movie/upcoming`, { page: String(page) }),
-        
+
     getDiscoverAnime: (page = 1) => {
         const today = new Date();
         const lastMonth = new Date();
@@ -207,22 +207,22 @@ export const tmdbApi = {
             total_pages: Math.min(response.total_pages, 500)
         };
     },
-        
-    getDetails: (id: string, type: 'movie' | 'tv' | string) => 
+
+    getDetails: (id: string, type: 'movie' | 'tv' | string) =>
         fetchTMDB<TMDBDetail>(`/${type}/${id}`, {
             append_to_response: 'videos,credits,images'
         }),
-        
+
     getRecommendations: async (id: string | number, type: 'movie' | 'tv'): Promise<TMDBMedia[]> => {
         const response = await fetchTMDB<TMDBResponse<TMDBMedia>>(`/${type}/${id}/recommendations`);
         return response.results;
     },
-        
+
     getImageUrl: (path: string | null, size: 'w500' | 'original' = 'w500') => {
         if (!path) return '/img/poster/spider.jpg';
         return size === 'w500' ? `${TMDB_IMAGE_BASE_URL}${path}` : `${TMDB_IMAGE_ORIGINAL_URL}${path}`;
     },
-    
+
     search: (query: string, type: 'movie' | 'tv' | 'multi' = 'multi', page = 1) =>
         fetchTMDB<TMDBResponse<TMDBMedia>>(`/search/${type}`, { query, page: String(page) }),
 

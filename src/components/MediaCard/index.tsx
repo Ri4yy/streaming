@@ -72,10 +72,10 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
                             }
                         }}
                         onError={() => {
-                            const steamFallback = `/api/steam/image/${id}`;
+                            const steamFallback = type === 'game' ? (fallbackImg || `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${id}/header.jpg`) : null;
                             const defaultFallback = fallbackImg || '/img/poster/spider.jpg';
                             
-                            if (type === 'game' && imgSrc !== steamFallback && imgSrc !== defaultFallback) {
+                            if (type === 'game' && steamFallback && imgSrc !== steamFallback && imgSrc !== defaultFallback) {
                                 setImgSrc(steamFallback);
                             } else if (imgSrc !== defaultFallback) {
                                 setImgSrc(defaultFallback);
