@@ -1,10 +1,27 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoClose } from 'react-icons/io5';
-import { BsSearch, BsChevronDown } from "react-icons/bs";
+import { BsSearch, BsChevronDown, BsStarFill } from "react-icons/bs";
 import { useRouter } from 'next/navigation';
 import { Listbox, Transition } from '@headlessui/react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { fetchGlobalSearch, GlobalSearchResult, GroupedGlobalSearchResults } from '@/app/actions/globalSearch';
+
+// Helper hook for debounce
+function useDebounce<T>(value: T, delay: number): T {
+    const [debouncedValue, setDebouncedValue] = useState<T>(value);
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedValue(value);
+        }, delay);
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [value, delay]);
+    return debouncedValue;
+}
 
 const searchCategories = [
     { id: 'search', name: 'Везде' },
@@ -17,8 +34,40 @@ const searchCategories = [
 
 export default function ModalSearch({ activeSearch, setActiveSearch }: { activeSearch: boolean, setActiveSearch: (v: boolean) => void }) {
     const [query, setQuery] = useState('');
+    const debouncedQuery = useDebounce(query, 500);
     const [category, setCategory] = useState(searchCategories[0]);
     const router = useRouter();
+    
+    const [isSearching, setIsSearching] = useState(false);
+    const [results, setResults] = useState<GlobalSearchResult[] | GroupedGlobalSearchResults | null>(null);
+
+    useEffect(() => {
+        if (!activeSearch) {
+            setQuery('');
+            setResults(null);
+            return;
+        }
+    }, [activeSearch]);
+
+    useEffect(() => {
+        const performSearch = async () => {
+            if (!debouncedQuery.trim() || debouncedQuery.trim().length < 2) {
+                setResults(null);
+                setIsSearching(false);
+                return;
+            }
+            setIsSearching(true);
+            try {
+                const data = await fetchGlobalSearch(debouncedQuery.trim(), category.id);
+                setResults(data);
+            } catch (error) {
+                console.error("Search failed:", error);
+            } finally {
+                setIsSearching(false);
+            }
+        };
+        performSearch();
+    }, [debouncedQuery, category.id]);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -81,10 +130,127 @@ export default function ModalSearch({ activeSearch, setActiveSearch }: { activeS
                             placeholder='Поиск...' 
                             autoComplete='off' 
                         />
-                        <button type='submit'><BsSearch className='absolute top-1/2 -translate-y-1/2 right-6 h-5 w-5 fill-white hover:fill-[#ff1414] transition-colors duration-300' /></button>
+                        <button type='submit'>
+                            {isSearching ? (
+                                <div className="absolute top-1/2 -translate-y-1/2 right-6 w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            ) : (
+                                <BsSearch className='absolute top-1/2 -translate-y-1/2 right-6 h-5 w-5 fill-white hover:fill-[#ff1414] transition-colors duration-300' />
+                            )}
+                        </button>
                     </div>
                 </form>
+
+                {/* SEARCH RESULTS DROPDOWN */}
+                {results && (
+                    <div className="w-full bg-[#1E1E20] border border-white/10 rounded-xl mt-2 overflow-hidden shadow-2xl flex flex-col max-h-[60vh]">
+                        <div className="overflow-y-auto custom-scrollbar p-2">
+                            {category.id === 'search' ? (
+                                // GROUPED RESULTS
+                                <>
+                                    <ResultGroup title="Фильмы" items={(results as GroupedGlobalSearchResults).movies} onSelect={() => setActiveSearch(false)} />
+                                    <ResultGroup title="Сериалы" items={(results as GroupedGlobalSearchResults).series} onSelect={() => setActiveSearch(false)} />
+                                    <ResultGroup title="Аниме" items={(results as GroupedGlobalSearchResults).anime} onSelect={() => setActiveSearch(false)} />
+                                    <ResultGroup title="Игры" items={(results as GroupedGlobalSearchResults).games} onSelect={() => setActiveSearch(false)} />
+                                    <ResultGroup title="Книги" items={(results as GroupedGlobalSearchResults).books} onSelect={() => setActiveSearch(false)} />
+                                    
+                                    {Object.values(results as GroupedGlobalSearchResults).every(arr => arr.length === 0) && (
+                                        <p className="text-gray-400 text-center py-8">Ничего не найдено</p>
+                                    )}
+                                </>
+                            ) : (
+                                // FLAT LIST (Single Category)
+                                <>
+                                    {(results as GlobalSearchResult[]).length > 0 ? (
+                                        <div className="flex flex-col gap-1">
+                                            {(results as GlobalSearchResult[]).map(item => (
+                                                <ResultItem key={item.id} item={item} onSelect={() => setActiveSearch(false)} />
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-gray-400 text-center py-8">Ничего не найдено</p>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                        <button 
+                            onClick={handleSearch}
+                            className="w-full p-4 bg-white/5 hover:bg-white/10 transition-colors border-t border-white/10 text-white font-medium flex items-center justify-center gap-2"
+                        >
+                            Показать все результаты поиска
+                        </button>
+                    </div>
+                )}
+
             </div>
         </div>
+    );
+}
+
+// Subcomponents for results
+function ResultGroup({ title, items, onSelect }: { title: string, items: GlobalSearchResult[], onSelect: () => void }) {
+    if (!items || items.length === 0) return null;
+    return (
+        <div className="mb-4 last:mb-0">
+            <h3 className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-2 px-3">{title}</h3>
+            <div className="flex flex-col gap-1">
+                {items.map(item => (
+                    <ResultItem key={item.id} item={item} onSelect={onSelect} />
+                ))}
+            </div>
+        </div>
+    );
+}
+
+function ResultItem({ item, onSelect }: { item: GlobalSearchResult, onSelect: () => void }) {
+    const [imgSrc, setImgSrc] = useState(item.img);
+
+    useEffect(() => {
+        setImgSrc(item.img);
+    }, [item.img]);
+
+    return (
+        <Link 
+            href={item.href} 
+            onClick={onSelect}
+            className="flex items-center gap-4 p-2 rounded-lg hover:bg-white/10 transition-colors group"
+        >
+            <div className="w-12 h-16 bg-black/40 rounded overflow-hidden shrink-0 relative">
+                {imgSrc && !imgSrc.includes('null') ? (
+                    <Image 
+                        src={imgSrc} 
+                        alt={item.title} 
+                        fill 
+                        className="object-cover" 
+                        onError={() => {
+                            if (item.fallbackImg && imgSrc !== item.fallbackImg) {
+                                setImgSrc(item.fallbackImg);
+                            }
+                        }}
+                    />
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center text-xs text-white/30 text-center p-1">Нет фото</div>
+                )}
+            </div>
+            <div className="flex flex-col justify-center overflow-hidden w-full">
+                <div className="flex items-center justify-between gap-3">
+                    <p className="text-white font-medium truncate group-hover:text-red-500 transition-colors">{item.title}</p>
+                    {item.rate > 0 && (
+                        <div className="flex items-center gap-1 bg-black/40 px-2 py-0.5 rounded text-xs shrink-0">
+                            <BsStarFill className="w-2.5 h-2.5 text-yellow-500" />
+                            <span className="text-white">{item.rate.toFixed(1)}</span>
+                        </div>
+                    )}
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-400 mt-1">
+                    <span>{item.genre}</span>
+                    {item.year && (
+                        <>
+                            <span className="w-1 h-1 rounded-full bg-gray-600"></span>
+                            <span>{item.year}</span>
+                        </>
+                    )}
+                </div>
+            </div>
+        </Link>
     );
 }

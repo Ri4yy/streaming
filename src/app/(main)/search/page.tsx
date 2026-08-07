@@ -49,7 +49,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     const hasResults = moviesList.length > 0 || seriesList.length > 0 || gamesList.length > 0 || booksList.length > 0;
 
     return (
-        <main className='-mt-20 pt-40 container min-h-screen'>
+        <main className='pt-40 container min-h-screen'>
             <h1 className="text-4xl font-bold mb-10">Результаты поиска: {query}</h1>
 
             {!hasResults && query && (

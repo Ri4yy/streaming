@@ -192,7 +192,7 @@ export default async function GamesPage({ searchParams }: { searchParams: Promis
                 </div>
             </section>
 
-            <section className='container lg:pb-[120px] md:pb-14 pb-8'>
+            <section className='container lg:pb-[120px] md:pb-14 pb-8 pt-4'>
                 {!q && weeklyGames.length > 0 && (
                     <WeeklySlider items={weeklyGames} type="game" title="Ожидаемые новинки" />
                 )}

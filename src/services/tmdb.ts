@@ -116,6 +116,16 @@ async function fetchTMDB<T>(endpoint: string, params: Record<string, string> = {
     } catch (error) {
         console.error(`Fetch failed for ${endpoint}:`, error);
 
+        // If it's a search query, return empty results so we don't show irrelevant mock data
+        if (endpoint.includes('/search/')) {
+            return {
+                page: 1,
+                results: [],
+                total_pages: 1,
+                total_results: 0
+            } as any;
+        }
+
         // Return fallback mock data to prevent app crash
         // This object satisfies both list response and detail response
         const mockFallback: any = {
