@@ -8,16 +8,26 @@ interface KinoboxPlayerProps {
 
 export default function KinoboxPlayer({ tmdbId }: KinoboxPlayerProps) {
     const containerRef = useRef<HTMLDivElement>(null);
+    const playerId = `kinobox-${tmdbId}`;
 
     useEffect(() => {
         const scriptId = 'kinobox-script';
-        
-        const initPlayer = () => {
+
+        if (!document.getElementById(scriptId)) {
+            const script = document.createElement('script');
+            script.id = scriptId;
+            script.src = 'https://kinobox.tv/kinobox.min.js';
+            script.async = true;
+            document.body.appendChild(script);
+        }
+
+        const checkKinobox = setInterval(() => {
             if (window.Kinobox && containerRef.current) {
+                clearInterval(checkKinobox);
                 containerRef.current.innerHTML = '';
-                new window.Kinobox(containerRef.current, {
+                new window.Kinobox(`#${playerId}`, {
                     search: {
-                        tmdb: tmdbId
+                        tmdb: String(tmdbId)
                     },
                     menu: {
                         enable: true,
@@ -25,29 +35,20 @@ export default function KinoboxPlayer({ tmdbId }: KinoboxPlayerProps) {
                     }
                 }).init();
             }
-        };
-
-        if (!document.getElementById(scriptId)) {
-            const script = document.createElement('script');
-            script.id = scriptId;
-            script.src = 'https://kinobox.tv/kinobox.min.js';
-            script.async = true;
-            script.onload = initPlayer;
-            document.body.appendChild(script);
-        } else {
-            initPlayer();
-        }
+        }, 100);
 
         return () => {
+            clearInterval(checkKinobox);
             if (containerRef.current) {
                 containerRef.current.innerHTML = '';
             }
         };
-    }, [tmdbId]);
+    }, [tmdbId, playerId]);
 
     return (
         <section className="container mx-auto px-5 lg:px-0">
             <div 
+                id={playerId}
                 ref={containerRef} 
                 className="kinobox_player w-full xl:w-4/5 mx-auto min-h-[400px] md:min-h-[600px] rounded-2xl overflow-hidden bg-[#1E1E20] border border-white/10 shadow-2xl"
             >
