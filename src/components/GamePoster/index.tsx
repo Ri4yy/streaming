@@ -25,6 +25,7 @@ export default function GamePoster({ appId, name, initialSrc, fallbackSrc }: Gam
                     src={imgSrc} 
                     alt={`${name} background`} 
                     fill
+                    unoptimized
                     className='absolute inset-0 object-cover blur-xl opacity-60 scale-150 z-0' 
                 />
             )}
@@ -32,6 +33,7 @@ export default function GamePoster({ appId, name, initialSrc, fallbackSrc }: Gam
                 src={imgSrc} 
                 alt={name} 
                 fill
+                unoptimized
                 className={`w-full h-full z-10 ${isHorizontal ? 'object-contain' : 'object-cover'}`} 
                 onLoad={(e) => {
                     const target = e.target as HTMLImageElement;

@@ -213,6 +213,11 @@ export const tmdbApi = {
             append_to_response: 'videos,credits,images'
         }),
         
+    getRecommendations: async (id: string | number, type: 'movie' | 'tv'): Promise<TMDBMedia[]> => {
+        const response = await fetchTMDB<TMDBResponse<TMDBMedia>>(`/${type}/${id}/recommendations`);
+        return response.results;
+    },
+        
     getImageUrl: (path: string | null, size: 'w500' | 'original' = 'w500') => {
         if (!path) return '/img/poster/spider.jpg';
         return size === 'w500' ? `${TMDB_IMAGE_BASE_URL}${path}` : `${TMDB_IMAGE_ORIGINAL_URL}${path}`;

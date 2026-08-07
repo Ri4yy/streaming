@@ -250,6 +250,72 @@ export const steamApi = {
         }
     },
 
+    // Получить похожие игры (поиск по франшизе и жанру)
+    getSimilarGames: async (game: SteamGameDetails, limit: number = 8): Promise<SteamGameDetails[]> => {
+        try {
+            if (!game) return [];
+            
+            let similar: SteamGameDetails[] = [];
+            
+            const fetchSearchPageIds = async (url: string) => {
+                const res = await fetch(url, { next: { revalidate: 3600 * 24 } });
+                const text = await res.text();
+                const ids: string[] = [];
+                const regex = /data-ds-appid="(\d+)"/g;
+                let match;
+                while ((match = regex.exec(text)) !== null) {
+                    ids.push(match[1]);
+                }
+                return ids;
+            };
+            
+            // 1. Поиск по франшизе (базовому имени)
+            // Берем первые 2 слова до двоеточия, тире или цифр
+            const cleanName = game.name.replace(/[:\-].*$/, ''); // Убираем подзаголовки
+            const franchiseMatch = cleanName.match(/^([a-zA-Zа-яА-Я0-9]+(?:\s+[a-zA-Zа-яА-Я0-9]+)?)/);
+            const franchiseName = franchiseMatch ? franchiseMatch[1].trim() : cleanName;
+            
+            if (franchiseName.length > 2) {
+                const franchiseIds = await fetchSearchPageIds(`https://store.steampowered.com/search/results?term=${encodeURIComponent(franchiseName)}`);
+                const uniqueFranchiseIds = Array.from(new Set(franchiseIds))
+                    .filter(id => id !== game.steam_appid.toString())
+                    .slice(0, limit);
+                    
+                if (uniqueFranchiseIds.length > 0) {
+                    const detailsPromises = uniqueFranchiseIds.map(id => steamApi.getGameDetails(id));
+                    const detailsResults = await Promise.all(detailsPromises);
+                    similar = detailsResults.filter((g): g is SteamGameDetails => g !== null && g.type === 'game');
+                }
+            }
+            
+            // 2. Ищем похожие игры только по жанрам (тегам), чтобы добить список до нужного лимита
+            if (similar.length < limit && game.genres && game.genres.length > 0) {
+                const genreId = game.genres[0].id;
+                const genreIds = await fetchSearchPageIds(`https://store.steampowered.com/search/results?tags=${genreId}&filter=topsellers`);
+                const uniqueGenreIds = Array.from(new Set(genreIds))
+                    .filter(id => id !== game.steam_appid.toString() && !similar.some(s => s.steam_appid.toString() === id))
+                    .slice(0, limit - similar.length);
+                
+                const detailsPromises = uniqueGenreIds.map(id => steamApi.getGameDetails(id));
+                const detailsResults = await Promise.all(detailsPromises);
+                const genreGames = detailsResults.filter((g): g is SteamGameDetails => g !== null && g.type === 'game');
+                similar = [...similar, ...genreGames];
+            }
+            
+            // 3. Если и этого мало (что бывает крайне редко), добиваем популярными новинками
+            if (similar.length < limit) {
+                const popular = await steamApi.getWeeklyNewGames(limit);
+                const uniquePopular = popular.filter(p => p.steam_appid !== game.steam_appid && !similar.some(s => s.steam_appid === p.steam_appid));
+                similar = [...similar, ...uniquePopular];
+            }
+            
+            return similar.slice(0, limit);
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    },
+
     // Вспомогательная функция для вертикальных 9/16 обложек
     getVerticalImage: (appId: number | string): string => {
         return `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/library_600x900_2x.jpg`;

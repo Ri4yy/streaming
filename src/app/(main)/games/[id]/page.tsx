@@ -6,6 +6,7 @@ import { steamApi } from '@/services/steam';
 import { notFound } from 'next/navigation';
 import GameScreenshots from '@/components/GameScreenshots';
 import GamePoster from '@/components/GamePoster';
+import SimilarSlider from '@/components/SimilarSlider';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -29,6 +30,8 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
     if (!game) {
         return notFound();
     }
+    
+    const similar = await steamApi.getSimilarGames(game);
 
     return (
         <main className="relative min-h-screen">
@@ -104,6 +107,8 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
                         <GameScreenshots screenshots={game.screenshots} />
                     </div>
                 </div>
+                
+                {/* <SimilarSlider items={similar} type="game" /> */}
                 </section>
             </div>
         </main>

@@ -5,6 +5,7 @@ import DetailActions from '@/components/DetailActions';
 import DetailTabs from '@/components/DetailTabs';
 import FramesSlider from '@/components/FramesSlider';
 import TrailerModal from '@/components/TrailerModal';
+import SimilarSlider from '@/components/SimilarSlider';
 import { tmdbApi } from '@/services/tmdb';
 import type { Metadata } from 'next';
 
@@ -21,6 +22,11 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ id
     const { id } = await params;
     const anime = await tmdbApi.getDetails(id, 'tv');
     const trailer = anime.videos?.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+    const recommendations = await tmdbApi.getRecommendations(id, 'tv');
+    // Filter recommendations for animation or Japan origin
+    const similar = recommendations.filter(item => 
+        item.genre_ids?.includes(16) || item.origin_country?.includes('JP')
+    );
 
     return (  
         <main className="relative min-h-screen">
@@ -102,6 +108,8 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ id
             )}
             
             <DetailTabs media={anime} type="anime" />
+            
+            <SimilarSlider items={similar} type="anime" />
             </div>
         </main>
     );

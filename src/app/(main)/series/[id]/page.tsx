@@ -5,6 +5,7 @@ import DetailActions from '@/components/DetailActions';
 import DetailTabs from '@/components/DetailTabs';
 import FramesSlider from '@/components/FramesSlider';
 import TrailerModal from '@/components/TrailerModal';
+import SimilarSlider from '@/components/SimilarSlider';
 import { tmdbApi } from '@/services/tmdb';
 import type { Metadata } from 'next';
 
@@ -21,6 +22,7 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ i
     const { id } = await params;
     const series = await tmdbApi.getDetails(id, 'tv');
     const trailer = series.videos?.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+    const similar = await tmdbApi.getRecommendations(id, 'tv');
 
     return (  
         <main className="relative min-h-screen">
@@ -102,6 +104,8 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ i
             )}
             
             <DetailTabs media={series} type="tv" />
+            
+            <SimilarSlider items={similar} type="tv" />
             </div>
         </main>
     );
