@@ -58,7 +58,12 @@ export default async function SeriesPage({ searchParams }: { searchParams: Promi
             options.sort_by = 'popularity.desc';
         }
 
-        if (yearMin) options['first_air_date.gte'] = `${yearMin}-01-01`;
+        if (yearMin) {
+            options['first_air_date.gte'] = `${yearMin}-01-01`;
+        } else {
+            const currentYear = new Date().getFullYear();
+            options['first_air_date.gte'] = `${currentYear - 6}-01-01`;
+        }
         if (yearMax) options['first_air_date.lte'] = `${yearMax}-12-31`;
         if (ratingMin) options['vote_average.gte'] = ratingMin;
         if (ratingMax) options['vote_average.lte'] = ratingMax;
@@ -90,7 +95,7 @@ export default async function SeriesPage({ searchParams }: { searchParams: Promi
                     <div className="absolute inset-0 bg-black/20 z-0"></div>
                     <div className="absolute md:bottom-10 md:left-10 md:right-10 bottom-4 left-4 right-4 p-6 bg-black/40 backdrop-blur-3xl border border-white/10 rounded-2xl lg:max-w-[700px] shadow-2xl shadow-black/50 z-10">
                         <p className='md:text-5xl text-3xl font-bold mb-6 leading-[1.1] drop-shadow-lg'>{heroSeries?.title || heroSeries?.name}</p>
-                        
+
                         <div className='p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md shadow-inner'>
                             <p className='md:text-base text-sm text-white/90 line-clamp-3 leading-[1.5]'>
                                 {heroSeries?.overview || "Описание отсутствует."}
