@@ -88,7 +88,7 @@ export default function Hero({ movies }: { movies: TMDBMedia[] }) {
                             </p>
                             
                             <div className="flex items-center gap-4 mt-8" data-swiper-parallax="-500">
-                                <Link href={`/${movie.media_type === 'tv' ? 'series' : 'movies'}/${movie.id}`} className='flex gap-2 justify-center items-center group py-3.5 px-10 rounded-xl bg-theme-main hover:bg-theme-main/90 relative overflow-hidden transition-all duration-500 shadow-[0_0_20px_var(--theme-border)] hover:shadow-[0_0_30px_var(--theme-primary)]'>
+                                <Link href={`/${movie.media_type === 'tv' ? 'series' : 'movies'}/${movie.id}`} className='flex gap-2 justify-center items-center group py-3.5 px-10 rounded-xl bg-theme-gradient text-white font-bold hover:opacity-90 relative overflow-hidden transition-all duration-500 shadow-[0_0_20px_var(--theme-border)] hover:shadow-[0_0_30px_var(--theme-primary)]'>
                                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full transition-all duration-500 ease-out group-hover:w-[300px] group-hover:h-[300px] z-0"></div>
                                     <span className="relative z-10 text-white group-hover:text-black font-semibold text-lg transition-colors duration-500">Смотреть</span>
                                     <svg width="24" height="24" className='fill-white group-hover:fill-black z-50 relative' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

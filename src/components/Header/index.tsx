@@ -70,6 +70,7 @@ export default function Header() {
         { path: '/series', label: 'Сериалы' },
         { path: '/anime', label: 'Аниме' },
         { path: '/games', label: 'Игры' },
+        { path: '/collections', label: 'Подборки' },
         { path: '/books', label: 'Книги' },
     ];
 
@@ -145,7 +146,7 @@ export default function Header() {
                     <BsTelegram className="w-5 h-5 drop-shadow-[0_0_4px_rgba(0,136,204,0.3)]" />
                 </Link>
                 <nav className="relative flex items-center">
-                    <ul ref={navRef} className='hidden md:flex gap-2 text-sm relative z-10' onMouseLeave={handleMouseLeave}>
+                    <ul ref={navRef} className='hidden lg:flex gap-2 text-sm relative z-10' onMouseLeave={handleMouseLeave}>
                         {navLinks.map((link, idx) => (
                             <li key={link.path} className='py-4' onMouseEnter={() => handleMouseEnter(idx)}>
                                 <Link href={link.path} className={`px-4 py-2 block text-white transition-colors duration-300 ${pathname === link.path ? 'font-medium' : 'text-white/70 hover:text-white'}`}>
@@ -155,11 +156,11 @@ export default function Header() {
                         ))}
                     </ul>
                     <div
-                        className="absolute hidden md:block top-1/2 -translate-y-1/2 h-[36px] bg-theme-main/20 backdrop-blur-xl border border-theme-main/40 rounded-xl shadow-[0_0_15px_var(--theme-border)] transition-all duration-300 ease-out z-0 pointer-events-none"
+                        className="absolute hidden lg:block top-1/2 -translate-y-1/2 h-[36px] bg-theme-main/20 backdrop-blur-xl border border-theme-main/40 rounded-xl shadow-[0_0_15px_var(--theme-border)] transition-all duration-300 ease-out z-0 pointer-events-none"
                         style={{ left: pillStyle.left, width: pillStyle.width, opacity: pillStyle.opacity }}
                     />
                 </nav>
-                <div className="flex md:gap-5 gap-3 items-center ml-auto md:ml-0 md:mr-6 mr-4">
+                <div className="flex lg:gap-5 gap-3 items-center ml-auto lg:ml-0 lg:mr-6 mr-4">
                     <button onClick={() => setActiveSearch(true)}><BsSearch className='xs:block hidden h-5 w-5 text-white/70 hover:text-theme-main hover:drop-shadow-[0_0_8px_var(--theme-primary)] transition-all duration-300' /></button>
 
                     {!user ? (
@@ -274,7 +275,7 @@ export default function Header() {
                         </div>
                     )}
                 </div>
-                <div className="md:hidden flex justify-center items-center relative md:py-0 py-3" onClick={() => setActiveMenu(!activeMenu)}>
+                <div className="lg:hidden flex justify-center items-center relative lg:py-0 py-3" onClick={() => setActiveMenu(!activeMenu)}>
                     <HiMenu className='cursor-pointer h-6 w-6 z-20' />
                     <div className="absolute backdrop-blur-md bg-white/20 rounded-md w-8 h-8"></div>
                 </div>
@@ -282,7 +283,7 @@ export default function Header() {
 
             {/* Mobile Menu Overlay */}
             {activeMenu && (
-                <div className="fixed inset-0 z-[55] bg-black/80 backdrop-blur-md flex flex-col items-center justify-center md:hidden pt-20 transition-all duration-300">
+                <div className="fixed inset-0 z-[55] bg-black/80 backdrop-blur-md flex flex-col items-center justify-center lg:hidden pt-20 transition-all duration-300">
                     <button className="absolute top-6 right-6 text-white text-3xl" onClick={() => setActiveMenu(false)}>&times;</button>
                     <ul className="flex flex-col gap-6 text-center text-xl font-medium">
                         {navLinks.map(link => (

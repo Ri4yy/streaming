@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import Script from 'next/script';
 import DetailActions from '@/components/DetailActions';
 import DetailTabs from '@/components/DetailTabs';
 import FramesSlider from '@/components/FramesSlider';
@@ -57,7 +58,8 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ id
 
     return (
         <main className="relative min-h-screen">
-            <script
+            <Script
+                id="json-ld"
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />

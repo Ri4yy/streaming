@@ -43,11 +43,12 @@ export default function SimilarSlider({ items, type }: SimilarSliderProps) {
             <Swiper
                 modules={[Navigation]}
                 spaceBetween={20}
-                slidesPerView={2}
+                slidesPerView={1.5}
                 breakpoints={{
-                    640: { slidesPerView: 3 },
-                    1024: { slidesPerView: 5 },
-                    1280: { slidesPerView: 6 },
+                    480: { slidesPerView: 2 },
+                    768: { slidesPerView: 3 },
+                    1024: { slidesPerView: 4 },
+                    1280: { slidesPerView: 5 },
                 }}
                 className="w-full relative static-buttons-swiper pb-10"
             >

@@ -11,6 +11,10 @@
   --color-theme-hover: var(--theme-primary-hover);
 }
 
+@utility bg-theme-gradient {
+  background: var(--theme-primary-gradient);
+}
+
 @layer base {
   body {
     color: #fff;
@@ -206,6 +210,7 @@
   /* Default theme (Red) */
   --theme-primary: #ff1414;
   --theme-primary-hover: #e01212;
+  --theme-primary-gradient: var(--theme-primary);
   --theme-bg-gradient: linear-gradient(100deg, rgba(255, 20, 20, 0.15), rgba(255, 20, 20, 0.05) 62%);
   --theme-border: rgba(255, 20, 20, 0.28);
   --theme-bg: #101113;
@@ -215,6 +220,7 @@
 [data-theme="blue"] {
   --theme-primary: #2aabee;
   --theme-primary-hover: #228abc;
+  --theme-primary-gradient: var(--theme-primary);
   --theme-bg-gradient: linear-gradient(100deg, #2aabee24, #2aabee0d 62%);
   --theme-border: #2aabee47;
   --theme-bg: #080c13;
@@ -257,6 +263,7 @@
 [data-theme="orange"] {
   --theme-primary: #f97316;
   --theme-primary-hover: #ea580c;
+  --theme-primary-gradient: var(--theme-primary);
   --theme-bg-gradient: linear-gradient(100deg, rgba(249, 115, 22, 0.15), rgba(249, 115, 22, 0.05) 62%);
   --theme-border: rgba(249, 115, 22, 0.28);
   --theme-bg: #110d0a;
@@ -264,10 +271,11 @@
 }
 
 [data-theme="lime"] {
-  --theme-primary: #84cc16;
-  --theme-primary-hover: #65a30d;
-  --theme-bg-gradient: linear-gradient(100deg, rgba(132, 204, 22, 0.15), rgba(132, 204, 22, 0.05) 62%);
-  --theme-border: rgba(132, 204, 22, 0.28);
+  --theme-primary: #b4fd64;
+  --theme-primary-hover: #9be945;
+  --theme-primary-gradient: linear-gradient(45deg, #f2f452, #b4fd64 64%);
+  --theme-bg-gradient: linear-gradient(100deg, rgba(180, 253, 100, 0.15), rgba(180, 253, 100, 0.05) 62%);
+  --theme-border: rgba(180, 253, 100, 0.28);
   --theme-bg: #0c110a;
   --theme-input-bg: rgba(255, 255, 255, 0.06);
 }

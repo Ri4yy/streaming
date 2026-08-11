@@ -99,7 +99,7 @@ export default function DetailTabs({ media, type }: { media: TMDBDetail, type: '
                         <Tab.Panel>
                             <div className="flex flex-col gap-y-10 xl:w-2/5 md:w-4/5 px-5 md:px-0 mx-auto pb-20">
                                 {media.next_episode_to_air ? (
-                                    <div className="bg-[#1E1E20] p-6 rounded-xl border border-white/10">
+                                    <div className="p-6 rounded-xl bg-white/5 backdrop-blur-3xl border border-white/10">
                                         <h3 className="text-xl font-bold mb-4">Следующая серия</h3>
                                         <p className="text-[#CAE962] font-medium text-lg mb-2">
                                             {media.next_episode_to_air.name || `Эпизод ${media.next_episode_to_air.episode_number}`}

@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import Script from 'next/script';
 import DetailActions from '@/components/DetailActions';
 import { steamApi } from '@/services/steam';
 import { notFound } from 'next/navigation';
@@ -60,7 +61,8 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
 
     return (
         <main className="relative min-h-screen">
-            <script
+            <Script
+                id="json-ld"
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
@@ -78,7 +80,7 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
             <div className="relative z-20">
                 <section className='pb-20 pt-[120px] md:pt-[150px] w-full min-h-screen'>
                     <div className="container flex max-[1100px]:flex-col gap-x-20 items-start">
-                    <div className="max-[1100px]:mt-[40px] w-[30%] h-full max-[1100px]:w-full relative sticky top-[120px]">
+                    <div className="max-[1100px]:mt-[40px] w-[30%] h-full max-[1100px]:w-full relative min-[1100px]:sticky min-[1100px]:top-[120px]">
                         <div className="relative pb-32">
                             {/* Постер с фоллбеком */}
                             <GamePoster 

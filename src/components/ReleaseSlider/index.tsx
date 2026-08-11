@@ -27,15 +27,14 @@ export default function ReleaseSlider({ movies }: { movies: TMDBMedia[] }) {
                         <Swiper
                         className="!pt-5 !px-5"
                         breakpoints={{
-                            320: { slidesPerView: 1 },
-                            580: { slidesPerView: 2 },
-                            900: { slidesPerView: 3 },
+                            480: { slidesPerView: 2 },
+                            768: { slidesPerView: 3 },
                             1024: { slidesPerView: 4 },
-                            1480: { slidesPerView: 5 }
+                            1280: { slidesPerView: 5 },
                         }}
                         modules={[Navigation]}
                         spaceBetween={50}
-                        slidesPerView={5}
+                        slidesPerView={1.5}
                         >
                             <div slot="container-start" className="absolute top-0 left-0 w-full h-[calc(100%-76px)] bg-white/5 backdrop-blur-3xl border border-white/10 shadow-2xl rounded-l-2xl z-0 pointer-events-none"></div>
                             {movies.map((movie) => (

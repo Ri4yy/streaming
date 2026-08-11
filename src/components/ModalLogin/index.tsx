@@ -85,7 +85,7 @@ export default function ModalLogin({ active, setActive }: { active: boolean, set
                         <input value={password} onChange={e => setPassword(e.target.value)} required className='w-full py-4 pl-[60px] pr-6 rounded-xl bg-white/5 hover:bg-white/10 focus:bg-white/10 outline-none border border-white/10 hover:border-white/20 focus:border-white/30 transition-all duration-300 text-white placeholder:text-white/50' name='password' type="password" placeholder='Пароль' autoComplete='current-password' />
                     </div>
                     <div className="flex flex-col gap-4 mt-2">
-                        <button type="submit" disabled={loading} className='flex justify-center items-center group py-4 w-full rounded-lg bg-theme-main relative overflow-hidden transition-all duration-500 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100'>
+                        <button type="submit" disabled={loading} className='flex justify-center items-center group py-4 w-full rounded-lg bg-theme-gradient text-white font-bold hover:opacity-90 relative overflow-hidden transition-all duration-500 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100'>
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full transition-all duration-500 ease-out group-hover:w-[400px] group-hover:h-[400px] z-0"></div>
                             <span className="relative z-10 font-medium group-hover:text-black transition-colors duration-500">{loading ? 'Загрузка...' : 'Войти'}</span>
                         </button>

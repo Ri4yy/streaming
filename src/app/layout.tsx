@@ -3,6 +3,7 @@ import "./globals.css";
 import ScrollToTopBtn from "@/components/ScrollToTopBtn";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
+import Script from "next/script";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -40,7 +41,9 @@ export default function RootLayout({
   return (
     <html lang="ru" className={cn("dark font-sans", geist.variable)} suppressHydrationWarning>
       <head>
-        <script
+        <Script
+          id="theme-script"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               try {

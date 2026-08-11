@@ -38,14 +38,14 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
 
     return (
         <div className="flex flex-col gap-4 group h-full">
-            <div className={`w-full relative rounded-lg overflow-hidden bg-white/5 ${size === 'small' ? 'h-[300px]' : 'h-[400px]'}`}>
+            <div className={`w-full relative rounded-lg overflow-hidden bg-white/5 ${size === 'small' ? 'aspect-[9/16] min-h-[320px]' : 'h-[400px]'}`}>
                 {/* Image loading skeleton */}
                 {!isLoaded && (
                     <div className="absolute inset-0 bg-white/10 animate-pulse z-0"></div>
                 )}
                 
                 {(rate !== 0 && rate !== '0' && rate !== '0.0' && rate !== 'N/A') && (
-                    <div className='absolute top-3 right-3 text-white rounded-md backdrop-blur-md bg-black/50 py-1 px-2.5 z-20'>
+                    <div className='absolute top-3 right-3 text-white font-bold rounded-md bg-[#F6C700]/40 backdrop-blur-md border border-[#F6C700]/50 shadow-[0_0_15px_rgba(246,199,0,0.2)] py-1 px-2.5 z-20'>
                         {typeof rate === 'number' ? rate.toFixed(1) : rate}
                     </div>
                 )}

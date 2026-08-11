@@ -36,7 +36,7 @@ export default function MovieList({ movies }: { movies: TMDBMedia[] }) {
                     )}
                 </div>
                 <StaggerItem>
-                    <Link href="/movies" className='flex gap-2 justify-center items-center group py-3 px-8 rounded-lg hover:scale-110 bg-theme-main relative overflow-hidden transition-all duration-700 mx-auto mt-12 w-fit'>
+                    <Link href="/movies" className='flex gap-2 justify-center items-center group py-3 px-8 rounded-lg hover:scale-110 bg-theme-gradient text-white relative overflow-hidden transition-all duration-700 mx-auto mt-12 w-fit'>
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full transition-all duration-500 ease-out group-hover:w-[300px] group-hover:h-[300px] z-0"></div>
                         <span className="relative z-10 group-hover:text-black transition-colors duration-500">Просмотреть все</span>
                     </Link>
