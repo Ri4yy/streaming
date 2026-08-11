@@ -32,6 +32,15 @@ const searchCategories = [
     { id: 'books', name: 'Книги' },
 ];
 
+const categoryPlaceholders: Record<string, string[]> = {
+    search: ['Найти фильм...', 'Найти сериал...', 'Найти игру...', 'Найти аниме...', 'Дэдпул и Росомаха', 'The Witcher 3', 'Во все тяжкие'],
+    movies: ['Найти фильм...', 'Мстители', 'Интерстеллар', 'Дюна', 'Побег из Шоушенка', 'Матрица'],
+    series: ['Найти сериал...', 'Во все тяжкие', 'Игра престолов', 'Офис', 'Пацаны', 'Очень странные дела'],
+    anime: ['Найти аниме...', 'Наруто', 'Атака титанов', 'Ван Пис', 'Тетрадь смерти', 'Клинок, рассекающий демонов'],
+    games: ['Найти игру...', 'Ведьмак 3', 'Cyberpunk 2077', 'GTA V', 'Red Dead Redemption 2', 'Elden Ring'],
+    books: ['Найти книгу...', 'Гарри Поттер', 'Властелин колец', 'Мастер и Маргарита', '1984', 'Дюна'],
+};
+
 export default function ModalSearch({ activeSearch, setActiveSearch }: { activeSearch: boolean, setActiveSearch: (v: boolean) => void }) {
     const [query, setQuery] = useState('');
     const debouncedQuery = useDebounce(query, 500);
@@ -40,6 +49,48 @@ export default function ModalSearch({ activeSearch, setActiveSearch }: { activeS
     
     const [isSearching, setIsSearching] = useState(false);
     const [results, setResults] = useState<GlobalSearchResult[] | GroupedGlobalSearchResults | null>(null);
+
+    // Typing effect state
+    const [placeholderText, setPlaceholderText] = useState('');
+    const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    useEffect(() => {
+        const phrases = categoryPlaceholders[category.id] || categoryPlaceholders['search'];
+        const currentPhrase = phrases[currentPhraseIndex];
+        
+        const typeSpeed = 100;
+        const deleteSpeed = 50;
+        const pauseDelay = 2000;
+
+        let timer: NodeJS.Timeout;
+
+        if (isDeleting) {
+            timer = setTimeout(() => {
+                setPlaceholderText(currentPhrase.substring(0, placeholderText.length - 1));
+                if (placeholderText.length === 0) {
+                    setIsDeleting(false);
+                    setCurrentPhraseIndex((prev) => (prev + 1) % phrases.length);
+                }
+            }, deleteSpeed);
+        } else {
+            timer = setTimeout(() => {
+                setPlaceholderText(currentPhrase.substring(0, placeholderText.length + 1));
+                if (placeholderText === currentPhrase) {
+                    setTimeout(() => setIsDeleting(true), pauseDelay);
+                }
+            }, typeSpeed);
+        }
+
+        return () => clearTimeout(timer);
+    }, [placeholderText, isDeleting, currentPhraseIndex, category.id]);
+
+    // Reset typing effect when category changes
+    useEffect(() => {
+        setPlaceholderText('');
+        setIsDeleting(false);
+        setCurrentPhraseIndex(0);
+    }, [category.id]);
 
     useEffect(() => {
         if (!activeSearch) {
@@ -86,7 +137,7 @@ export default function ModalSearch({ activeSearch, setActiveSearch }: { activeS
                 <form action="#" method="POST" className='w-full flex gap-3 xs:flex-row flex-col' onSubmit={handleSearch}>
                     <div className="relative w-full xs:w-[150px] shrink-0 z-50">
                         <Listbox value={category} onChange={setCategory}>
-                            <Listbox.Button className="relative w-full h-full min-h-[56px] cursor-pointer rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300 py-4 pl-5 pr-10 text-left shadow-lg backdrop-blur-md focus:outline-none sm:text-sm text-white flex items-center">
+                            <Listbox.Button className="relative w-full h-full min-h-[56px] cursor-pointer rounded-xl bg-[var(--theme-input-bg)] hover:bg-[var(--theme-input-bg)]/80 border border-white/10 transition-all duration-300 py-4 pl-5 pr-10 text-left shadow-lg backdrop-blur-md focus:outline-none sm:text-sm text-white flex items-center">
                                 <span className="block truncate font-medium">{category.name}</span>
                                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
                                     <BsChevronDown className="h-4 w-4 text-gray-400" aria-hidden="true" />
@@ -110,7 +161,7 @@ export default function ModalSearch({ activeSearch, setActiveSearch }: { activeS
                                             value={option}
                                         >
                                             {({ selected }) => (
-                                                <span className={`block truncate ${selected ? 'font-bold text-red-500' : 'font-normal'}`}>
+                                                <span className={`block truncate ${selected ? 'font-bold text-theme-main' : 'font-normal'}`}>
                                                     {option.name}
                                                 </span>
                                             )}
@@ -124,17 +175,17 @@ export default function ModalSearch({ activeSearch, setActiveSearch }: { activeS
                         <input 
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
-                            className='w-full py-4 px-7 pr-14 rounded-xl bg-white/5 hover:bg-white/10 focus:bg-white/10 outline-none border border-white/10 hover:border-white/20 focus:border-white/30 transition-all duration-300 text-white placeholder:text-white/50' 
+                            className='w-full py-4 px-7 pr-14 rounded-xl bg-[var(--theme-input-bg)] hover:bg-[var(--theme-input-bg)]/80 focus:bg-[var(--theme-input-bg)]/80 outline-none border border-white/10 hover:border-white/20 focus:border-white/30 transition-all duration-300 text-white placeholder:text-white/50' 
                             name='search' 
                             type="text" 
-                            placeholder='Найти фильм, сериал, игру...' 
+                            placeholder={placeholderText} 
                             autoComplete='off' 
                         />
                         <button type='submit'>
                             {isSearching ? (
                                 <div className="absolute top-1/2 -translate-y-1/2 right-6 w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                             ) : (
-                                <BsSearch className='absolute top-1/2 -translate-y-1/2 right-6 h-5 w-5 fill-white hover:fill-[#ff1414] transition-colors duration-300' />
+                                <BsSearch className='absolute top-1/2 -translate-y-1/2 right-6 h-5 w-5 fill-white hover:fill-theme-main transition-colors duration-300' />
                             )}
                         </button>
                     </div>
@@ -174,7 +225,7 @@ export default function ModalSearch({ activeSearch, setActiveSearch }: { activeS
                         </div>
                         <button 
                             onClick={handleSearch}
-                            className="w-full p-4 bg-white/5 hover:bg-white/10 transition-colors border-t border-white/10 text-white font-medium flex items-center justify-center gap-2"
+                            className="w-full p-4 bg-[var(--theme-input-bg)] hover:bg-[var(--theme-input-bg)]/80 transition-colors border-t border-white/10 text-white font-medium flex items-center justify-center gap-2"
                         >
                             Показать все результаты поиска
                         </button>
@@ -233,7 +284,7 @@ function ResultItem({ item, onSelect }: { item: GlobalSearchResult, onSelect: ()
             </div>
             <div className="flex flex-col justify-center overflow-hidden w-full">
                 <div className="flex items-center justify-between gap-3">
-                    <p className="text-white font-medium truncate group-hover:text-red-500 transition-colors">{item.title}</p>
+                    <p className="text-white font-medium truncate group-hover:text-theme-main transition-colors">{item.title}</p>
                     {item.rate > 0 && (
                         <div className="flex items-center gap-1 bg-black/40 px-2 py-0.5 rounded text-xs shrink-0">
                             <BsStarFill className="w-2.5 h-2.5 text-yellow-500" />

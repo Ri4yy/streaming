@@ -12,9 +12,21 @@ import type { Metadata } from 'next';
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const { id } = await params;
     const movie = await tmdbApi.getDetails(id, 'movie');
+    
+    const year = movie.release_date?.split('-')[0] || '';
+    const title = `${movie.title || movie.name} ${year ? `(${year}) ` : ''}— обзор, актеры, отзывы, рейтинг | CineBox`;
+    const description = `Вся информация о фильме «${movie.title || movie.name}» ${year ? `(${year})` : ''}. Сюжет, актерский состав, трейлеры и похожие фильмы. Читайте отзывы и узнайте рейтинг.`;
+    const imgUrl = tmdbApi.getImageUrl(movie.poster_path);
+
     return {
-        title: movie.title || movie.name || 'Фильм',
-        description: movie.overview?.substring(0, 160) || "Подробная информация о фильме.",
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            images: [imgUrl],
+            type: 'video.movie',
+        }
     };
 }
 
@@ -24,8 +36,27 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
     const trailer = movie.videos?.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube');
     const similar = await tmdbApi.getRecommendations(id, 'movie');
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Movie',
+        name: movie.title || movie.name,
+        image: tmdbApi.getImageUrl(movie.poster_path),
+        description: movie.overview,
+        datePublished: movie.release_date,
+        aggregateRating: movie.vote_average ? {
+            '@type': 'AggregateRating',
+            ratingValue: movie.vote_average,
+            bestRating: '10',
+            ratingCount: movie.vote_count || 1,
+        } : undefined,
+    };
+
     return (
         <main className="relative min-h-screen">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <Image
                     src={tmdbApi.getImageUrl(movie.backdrop_path || movie.poster_path, 'original')}
@@ -77,7 +108,7 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
                             <ul className='flex md:flex-row flex-col gap-x-8 gap-y-2 md:items-center'>
                                 {movie.credits?.cast?.slice(0, 3).map(person => (
                                     <li key={person.id}>
-                                        <Link href="#" className='text-white hover:text-[#ff1414] transition-all duration-300'>
+                                        <Link href="#" className='text-white hover:text-theme-main transition-all duration-300'>
                                             {person.name}
                                         </Link>
                                     </li>

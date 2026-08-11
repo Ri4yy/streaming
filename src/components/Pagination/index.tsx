@@ -36,7 +36,7 @@ export default function Pagination({ totalPages, currentPage, onPageChange }: Pa
                     onClick={() => handlePageChange(i)}
                     className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 border backdrop-blur-md shadow-lg ${
                         currentPage === i 
-                        ? 'bg-[#ff1414] border-[#ff1414] shadow-[#ff1414]/30 text-white font-medium' 
+                        ? 'bg-theme-main border-theme-main shadow-theme-main/30 text-white font-medium' 
                         : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20 text-white/70 hover:text-white'
                     }`}
                 >

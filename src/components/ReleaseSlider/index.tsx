@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { Flame } from 'lucide-react';
 import MediaCard from '@/components/MediaCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -15,7 +16,12 @@ export default function ReleaseSlider({ movies }: { movies: TMDBMedia[] }) {
     return (  
         <StaggerContainer className='xl:pl-[calc((100%-1240px)/2)] min-[1240px]:pl-[calc((100%-1160px)/2)] md:pl-10 px-5 md:px-0 pt-[100px]'>
             <section>
-                <StaggerItem><h2 className='text-3xl font-bold'>Премьеры</h2></StaggerItem>
+                <StaggerItem>
+                    <h2 className='text-3xl font-bold flex items-center gap-3'>
+                        <Flame className="w-8 h-8 text-white" />
+                        Премьеры
+                    </h2>
+                </StaggerItem>
                 <StaggerItem>
                     <div className='pt-10'>
                         <Swiper

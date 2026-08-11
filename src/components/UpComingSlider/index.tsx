@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { Calendar } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import CardUpComing from '@/components/CardUpComing';
@@ -13,7 +14,10 @@ export default function UpComingSlider({ movies }: { movies: TMDBMedia[] }) {
     if (!movies || movies.length === 0) return null;
     return (  
         <div className="container pt-[100px]">
-            <h2 className='md:text-[32px] text-2xl leading-[1.2] font-bold'>Предстоящие релизы</h2>
+            <h2 className='md:text-[32px] text-2xl leading-[1.2] font-bold flex items-center gap-3'>
+                <Calendar className="w-8 h-8 text-white" />
+                Предстоящие релизы
+            </h2>
             <div className="pt-10">
                 <Swiper
                     breakpoints={{

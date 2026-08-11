@@ -75,7 +75,7 @@ export default function TWASearchPage() {
             {type === t && (
               <motion.div
                 layoutId="active-search-tab"
-                className="absolute inset-0 bg-[#ff1414]/20 border border-[#ff1414]/40 rounded-xl z-0 backdrop-blur-md shadow-sm"
+                className="absolute inset-0 bg-theme-main/20 border border-theme-main/40 rounded-xl z-0 backdrop-blur-md shadow-sm"
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}

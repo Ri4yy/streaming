@@ -70,7 +70,7 @@ export default function DetailActions({ id, type, title, coverUrl }: DetailActio
                                     value={option}
                                 >
                                     {({ selected }) => (
-                                        <span className={`block truncate ${selected ? 'font-bold text-red-500' : 'font-normal'}`}>
+                                        <span className={`block truncate ${selected ? 'font-bold text-theme-main' : 'font-normal'}`}>
                                             {option.name}
                                         </span>
                                     )}
@@ -86,11 +86,11 @@ export default function DetailActions({ id, type, title, coverUrl }: DetailActio
                 className="group hover:scale-105 transition-all duration-500 overflow-hidden flex justify-center items-center backdrop-blur-md bg-black/60 py-2.5 w-full rounded-lg cursor-pointer"
             >
                 {isFavorite ? (
-                    <AiFillHeart className='w-5 h-5 fill-red-500 transition-all duration-500' />
+                    <AiFillHeart className='w-5 h-5 fill-theme-main transition-all duration-500' />
                 ) : (
                     <AiOutlineHeart className='w-5 h-5 group-hover:fill-black transition-all duration-500' />
                 )}
-                <span className={`whitespace-nowrap pl-3 transition-all duration-500 ${isFavorite ? 'text-red-500' : 'group-hover:text-black'}`}>
+                <span className={`whitespace-nowrap pl-3 transition-all duration-500 ${isFavorite ? 'text-theme-main' : 'group-hover:text-black'}`}>
                     {isFavorite ? 'В Избранном' : 'Добавить в Избранное'}
                 </span>
                 {!isFavorite && <div className="-z-10 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-0 h-0 group-hover:w-[150%] rounded-full group-hover:h-[1000%] bg-white transition-all duration-500"></div>}

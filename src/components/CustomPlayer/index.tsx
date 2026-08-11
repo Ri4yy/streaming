@@ -155,7 +155,7 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
                 onClick={handlePlayPause}
             >
                 <button 
-                    className={`w-20 h-20 bg-white/20 hover:bg-[#ff1414] backdrop-blur-md rounded-full flex justify-center items-center transition-all duration-300 ${!playing ? 'scale-100' : 'scale-75 opacity-0'}`}
+                    className={`w-20 h-20 bg-white/20 hover:bg-theme-main backdrop-blur-md rounded-full flex justify-center items-center transition-all duration-300 ${!playing ? 'scale-100' : 'scale-75 opacity-0'}`}
                 >
                     <BsPlayFill className="text-white text-5xl ml-2" />
                 </button>
@@ -176,21 +176,21 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
                         onMouseDown={() => setPlaying(false)}
                         onChange={handleSeekChange}
                         onMouseUp={handleSeekMouseUp}
-                        className="w-full h-1.5 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-[#ff1414]"
+                        className="w-full h-1.5 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-theme-main"
                         style={{
-                            background: `linear-gradient(to right, #ff1414 ${played * 100}%, #4b5563 ${played * 100}%)`
+                            background: `linear-gradient(to right, var(--theme-primary) ${played * 100}%, #4b5563 ${played * 100}%)`
                         }}
                     />
                 </div>
 
                 <div className="flex justify-between items-center text-white">
                     <div className="flex items-center gap-4">
-                        <button onClick={handlePlayPause} className="hover:text-[#ff1414] transition-colors">
+                        <button onClick={handlePlayPause} className="hover:text-theme-main transition-colors">
                             {playing ? <BsPauseFill className="text-2xl" /> : <BsPlayFill className="text-2xl" />}
                         </button>
                         
                         <div className="flex items-center gap-2 group/volume relative">
-                            <button onClick={handleToggleMute} className="hover:text-[#ff1414] transition-colors">
+                            <button onClick={handleToggleMute} className="hover:text-theme-main transition-colors">
                                 {muted || volume === 0 ? <BsVolumeMuteFill className="text-2xl" /> : <BsVolumeUpFill className="text-2xl" />}
                             </button>
                             <input 
@@ -200,9 +200,9 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
                                 step="any"
                                 value={muted ? 0 : volume}
                                 onChange={handleVolumeChange}
-                                className="w-0 opacity-0 group-hover/volume:w-20 group-hover/volume:opacity-100 transition-all duration-300 h-1.5 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-[#ff1414] origin-left"
+                                className="w-0 opacity-0 group-hover/volume:w-20 group-hover/volume:opacity-100 transition-all duration-300 h-1.5 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-theme-main origin-left"
                                 style={{
-                                    background: `linear-gradient(to right, #ff1414 ${(muted ? 0 : volume) * 100}%, #4b5563 ${(muted ? 0 : volume) * 100}%)`
+                                    background: `linear-gradient(to right, var(--theme-primary) ${(muted ? 0 : volume) * 100}%, #4b5563 ${(muted ? 0 : volume) * 100}%)`
                                 }}
                             />
                         </div>
@@ -213,7 +213,7 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
                     </div>
 
                     <div className="flex items-center">
-                        <button onClick={toggleFullscreen} className="hover:text-[#ff1414] transition-colors">
+                        <button onClick={toggleFullscreen} className="hover:text-theme-main transition-colors">
                             {isFullscreen ? <BsFullscreenExit className="text-xl" /> : <BsFullscreen className="text-xl" />}
                         </button>
                     </div>
@@ -227,7 +227,7 @@ export default function CustomPlayer({ url, autoPlay = false }: CustomPlayerProp
                     width: 12px;
                     height: 12px;
                     border-radius: 50%;
-                    background: #ff1414;
+                    background: var(--theme-primary);
                     cursor: pointer;
                     transition: transform 0.1s;
                 }

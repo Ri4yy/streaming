@@ -34,7 +34,7 @@ export default function TrailerModal({ trailerKey }: TrailerModalProps) {
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors flex justify-center items-center">
-                        <button className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex justify-center items-center group-hover:bg-[#ff1414] transition-colors duration-300">
+                        <button className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex justify-center items-center group-hover:bg-theme-main transition-colors duration-300">
                             <BsPlayFill className="text-white text-3xl ml-1" />
                         </button>
                     </div>
@@ -69,7 +69,7 @@ export default function TrailerModal({ trailerKey }: TrailerModalProps) {
                                 <Dialog.Panel className="w-full max-w-5xl transform overflow-visible rounded-2xl bg-black text-left align-middle shadow-xl transition-all relative">
                                     <button 
                                         onClick={() => setIsOpen(false)}
-                                        className="absolute -top-12 right-0 text-white hover:text-[#ff1414] transition-colors z-50"
+                                        className="absolute -top-12 right-0 text-white hover:text-theme-main transition-colors z-50"
                                     >
                                         <IoClose size={40} />
                                     </button>

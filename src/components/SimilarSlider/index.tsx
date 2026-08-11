@@ -9,6 +9,14 @@ import { TMDBMedia, tmdbApi } from '@/services/tmdb';
 import { SteamGameDetails, steamApi } from '@/services/steam';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import { Film, Tv, Gamepad2, PlayCircle } from 'lucide-react';
+
+const typeIcons = {
+    movie: Film,
+    tv: Tv,
+    anime: PlayCircle,
+    game: Gamepad2
+};
 
 interface SimilarSliderProps {
     items: (TMDBMedia | SteamGameDetails)[];
@@ -22,10 +30,15 @@ export default function SimilarSlider({ items, type }: SimilarSliderProps) {
     const isTMDB = (item: any): item is TMDBMedia => 'poster_path' in item || 'vote_average' in item;
     const isSteam = (item: any): item is SteamGameDetails => 'steam_appid' in item;
 
+    const Icon = typeIcons[type] || Film;
+
     return (
         <section className='container py-12 relative'>
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Похожие {type === 'movie' ? 'фильмы' : type === 'tv' ? 'сериалы' : type === 'anime' ? 'аниме' : 'игры'}</h2>
+                <h2 className="text-2xl font-bold flex items-center gap-3">
+                    <Icon className="w-6 h-6 text-white" />
+                    Похожие {type === 'movie' ? 'фильмы' : type === 'tv' ? 'сериалы' : type === 'anime' ? 'аниме' : 'игры'}
+                </h2>
             </div>
             <Swiper
                 modules={[Navigation]}

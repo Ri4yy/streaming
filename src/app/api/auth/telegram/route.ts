@@ -43,47 +43,58 @@ export async function POST(req: Request) {
     const randomPassword = crypto.randomBytes(32).toString('hex');
     const fullName = `${userData.first_name || ''} ${userData.last_name || ''}`.trim();
 
-    // Try to create the user
-    let { data: { user }, error: createError } = await supabaseAdmin.auth.admin.createUser({
-      email,
-      password: randomPassword,
-      email_confirm: true,
-      user_metadata: {
-        full_name: fullName,
-        telegram_id: userData.id,
-        avatar_url: userData.photo_url || null,
-        provider: 'telegram'
-      }
-    });
+    // 1. First, check if any user has this telegram_id linked
+    const { data: { users }, error: listError } = await supabaseAdmin.auth.admin.listUsers();
+    if (listError) throw listError;
+    
+    let targetUser = users.find(u => u.user_metadata?.telegram_id == userData.id);
+    let userEmailToSignIn = email;
 
-    // If user already exists, update their password
-    if (createError && (createError.message.includes('already registered') || createError.status === 422)) {
-      const { data: { users }, error: listError } = await supabaseAdmin.auth.admin.listUsers();
-      if (listError) throw listError;
-      
-      const existingUser = users.find(u => u.email === email);
-      if (existingUser) {
-        const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(existingUser.id, { 
-          password: randomPassword,
-          user_metadata: {
-            ...existingUser.user_metadata,
-            full_name: fullName,
-            telegram_id: userData.id,
-            avatar_url: userData.photo_url || null,
-            provider: 'telegram'
-          }
-        });
-        if (updateError) throw updateError;
-      } else {
-         throw new Error("User exists but could not be found");
+    if (targetUser) {
+      userEmailToSignIn = targetUser.email || email;
+      const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(targetUser.id, { 
+        password: randomPassword
+      });
+      if (updateError) throw updateError;
+    } else {
+      let { data: { user }, error: createError } = await supabaseAdmin.auth.admin.createUser({
+        email,
+        password: randomPassword,
+        email_confirm: true,
+        user_metadata: {
+          full_name: fullName,
+          telegram_id: userData.id,
+          avatar_url: userData.photo_url || null,
+          provider: 'telegram'
+        }
+      });
+
+      if (createError && (createError.message.includes('already registered') || createError.status === 422)) {
+        const existingUser = users.find(u => u.email === email);
+        if (existingUser) {
+          const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(existingUser.id, { 
+            password: randomPassword,
+            user_metadata: {
+              ...existingUser.user_metadata,
+              full_name: fullName,
+              telegram_id: userData.id,
+              avatar_url: userData.photo_url || null,
+              provider: 'telegram'
+            }
+          });
+          if (updateError) throw updateError;
+          userEmailToSignIn = existingUser.email || email;
+        } else {
+           throw new Error("User exists but could not be found");
+        }
+      } else if (createError) {
+        throw createError;
       }
-    } else if (createError) {
-      throw createError;
     }
 
     // Now sign in the user to get session tokens
     const { data: sessionData, error: signInError } = await supabaseAdmin.auth.signInWithPassword({
-      email,
+      email: userEmailToSignIn,
       password: randomPassword
     });
 

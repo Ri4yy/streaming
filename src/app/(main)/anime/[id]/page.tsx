@@ -12,9 +12,21 @@ import type { Metadata } from 'next';
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const { id } = await params;
     const anime = await tmdbApi.getDetails(id, 'tv');
+    
+    const year = anime.first_air_date?.split('-')[0] || '';
+    const title = `${anime.title || anime.name} ${year ? `(${year}) ` : ''}— смотреть аниме, даты выхода серий, рейтинг | CineBox`;
+    const description = `Вся информация об аниме «${anime.title || anime.name}» ${year ? `(${year})` : ''}. Сюжет, даты выхода новых серий, отзывы зрителей и рекомендации.`;
+    const imgUrl = tmdbApi.getImageUrl(anime.poster_path);
+
     return {
-        title: anime.title || anime.name || 'Аниме',
-        description: anime.overview?.substring(0, 160) || "Подробная информация об аниме.",
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            images: [imgUrl],
+            type: 'video.tv_show',
+        }
     };
 }
 
@@ -24,12 +36,31 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ id
     const trailer = anime.videos?.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube');
     const recommendations = await tmdbApi.getRecommendations(id, 'tv');
     // Filter recommendations for animation or Japan origin
-    const similar = recommendations.filter(item =>
+    const similar = recommendations.filter((item: any) =>
         item.genre_ids?.includes(16) || item.origin_country?.includes('JP')
     );
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'TVSeries',
+        name: anime.title || anime.name,
+        image: tmdbApi.getImageUrl(anime.poster_path),
+        description: anime.overview,
+        startDate: anime.first_air_date,
+        aggregateRating: anime.vote_average ? {
+            '@type': 'AggregateRating',
+            ratingValue: anime.vote_average,
+            bestRating: '10',
+            ratingCount: anime.vote_count || 1,
+        } : undefined,
+    };
+
     return (
         <main className="relative min-h-screen">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <Image
                     src={tmdbApi.getImageUrl(anime.backdrop_path || anime.poster_path, 'original')}

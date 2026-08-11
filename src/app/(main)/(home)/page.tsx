@@ -5,6 +5,17 @@ import FilmsOfWeek from '@/components/FilmsOfWeek';
 import SerialsSlider from '@/components/SerialsSlider';
 import MovieList from '@/components/MovieList';
 import { tmdbApi } from '@/services/tmdb';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: "CineBox — Смотреть фильмы, сериалы и аниме в высоком качестве",
+    description: "CineBox — крупнейший каталог кино. Узнайте рейтинг фильмов, актерский состав, даты выхода новинок и читайте отзывы. Добавляйте в избранное и делитесь с друзьями.",
+    openGraph: {
+        title: "CineBox — Каталог фильмов, сериалов и аниме",
+        description: "Узнайте рейтинг фильмов, актерский состав, даты выхода новинок и читайте отзывы.",
+        images: ['/images/og-default.jpg'],
+    }
+};
 
 export default async function Home() {
     const [

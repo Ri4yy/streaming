@@ -12,8 +12,12 @@ import WeeklySlider from '@/components/WeeklySlider';
 
 
 export const metadata: Metadata = {
-    title: "Аниме",
-    description: "Смотреть и искать новые и популярные аниме.",
+    title: "Лучшие аниме: новинки онгоингов, культовые тайтлы и подборки",
+    description: "Самая полная база аниме на CineBox. Даты выхода новых серий онгоингов, рейтинги, отзывы и описания сюжетов. Найдите свое любимое аниме.",
+    openGraph: {
+        title: "Лучшие аниме на CineBox",
+        description: "Даты выхода новых серий онгоингов, рейтинги, отзывы и описания сюжетов. Найдите свое любимое аниме.",
+    }
 };
 
 export default async function AnimePage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string, yearMin?: string, yearMax?: string, ratingMin?: string, ratingMax?: string }> }) {

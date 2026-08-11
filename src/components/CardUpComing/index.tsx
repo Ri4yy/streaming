@@ -29,7 +29,7 @@ export default function CardUpComing({ name, desc, rate, img, href = "/movies/1"
                     onClick={toggleFavorite}
                     className='absolute top-5 right-5 rounded-full backdrop-blur-xl bg-black/40 border border-white/10 p-2 z-20 hover:bg-white/10 hover:border-white/20 hover:shadow-lg transition-all duration-300'
                 >
-                    <Heart className={`w-5 h-5 transition-all duration-300 ${isFavorite ? 'fill-[#ff1414] stroke-[#ff1414] scale-110' : 'stroke-white/70 hover:stroke-white'}`} />
+                    <Heart className={`w-5 h-5 transition-all duration-300 ${isFavorite ? 'fill-theme-main stroke-theme-main scale-110' : 'stroke-white/70 hover:stroke-white'}`} />
                 </button>
                 <div className="group-hover:translate-y-0 md:p-10 p-5 z-10 mt-auto md:translate-y-[100%] transition-all duration-700 backdrop-blur-xl bg-black/50 border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] rounded-t-3xl rounded-b-xl">
                     <div className="flex items-center mb-5">

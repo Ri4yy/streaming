@@ -15,7 +15,7 @@ export default function TermsPage() {
             </Link>
             
             <header className="mb-10">
-                <span className="text-[#ff1414] font-medium uppercase tracking-wider text-sm mb-2 block">Правила сервиса</span>
+                <span className="text-theme-main font-medium uppercase tracking-wider text-sm mb-2 block">Правила сервиса</span>
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">Пользовательское соглашение</h1>
                 <div className="text-gray-400 text-sm mb-6">Обновлено: 4 августа 2026 г.</div>
                 <p className="text-lg text-gray-300">
@@ -43,7 +43,7 @@ export default function TermsPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">3. Обращения правообладателей</h2>
-                    <p className="mb-3">При мотивированном обращении о нарушении прав или законном требовании уполномоченного органа сервис может ограничить доступ к спорным материалам в каталоге (карточка, плеер) в разумный срок. e-mail: <a href="mailto:admin@cinebox.ru" className="text-[#ff1414] hover:underline">admin@cinebox.ru</a>.</p>
+                    <p className="mb-3">При мотивированном обращении о нарушении прав или законном требовании уполномоченного органа сервис может ограничить доступ к спорным материалам в каталоге (карточка, плеер) в разумный срок. e-mail: <a href="mailto:admin@cinebox.ru" className="text-theme-main hover:underline">admin@cinebox.ru</a>.</p>
                     <p>Сервис не обязан превентивно модерировать весь контент сторонних плееров и не может удалять файлы или потоки на чужих серверах.</p>
                 </section>
 
@@ -59,7 +59,7 @@ export default function TermsPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">5. Персональные данные</h2>
-                    <p>Порядок обработки — в <Link href="/privacy" className="text-[#ff1414] hover:underline">документе об обработке персональных данных</Link>. Регистрируясь, вы подтверждаете ознакомление и согласие в указанном объёме.</p>
+                    <p>Порядок обработки — в <Link href="/privacy" className="text-theme-main hover:underline">документе об обработке персональных данных</Link>. Регистрируясь, вы подтверждаете ознакомление и согласие в указанном объёме.</p>
                 </section>
 
                 <section>
@@ -108,7 +108,7 @@ export default function TermsPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">12. Контакты</h2>
-                    <p><a href="mailto:admin@cinebox.ru" className="text-[#ff1414] hover:underline">admin@cinebox.ru</a>, Telegram <a href="https://t.me/cinebox_support" target="_blank" rel="noopener noreferrer" className="text-[#ff1414] hover:underline">@cinebox_support</a>.</p>
+                    <p><a href="mailto:admin@cinebox.ru" className="text-theme-main hover:underline">admin@cinebox.ru</a>, Telegram <a href="https://t.me/cinebox_support" target="_blank" rel="noopener noreferrer" className="text-theme-main hover:underline">@cinebox_support</a>.</p>
                 </section>
             </div>
         </main>

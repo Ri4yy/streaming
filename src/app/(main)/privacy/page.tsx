@@ -15,7 +15,7 @@ export default function PrivacyPage() {
             </Link>
             
             <header className="mb-10">
-                <span className="text-[#ff1414] font-medium uppercase tracking-wider text-sm mb-2 block">Конфиденциальность</span>
+                <span className="text-theme-main font-medium uppercase tracking-wider text-sm mb-2 block">Конфиденциальность</span>
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">Обработка персональных данных</h1>
                 <div className="text-gray-400 text-sm mb-6">Обновлено: 4 августа 2026 г.</div>
                 <p className="text-lg text-gray-300">
@@ -28,8 +28,8 @@ export default function PrivacyPage() {
                     <h2 className="text-2xl font-bold text-white mb-4">1. Контакты</h2>
                     <p className="mb-2">По вопросам персональных данных, удаления аккаунта и реализации ваших прав:</p>
                     <ul className="list-disc pl-5 space-y-1">
-                        <li>e-mail: <a href="mailto:admin@cinebox.ru" className="text-[#ff1414] hover:underline">admin@cinebox.ru</a></li>
-                        <li>Telegram: <a href="https://t.me/cinebox_support" target="_blank" rel="noopener noreferrer" className="text-[#ff1414] hover:underline">@cinebox_support</a></li>
+                        <li>e-mail: <a href="mailto:admin@cinebox.ru" className="text-theme-main hover:underline">admin@cinebox.ru</a></li>
+                        <li>Telegram: <a href="https://t.me/cinebox_support" target="_blank" rel="noopener noreferrer" className="text-theme-main hover:underline">@cinebox_support</a></li>
                     </ul>
                 </section>
 
@@ -69,7 +69,7 @@ export default function PrivacyPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">6. Хранение и удаление</h2>
-                    <p>Данные аккаунта хранятся, пока аккаунт активен. Технические журналы — обычно до 12 месяцев. Удаление аккаунта — по запросу на <a href="mailto:admin@cinebox.ru" className="text-[#ff1414] hover:underline">admin@cinebox.ru</a>; часть данных может сохраняться, если это требуется законом.</p>
+                    <p>Данные аккаунта хранятся, пока аккаунт активен. Технические журналы — обычно до 12 месяцев. Удаление аккаунта — по запросу на <a href="mailto:admin@cinebox.ru" className="text-theme-main hover:underline">admin@cinebox.ru</a>; часть данных может сохраняться, если это требуется законом.</p>
                 </section>
 
                 <section>
@@ -84,7 +84,7 @@ export default function PrivacyPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">9. Связанные документы</h2>
-                    <p><Link href="/terms" className="text-[#ff1414] hover:underline">Пользовательское соглашение</Link>.</p>
+                    <p><Link href="/terms" className="text-theme-main hover:underline">Пользовательское соглашение</Link>.</p>
                 </section>
             </div>
         </main>

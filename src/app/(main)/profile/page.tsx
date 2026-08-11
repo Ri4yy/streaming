@@ -10,6 +10,7 @@ import { createClient } from '@/utils/supabase/client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import MediaCard from '@/components/MediaCard';
 import { User, Heart, Settings } from 'lucide-react';
+import { LoginButton } from '@telegram-auth/react';
 
 function ProfileSkeleton() {
     return (
@@ -89,7 +90,7 @@ function SubTabCustom({ text }: { text: string }) {
     return (
         <Tab as={Fragment}>
             {({ selected }) => (
-                <button className={`px-4 py-2.5 rounded-xl font-medium transition-all duration-300 border backdrop-blur-md shadow-sm ${selected ? 'bg-[#ff1414]/20 border-[#ff1414]/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}>
+                <button className={`px-4 py-2.5 rounded-xl font-medium transition-all duration-300 border backdrop-blur-md shadow-sm ${selected ? 'bg-theme-main/20 border-theme-main/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}>
                     {text}
                 </button>
             )}
@@ -104,6 +105,25 @@ function ProfileContent() {
     const tabIndexParam = searchParams.get('tab');
     
     const [selectedIndex, setSelectedIndex] = useState(tabIndexParam ? parseInt(tabIndexParam) : 0);
+    const [isLinking, setIsLinking] = useState(false);
+
+    const handleTelegramLink = async (tgUser: any) => {
+        setIsLinking(true);
+        try {
+            const response = await fetch('/api/auth/telegram/link', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(tgUser)
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Ошибка привязки Telegram');
+            alert('Telegram успешно привязан!');
+            window.location.reload();
+        } catch (err: any) {
+            alert(err.message);
+            setIsLinking(false);
+        }
+    };
 
     const favorites = mediaList.filter(m => m.is_favorite);
     const movies = favorites.filter(m => m.media_type === 'movie');
@@ -126,31 +146,31 @@ function ProfileContent() {
                 <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
                     <button 
                         onClick={() => setStatusFilter('all')}
-                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'all' ? 'bg-[#ff1414]/20 border-[#ff1414]/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
+                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'all' ? 'bg-theme-main/20 border-theme-main/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
                     >
                         Все ({items.length})
                     </button>
                     <button 
                         onClick={() => setStatusFilter('planned')}
-                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'planned' ? 'bg-[#ff1414]/20 border-[#ff1414]/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
+                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'planned' ? 'bg-theme-main/20 border-theme-main/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
                     >
                         В планах ({items.filter(i => i.status === 'planned').length})
                     </button>
                     <button 
                         onClick={() => setStatusFilter('watching')}
-                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'watching' ? 'bg-[#ff1414]/20 border-[#ff1414]/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
+                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'watching' ? 'bg-theme-main/20 border-theme-main/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
                     >
                         Смотрю ({items.filter(i => i.status === 'watching').length})
                     </button>
                     <button 
                         onClick={() => setStatusFilter('completed')}
-                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'completed' ? 'bg-[#ff1414]/20 border-[#ff1414]/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
+                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'completed' ? 'bg-theme-main/20 border-theme-main/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
                     >
                         Просмотрено ({items.filter(i => i.status === 'completed').length})
                     </button>
                     <button 
                         onClick={() => setStatusFilter('dropped')}
-                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'dropped' ? 'bg-[#ff1414]/20 border-[#ff1414]/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
+                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 border backdrop-blur-md shadow-sm whitespace-nowrap ${statusFilter === 'dropped' ? 'bg-theme-main/20 border-theme-main/40 text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'}`}
                     >
                         Брошено ({items.filter(i => i.status === 'dropped').length})
                     </button>
@@ -250,7 +270,39 @@ function ProfileContent() {
                             <div className="flex flex-col p-10 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl">
                                 <h2 className="text-xl font-medium mb-6">Настройки аккаунта</h2>
                                 {user ? (
-                                    <p className="text-gray-400">Настройки доступны только для демо-режима.</p>
+                                    <div className="flex flex-col gap-6">
+                                        <div className="flex flex-col gap-2 p-6 rounded-xl bg-black/40 border border-white/5">
+                                            <h3 className="font-medium text-lg">Привязка Telegram</h3>
+                                            <p className="text-sm text-gray-400 mb-2">Привяжите Telegram-аккаунт, чтобы заходить на сайт через бота и синхронизировать Избранное.</p>
+                                            
+                                            {user.user_metadata?.telegram_id ? (
+                                                <div className="flex items-center gap-3">
+                                                    <div className="px-4 py-2 bg-green-500/10 text-green-500 border border-green-500/20 rounded-lg text-sm font-medium">
+                                                        ✅ Telegram привязан (ID: {user.user_metadata.telegram_id})
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="w-fit">
+                                                    {isLinking ? (
+                                                        <div className="px-4 py-2 bg-white/10 text-white rounded-lg text-sm animate-pulse">Привязка...</div>
+                                                    ) : (
+                                                        process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME ? (
+                                                            <LoginButton
+                                                                botUsername={process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}
+                                                                onAuthCallback={(data) => handleTelegramLink(data)}
+                                                                buttonSize="large"
+                                                                cornerRadius={8}
+                                                                showAvatar={false}
+                                                                lang="ru"
+                                                            />
+                                                        ) : (
+                                                            <div className="text-xs text-white/50 px-4 py-2 border border-white/10 rounded-lg bg-white/5">Telegram Auth недоступен</div>
+                                                        )
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                 ) : (
                                     <p className="text-gray-400">Пожалуйста, войдите в аккаунт, чтобы изменить настройки.</p>
                                 )}

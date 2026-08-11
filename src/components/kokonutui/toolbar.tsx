@@ -104,7 +104,7 @@ export function Toolbar({
   items = DEFAULT_TOOLBAR_ITEMS,
   defaultSelected = "select",
   className,
-  activeColor = "text-red-500",
+  activeColor = "text-theme-main",
   onSelect,
 }: ToolbarProps) {
   const [selected, setSelected] = React.useState<string | null>(
@@ -148,12 +148,12 @@ export function Toolbar({
               transition={{ duration: 0.3 }}
               variants={notificationVariants as any}
             >
-              <div className="rounded-full bg-[#ff1414]/80 backdrop-blur-md border border-[#ff1414]/40 px-3 py-1 text-white text-xs font-medium">
+              <div className="rounded-full bg-theme-main/80 backdrop-blur-md border border-theme-main/40 px-3 py-1 text-white text-xs font-medium">
                 {items.find((item) => item.id === activeNotification)?.title}
               </div>
               <motion.div
                 animate="animate"
-                className="absolute -bottom-1 left-1/2 h-[2px] w-full origin-left bg-[#ff1414]/80"
+                className="absolute -bottom-1 left-1/2 h-[2px] w-full origin-left bg-theme-main/80"
                 exit="exit"
                 initial="initial"
                 variants={lineVariants as any}
@@ -170,7 +170,7 @@ export function Toolbar({
                 "relative flex items-center rounded-full px-3 py-2 border",
                 "font-medium text-sm transition-all duration-300",
                 selected === item.id
-                  ? "bg-[#ff1414]/20 border-[#ff1414]/40 text-white shadow-sm"
+                  ? "bg-theme-main/20 border-theme-main/40 text-white shadow-sm"
                   : "bg-transparent border-transparent text-white/70 hover:bg-white/5 hover:border-white/10 hover:text-white"
               )}
               custom={selected === item.id}

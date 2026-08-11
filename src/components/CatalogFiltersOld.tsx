@@ -76,7 +76,7 @@ function CatalogFiltersOldContent({ genres, hideRating = false }: { genres: { id
                         placeholder='Поиск...'
                         autoComplete='off'
                     />
-                    <button type='submit'><BsSearch className='absolute top-1/2 -translate-y-1/2 right-6 h-5 w-5 fill-white hover:fill-[#ff1414] transition-colors duration-300' /></button>
+                    <button type='submit'><BsSearch className='absolute top-1/2 -translate-y-1/2 right-6 h-5 w-5 fill-white hover:fill-theme-main transition-colors duration-300' /></button>
                 </div>
             </form>
 

@@ -12,9 +12,21 @@ import type { Metadata } from 'next';
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const { id } = await params;
     const series = await tmdbApi.getDetails(id, 'tv');
+    
+    const year = series.first_air_date?.split('-')[0] || '';
+    const title = `${series.title || series.name} ${year ? `(${year}) ` : ''}— все сезоны, актеры, отзывы, рейтинг | CineBox`;
+    const description = `Вся информация о сериале «${series.title || series.name}» ${year ? `(${year})` : ''}. Сюжет, даты выхода серий, актерский состав, трейлеры и рекомендации.`;
+    const imgUrl = tmdbApi.getImageUrl(series.poster_path);
+
     return {
-        title: series.title || series.name || 'Сериал',
-        description: series.overview?.substring(0, 160) || "Подробная информация о сериале.",
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            images: [imgUrl],
+            type: 'video.tv_show',
+        }
     };
 }
 
@@ -22,10 +34,34 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ i
     const { id } = await params;
     const series = await tmdbApi.getDetails(id, 'tv');
     const trailer = series.videos?.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube');
-    const similar = await tmdbApi.getRecommendations(id, 'tv');
+    const recommendations = await tmdbApi.getRecommendations(id, 'tv');
+    
+    // Filter recommendations for animation or Japan origin to exclude from normal series
+    const similar = recommendations.filter((item: any) =>
+        !item.genre_ids?.includes(16)
+    );
+
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'TVSeries',
+        name: series.title || series.name,
+        image: tmdbApi.getImageUrl(series.poster_path),
+        description: series.overview,
+        startDate: series.first_air_date,
+        aggregateRating: series.vote_average ? {
+            '@type': 'AggregateRating',
+            ratingValue: series.vote_average,
+            bestRating: '10',
+            ratingCount: series.vote_count || 1,
+        } : undefined,
+    };
 
     return (
         <main className="relative min-h-screen">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <Image
                     src={tmdbApi.getImageUrl(series.backdrop_path || series.poster_path, 'original')}
@@ -88,7 +124,7 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ i
                             <ul className='flex md:flex-row flex-col gap-x-8 gap-y-2 md:items-center'>
                                 {series.credits?.cast?.slice(0, 3).map(person => (
                                     <li key={person.id}>
-                                        <Link href="#" className='text-white hover:text-[#ff1414] transition-all duration-300'>
+                                        <Link href="#" className='text-white hover:text-theme-main transition-all duration-300'>
                                             {person.name}
                                         </Link>
                                     </li>

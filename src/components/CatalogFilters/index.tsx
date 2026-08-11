@@ -2,8 +2,17 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { BsSearch, BsChevronRight, BsChevronLeft } from "react-icons/bs";
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Transition } from '@headlessui/react';
+
+const categoryPlaceholders: Record<string, string[]> = {
+    search: ['Найти фильм...', 'Найти сериал...', 'Найти игру...', 'Найти аниме...', 'Дэдпул и Росомаха', 'The Witcher 3', 'Во все тяжкие'],
+    movies: ['Найти фильм...', 'Мстители', 'Интерстеллар', 'Дюна', 'Побег из Шоушенка', 'Матрица'],
+    series: ['Найти сериал...', 'Во все тяжкие', 'Игра престолов', 'Офис', 'Пацаны', 'Очень странные дела'],
+    anime: ['Найти аниме...', 'Наруто', 'Атака титанов', 'Ван Пис', 'Тетрадь смерти', 'Клинок, рассекающий демонов'],
+    games: ['Найти игру...', 'Ведьмак 3', 'Cyberpunk 2077', 'GTA V', 'Red Dead Redemption 2', 'Elden Ring'],
+    books: ['Найти книгу...', 'Гарри Поттер', 'Властелин колец', 'Мастер и Маргарита', '1984', 'Дюна'],
+};
 
 const sortOptions = [
     { id: 'rating', name: 'Рейтингу (по убыванию)' },
@@ -27,7 +36,44 @@ function CatalogFiltersContent({ genres, hideFilters = false, hideRatingToggle =
     const currentGenres = searchParams.get('genres')?.split(',').filter(Boolean) || [];
     
     const [query, setQuery] = useState(currentQuery);
+    const pathname = usePathname();
+    const catalogType = pathname.split('/')[1] || 'search';
     
+    // Typing effect state
+    const [placeholderText, setPlaceholderText] = useState('');
+    const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    useEffect(() => {
+        const phrases = categoryPlaceholders[catalogType] || categoryPlaceholders['search'];
+        const currentPhrase = phrases[currentPhraseIndex];
+        
+        const typeSpeed = 100;
+        const deleteSpeed = 50;
+        const pauseDelay = 2000;
+
+        let timer: NodeJS.Timeout;
+
+        if (isDeleting) {
+            timer = setTimeout(() => {
+                setPlaceholderText(currentPhrase.substring(0, placeholderText.length - 1));
+                if (placeholderText.length === 0) {
+                    setIsDeleting(false);
+                    setCurrentPhraseIndex((prev) => (prev + 1) % phrases.length);
+                }
+            }, deleteSpeed);
+        } else {
+            timer = setTimeout(() => {
+                setPlaceholderText(currentPhrase.substring(0, placeholderText.length + 1));
+                if (placeholderText === currentPhrase) {
+                    setTimeout(() => setIsDeleting(true), pauseDelay);
+                }
+            }, typeSpeed);
+        }
+
+        return () => clearTimeout(timer);
+    }, [placeholderText, isDeleting, currentPhraseIndex, catalogType]);
+
     // Local state for inputs to allow typing before applying
     const [yearMin, setYearMin] = useState(searchParams.get('yearMin') || '');
     const [yearMax, setYearMax] = useState(searchParams.get('yearMax') || '');
@@ -169,13 +215,13 @@ function CatalogFiltersContent({ genres, hideFilters = false, hideRatingToggle =
                     <input 
                         value={query}
                         onChange={e => setQuery(e.target.value)}
-                        className='w-full py-4 px-7 pr-14 rounded-xl bg-white/5 hover:bg-white/10 focus:bg-white/10 outline-none border border-white/10 hover:border-white/20 focus:border-white/30 transition-all duration-300 text-white placeholder:text-white/50' 
+                        className='w-full py-4 px-7 pr-14 rounded-xl bg-[var(--theme-input-bg)] hover:bg-[var(--theme-input-bg)]/80 focus:bg-[var(--theme-input-bg)]/80 outline-none border border-white/10 hover:border-white/20 focus:border-white/30 transition-all duration-300 text-white placeholder:text-white/50' 
                         name='search' 
                         type="text" 
-                        placeholder='Найти фильм, сериал, игру...' 
+                        placeholder={placeholderText} 
                         autoComplete='off' 
                     />
-                    <button type='submit'><BsSearch className='absolute top-1/2 -translate-y-1/2 right-6 h-5 w-5 fill-white hover:fill-[#ff1414] transition-colors duration-300' /></button>
+                    <button type='submit'><BsSearch className='absolute top-1/2 -translate-y-1/2 right-6 h-5 w-5 fill-white hover:fill-theme-main transition-colors duration-300' /></button>
                 </div>
             </form>
             
@@ -190,7 +236,7 @@ function CatalogFiltersContent({ genres, hideFilters = false, hideRatingToggle =
                                 <span>{filter.label}</span>
                                 <button
                                     onClick={filter.onRemove}
-                                    className="ml-1 p-1 text-gray-400 hover:text-[#ff1414] hover:bg-white/10 rounded-lg transition-all"
+                                    className="ml-1 p-1 text-gray-400 hover:text-theme-main hover:bg-white/10 rounded-lg transition-all"
                                 >
                                     <span className="text-[22px] leading-[0.6] block">&times;</span>
                                 </button>
@@ -199,7 +245,7 @@ function CatalogFiltersContent({ genres, hideFilters = false, hideRatingToggle =
                         
                         <div className="relative" ref={dropdownRef}>
                             <button 
-                                className='px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300 text-white font-medium flex items-center gap-2 shadow-lg backdrop-blur-md'
+                                className='px-5 py-2.5 rounded-xl bg-[var(--theme-input-bg)] hover:bg-[var(--theme-input-bg)]/80 border border-white/10 transition-all duration-300 text-white font-medium flex items-center gap-2 shadow-lg backdrop-blur-md'
                                 onClick={() => setIsOpen(!isOpen)}
                             >
                                 <span className="text-xl leading-none font-light mb-0.5">+</span> Добавить фильтр
@@ -264,7 +310,7 @@ function CatalogFiltersContent({ genres, hideFilters = false, hideRatingToggle =
                                                 return (
                                                     <li key={genre.id} className='hover:bg-white/10 transition-all duration-200 px-3 py-2 rounded-xl'>
                                                         <label className='flex gap-3 items-center cursor-pointer' onClick={(e) => toggleGenre(e, genre.name)}>
-                                                            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isChecked ? 'bg-[#ff1414] border-[#ff1414]' : 'border-white/30 bg-black/20'}`}>
+                                                            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isChecked ? 'bg-theme-main border-theme-main' : 'border-white/30 bg-black/20'}`}>
                                                                 {isChecked && (
                                                                     <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />

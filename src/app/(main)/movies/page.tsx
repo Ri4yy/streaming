@@ -10,8 +10,12 @@ import WeeklySlider from '@/components/WeeklySlider';
 
 
 export const metadata: Metadata = {
-    title: "Фильмы",
-    description: "Смотреть и искать лучшие фильмы в высоком качестве.",
+    title: "Лучшие фильмы и новинки кино: рейтинг, подборки, отзывы",
+    description: "Огромная база фильмов на CineBox. Ищите фильмы по жанрам, годам и рейтингу. Читайте обзоры, смотрите трейлеры, изучайте актерский состав.",
+    openGraph: {
+        title: "Лучшие фильмы на CineBox",
+        description: "Огромная база фильмов на CineBox. Ищите фильмы по жанрам, годам и рейтингу.",
+    }
 };
 
 export default async function MoviesPage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string, yearMin?: string, yearMax?: string, ratingMin?: string, ratingMax?: string }> }) {

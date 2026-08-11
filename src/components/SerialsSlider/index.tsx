@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { Tv } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import MediaCard from '@/components/MediaCard';
@@ -27,7 +28,10 @@ export default function SerialsSlider({ series }: { series: TMDBMedia[] }) {
                 className='flex flex-col'
                 >
                     <div slot="container-start" className="flex justify-between items-center mb-8 md:mb-12 pt-2 gap-4">
-                        <h2 className='md:text-[32px] text-xl xs:text-2xl leading-[1.2] font-bold whitespace-nowrap'>Лучшие сериалы</h2>
+                        <h2 className='md:text-[32px] text-xl xs:text-2xl leading-[1.2] font-bold whitespace-nowrap flex items-center gap-3'>
+                            <Tv className="w-8 h-8 text-white" />
+                            Лучшие сериалы
+                        </h2>
                         <div className="hidden sm:block h-[1px] w-full bg-[#323234] mx-10"></div>
                         <SwiperNavButtons />
                     </div>

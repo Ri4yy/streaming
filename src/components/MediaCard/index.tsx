@@ -92,7 +92,7 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
                     />
                 </Link>
             </div>
-            <Link href={href} className={`${size === 'small' ? 'text-base' : 'text-xl'} hover:text-[#ff1414] transition-colors duration-300 line-clamp-1`}>{name}</Link>
+            <Link href={href} className={`${size === 'small' ? 'text-base' : 'text-xl'} hover:text-theme-main transition-colors duration-300 line-clamp-1`}>{name}</Link>
             <ul className='flex gap-x-3 items-center'>
                 <li className='text-[#BFBFBF] text-sm truncate'>{year}</li>
                 <li><div className='h-1 w-1 rounded-full bg-[#323234]'></div></li>

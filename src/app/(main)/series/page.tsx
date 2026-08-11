@@ -10,8 +10,12 @@ import WeeklySlider from '@/components/WeeklySlider';
 
 
 export const metadata: Metadata = {
-    title: "Сериалы",
-    description: "Популярные сериалы, новинки и классика.",
+    title: "Лучшие сериалы: популярные проекты, новинки и даты выхода серий",
+    description: "Лучшие сериалы со всего мира на CineBox. Узнайте даты выхода новых серий, читайте отзывы и рецензии, изучайте актерский состав и рейтинг.",
+    openGraph: {
+        title: "Лучшие сериалы на CineBox",
+        description: "Лучшие сериалы со всего мира. Узнайте даты выхода новых серий, читайте отзывы и изучайте рейтинг.",
+    }
 };
 
 export default async function SeriesPage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string, yearMin?: string, yearMax?: string, ratingMin?: string, ratingMax?: string }> }) {

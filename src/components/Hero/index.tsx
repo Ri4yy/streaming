@@ -59,7 +59,7 @@ export default function Hero({ movies }: { movies: TMDBMedia[] }) {
                         
                         <div className="container relative z-20 mx-auto h-full flex flex-col justify-center" data-swiper-parallax="-50%">
                             <div className="flex md:flex-col flex-row items-center md:items-start gap-x-2 mt-6 md:mt-0 mb-4" data-swiper-parallax="-100">
-                                <div className="rounded-lg backdrop-blur-xl h-fit bg-[#ff1414]/30 border border-[#ff1414]/50 w-fit px-3 py-1 text-white text-xs font-bold uppercase tracking-wider mb-2 shadow-[0_0_15px_rgba(255,20,20,0.3)]">
+                                <div className="rounded-lg backdrop-blur-xl h-fit bg-theme-main/30 border border-theme-main/50 w-fit px-3 py-1 text-white text-xs font-bold uppercase tracking-wider mb-2 shadow-[0_0_15px_var(--theme-border)]">
                                     Топ новинка
                                 </div>
                                 <div className="flex items-center gap-x-2 md:mt-2">
@@ -88,7 +88,7 @@ export default function Hero({ movies }: { movies: TMDBMedia[] }) {
                             </p>
                             
                             <div className="flex items-center gap-4 mt-8" data-swiper-parallax="-500">
-                                <Link href={`/${movie.media_type === 'tv' ? 'series' : 'movies'}/${movie.id}`} className='flex gap-2 justify-center items-center group py-3.5 px-10 rounded-xl bg-[#ff1414] hover:bg-[#ff1414]/90 relative overflow-hidden transition-all duration-500 shadow-[0_0_20px_rgba(255,20,20,0.4)] hover:shadow-[0_0_30px_rgba(255,20,20,0.6)]'>
+                                <Link href={`/${movie.media_type === 'tv' ? 'series' : 'movies'}/${movie.id}`} className='flex gap-2 justify-center items-center group py-3.5 px-10 rounded-xl bg-theme-main hover:bg-theme-main/90 relative overflow-hidden transition-all duration-500 shadow-[0_0_20px_var(--theme-border)] hover:shadow-[0_0_30px_var(--theme-primary)]'>
                                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white rounded-full transition-all duration-500 ease-out group-hover:w-[300px] group-hover:h-[300px] z-0"></div>
                                     <span className="relative z-10 text-white group-hover:text-black font-semibold text-lg transition-colors duration-500">Смотреть</span>
                                     <svg width="24" height="24" className='fill-white group-hover:fill-black z-50 relative' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -111,7 +111,7 @@ export default function Hero({ movies }: { movies: TMDBMedia[] }) {
                     <svg viewBox="0 0 48 48" className="absolute left-0 top-0 w-full h-full -rotate-90 stroke-white/20 stroke-[3px] fill-none rounded-full">
                         <circle cx="24" cy="24" r="20"></circle>
                     </svg>
-                    <svg viewBox="0 0 48 48" className="absolute left-0 top-0 w-full h-full -rotate-90 stroke-[#ff1414] stroke-[3px] fill-none rounded-full transition-all duration-100 ease-linear" style={{ strokeDasharray: '125.6', strokeDashoffset: 'calc(125.6 * var(--progress, 0))' }} ref={progressCircle}>
+                    <svg viewBox="0 0 48 48" className="absolute left-0 top-0 w-full h-full -rotate-90 stroke-theme-main stroke-[3px] fill-none rounded-full transition-all duration-100 ease-linear" style={{ strokeDasharray: '125.6', strokeDashoffset: 'calc(125.6 * var(--progress, 0))' }} ref={progressCircle}>
                         <circle cx="24" cy="24" r="20"></circle>
                     </svg>
                     <span ref={progressContent} className="font-mono text-[13px] tracking-tighter"></span>
@@ -132,7 +132,7 @@ export default function Hero({ movies }: { movies: TMDBMedia[] }) {
                     background: rgba(255, 255, 255, 0.8);
                 }
                 .custom-bullet-active {
-                    background: #ff1414;
+                    background: var(--theme-primary);
                     width: 36px;
                     border-radius: 8px;
                 }

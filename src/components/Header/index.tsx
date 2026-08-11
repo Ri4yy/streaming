@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import ModalLogin from '@/components/ModalLogin';
 import ModalSearch from '@/components/ModalSearch';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
 import { createClient } from '@/utils/supabase/client';
 
 function useScrollDirection() {
@@ -154,12 +155,12 @@ export default function Header() {
                         ))}
                     </ul>
                     <div
-                        className="absolute hidden md:block top-1/2 -translate-y-1/2 h-[36px] bg-[#ff1414]/20 backdrop-blur-xl border border-[#ff1414]/40 rounded-xl shadow-[0_0_15px_rgba(255,20,20,0.15)] transition-all duration-300 ease-out z-0 pointer-events-none"
+                        className="absolute hidden md:block top-1/2 -translate-y-1/2 h-[36px] bg-theme-main/20 backdrop-blur-xl border border-theme-main/40 rounded-xl shadow-[0_0_15px_var(--theme-border)] transition-all duration-300 ease-out z-0 pointer-events-none"
                         style={{ left: pillStyle.left, width: pillStyle.width, opacity: pillStyle.opacity }}
                     />
                 </nav>
                 <div className="flex md:gap-5 gap-3 items-center ml-auto md:ml-0 md:mr-6 mr-4">
-                    <button onClick={() => setActiveSearch(true)}><BsSearch className='xs:block hidden h-5 w-5 text-white/70 hover:text-[#ff1414] hover:drop-shadow-[0_0_8px_rgba(255,20,20,0.8)] transition-all duration-300' /></button>
+                    <button onClick={() => setActiveSearch(true)}><BsSearch className='xs:block hidden h-5 w-5 text-white/70 hover:text-theme-main hover:drop-shadow-[0_0_8px_var(--theme-primary)] transition-all duration-300' /></button>
 
                     {!user ? (
                         <div 
@@ -203,6 +204,10 @@ export default function Header() {
 
                                 <div className="my-2 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent relative z-10" />
 
+                                <ThemeSwitcher />
+
+                                <div className="my-2 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent relative z-10" />
+
                                 <button onClick={() => { setActiveLogin(true); setUserMenuOpen(false); }} className="group/item flex w-full cursor-pointer items-center gap-3 rounded-xl border border-transparent bg-white/5 p-3 transition-all duration-200 hover:border-white/20 hover:bg-white/10 hover:shadow-sm" type="button">
                                     <LogIn className="h-4 w-4 text-white/90 transition-colors" />
                                     <span className="font-medium text-white/90 text-sm transition-colors">Вход</span>
@@ -210,12 +215,14 @@ export default function Header() {
                             </div>
                         </div>
                     ) : (
-                        <div className="group relative md:py-1 py-1 after:w-[calc(100%+100px)] after:-translate-x-[100px] after:h-4 after:absolute after:-bottom-4 after:left-0 z-[70]">
+                        <div 
+                            className="group relative md:py-1 py-1 after:w-[calc(100%+100px)] after:-translate-x-[100px] after:h-4 after:absolute after:-bottom-4 after:left-0 z-[70]"
+                            onMouseEnter={() => setUserMenuOpen(true)}
+                            onMouseLeave={() => setUserMenuOpen(false)}
+                        >
                             {/* Trigger */}
                             <button
                                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                onMouseEnter={() => setUserMenuOpen(true)}
-                                onMouseLeave={() => setUserMenuOpen(false)}
                                 className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-2 transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover:shadow-lg focus:outline-none backdrop-blur-md"
                                 type="button"
                             >
@@ -228,7 +235,7 @@ export default function Header() {
                                     </div>
                                 </div>
                                 <div className="relative">
-                                    <div className='w-10 h-10 rounded-full overflow-hidden relative bg-[#ff1414] flex justify-center items-center text-xl font-bold text-white shadow-inner'>
+                                    <div className='w-10 h-10 rounded-full overflow-hidden relative bg-theme-main flex justify-center items-center text-xl font-bold text-white shadow-inner'>
                                         {user.email?.[0].toUpperCase()}
                                     </div>
                                 </div>
@@ -236,8 +243,6 @@ export default function Header() {
 
                             {/* Dropdown Content */}
                             <div 
-                                onMouseEnter={() => setUserMenuOpen(true)}
-                                onMouseLeave={() => setUserMenuOpen(false)}
                                 className={`absolute top-[calc(100%+8px)] right-0 ${userMenuOpen ? 'block' : 'hidden'} min-w-[240px] origin-top-right rounded-2xl border border-white/10 bg-black/40 p-2 shadow-xl shadow-black/50 transition-all duration-300 z-50 before:content-[''] before:absolute before:inset-0 before:backdrop-blur-3xl before:rounded-2xl before:-z-10`}
                             >
                                 <div className="space-y-1 relative z-10">
@@ -254,6 +259,10 @@ export default function Header() {
                                         </div>
                                     </Link>
                                 </div>
+
+                                <div className="my-2 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent relative z-10" />
+
+                                <ThemeSwitcher />
 
                                 <div className="my-2 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent relative z-10" />
 

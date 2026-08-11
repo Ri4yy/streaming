@@ -8,13 +8,26 @@ import SwiperNavButtons from '@/components/SwiperNavButtons';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { tmdbApi } from '@/services/tmdb';
+import { Film, Tv, Gamepad2, PlayCircle } from 'lucide-react';
+
+const typeIcons = {
+    movie: Film,
+    tv: Tv,
+    anime: PlayCircle,
+    game: Gamepad2
+};
 
 export default function WeeklySlider({ items, type, title = "Новинки недели" }: { items: any[], type: 'movie' | 'tv' | 'anime' | 'game', title?: string }) {
     if (!items || items.length === 0) return null;
 
+    const Icon = typeIcons[type] || Film;
+
     return (
         <div className="mb-16 mt-[60px] relative">
-            <h2 className="text-2xl font-medium mb-6">{title}</h2>
+            <h2 className="text-2xl font-medium mb-6 flex items-center gap-3">
+                <Icon className="w-6 h-6 text-white" />
+                {title}
+            </h2>
             <Swiper
                 modules={[Navigation]}
                 spaceBetween={20}

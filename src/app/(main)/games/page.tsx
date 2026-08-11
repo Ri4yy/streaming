@@ -10,8 +10,12 @@ import WeeklySlider from '@/components/WeeklySlider';
 
 
 export const metadata: Metadata = {
-    title: "Игры",
-    description: "Каталог популярных видеоигр.",
+    title: "Лучшие видеоигры: новинки, системные требования и рейтинг",
+    description: "Самая полная база видеоигр на CineBox. Узнайте даты релиза, системные требования, рейтинг Metacritic и читайте отзывы геймеров. Найдите во что поиграть.",
+    openGraph: {
+        title: "Лучшие видеоигры на CineBox",
+        description: "Огромная база видеоигр. Узнайте даты релиза, системные требования, рейтинг Metacritic и читайте отзывы.",
+    }
 };
 
 export default async function GamesPage({ searchParams }: { searchParams: Promise<{ q?: string, sort?: string, genres?: string, page?: string, yearMin?: string, yearMax?: string, ratingMin?: string, ratingMax?: string }> }) {
@@ -76,12 +80,19 @@ export default async function GamesPage({ searchParams }: { searchParams: Promis
         return match ? match[1] : '';
     };
 
+    const getCardYear = (game: any) => {
+        if (game.release_date?.coming_soon && game.release_date.date) {
+            return `Выходит: ${game.release_date.date}`;
+        }
+        return extractYear(game.release_date?.date || '');
+    };
+
     // Новинки недели (первые 8 игр из официального API стима - релизы этой недели + coming soon)
     const weeklyGames = weeklyGamesRaw.length > 0 ? weeklyGamesRaw.map(game => ({
         ...game,
         id: game.steam_appid,
         title: game.name,
-        release_date: extractYear(game.release_date?.date || ''),
+        release_date: getCardYear(game),
         rate: game.metacritic?.score ? game.metacritic.score / 10 : 0,
         img: steamApi.getVerticalImage(game.steam_appid),
         fallbackImg: game.header_image
@@ -91,7 +102,7 @@ export default async function GamesPage({ searchParams }: { searchParams: Promis
         ...game,
         id: game.steam_appid,
         title: game.name,
-        release_date: extractYear(game.release_date?.date || ''),
+        release_date: getCardYear(game),
         rate: game.metacritic?.score ? game.metacritic.score / 10 : 0,
         img: steamApi.getVerticalImage(game.steam_appid),
         fallbackImg: game.header_image
@@ -100,15 +111,34 @@ export default async function GamesPage({ searchParams }: { searchParams: Promis
     // Извлекаем все уникальные жанры из загруженных игр для фильтра (только если не поиск, так как поиск возвращает фейковые данные)
     const allGenres = q ? [] : Array.from(new Set(allGames.flatMap((g: any) => g.genres?.map((genre: any) => genre.description) || [])));
     const arrGenre = allGenres.map((name, index) => ({ id: index + 1, name: name as string }));
+    
+    // Добавляем фейковый жанр для режима мультиплеера
+    if (!q) {
+        arrGenre.unshift({ id: 999999, name: "Кооператив" });
+    }
 
     // Local filter by query is removed since we use API search now
 
     // Filter by genres
     if (selectedGenresQuery) {
         const selectedGenres = selectedGenresQuery.split(',');
+        const isMultiplayerRequested = selectedGenres.includes("Кооператив");
+        const normalGenres = selectedGenres.filter(g => g !== "Кооператив");
+
         gamesList = gamesList.filter((game: any) => {
             const gameGenres = game.genres?.map((g: any) => g.description) || [];
-            return selectedGenres.some((g: string) => gameGenres.includes(g));
+            let passNormal = true;
+            if (normalGenres.length > 0) {
+                passNormal = normalGenres.some((g: string) => gameGenres.includes(g));
+            }
+            
+            let passMultiplayer = true;
+            if (isMultiplayerRequested) {
+                const categories = game.categories?.map((c: any) => c.id) || [];
+                passMultiplayer = categories.some((id: number) => [9, 38, 39].includes(id));
+            }
+
+            return passNormal && passMultiplayer;
         });
     }
 
@@ -209,7 +239,7 @@ export default async function GamesPage({ searchParams }: { searchParams: Promis
                     initialItems={paginatedGames.map((game: any) => ({
                         id: game.steam_appid,
                         name: game.name,
-                        year: extractYear(game.release_date?.date || ''),
+                        year: getCardYear(game),
                         genre: game.genres?.[0]?.description || "Игра",
                         rate: game.rate || (game.metacritic?.score ? game.metacritic.score / 10 : 0),
                         img: steamApi.getVerticalImage(game.steam_appid),

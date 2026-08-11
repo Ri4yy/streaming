@@ -16,10 +16,19 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     
     const rawDesc = game.short_description || game.detailed_description || '';
     const cleanDesc = rawDesc.replace(/<[^>]*>?/gm, '').substring(0, 160);
+    const title = `${game.name} — системные требования, дата выхода, отзывы, рейтинг | CineBox`;
+    const description = cleanDesc || `Вся информация об игре «${game.name}». Системные требования, отзывы геймеров, трейлеры, скриншоты и рейтинг Metacritic.`;
+    const imgUrl = game.header_image;
     
     return {
-        title: game.name || 'Игра',
-        description: cleanDesc || "Подробная информация об игре.",
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            images: [imgUrl],
+            type: 'website',
+        }
     };
 }
 
@@ -33,8 +42,28 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
     
     const similar = await steamApi.getSimilarGames(game);
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'VideoGame',
+        name: game.name,
+        image: game.header_image,
+        description: game.short_description?.replace(/<[^>]*>?/gm, ''),
+        publisher: game.publishers?.[0],
+        genre: game.genres?.map((g: any) => g.description),
+        aggregateRating: game.metacritic ? {
+            '@type': 'AggregateRating',
+            ratingValue: game.metacritic.score,
+            bestRating: '100',
+            ratingCount: 1, // API usually doesn't return count for metacritic, default to 1
+        } : undefined,
+    };
+
     return (
         <main className="relative min-h-screen">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <Image
                     src={game.background_raw || game.background || game.header_image}
@@ -50,7 +79,7 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
                 <section className='pb-20 pt-[120px] md:pt-[150px] w-full min-h-screen'>
                     <div className="container flex max-[1100px]:flex-col gap-x-20 items-start">
                     <div className="max-[1100px]:mt-[40px] w-[30%] h-full max-[1100px]:w-full relative sticky top-[120px]">
-                        <div className="relative">
+                        <div className="relative pb-32">
                             {/* Постер с фоллбеком */}
                             <GamePoster 
                                 appId={game.steam_appid} 
@@ -68,13 +97,29 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
                                 </svg>
                                 <span className="font-semibold tracking-wide text-sm">Играть в Steam</span>
                             </Link>
+                            <DetailActions 
+                                id={game.steam_appid} 
+                                type="game" 
+                                title={game.name} 
+                                coverUrl={game.header_image}
+                            />
                         </div>
-                        <DetailActions 
-                            id={game.steam_appid} 
-                            type="game" 
-                            title={game.name} 
-                            coverUrl={game.header_image}
-                        />
+
+                        {/* Режимы игры */}
+                        <div className="mt-4 flex flex-col gap-2">
+                            {game.categories?.some((c: any) => c.id === 2) && (
+                                <div className="flex items-center gap-3 px-4 py-3 bg-black/40 backdrop-blur-md border border-white/10 rounded-xl text-white/90">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                                    <span className="font-medium">Для одного игрока</span>
+                                </div>
+                            )}
+                            {game.categories?.some((c: any) => [1, 9, 27, 38, 39].includes(c.id)) && (
+                                <div className="flex items-center gap-3 px-4 py-3 bg-black/40 backdrop-blur-md border border-white/10 rounded-xl text-white/90">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                                    <span className="font-medium">{game.categories?.some((c: any) => [9, 38, 39].includes(c.id)) ? 'Кооператив / Мультиплеер' : 'Мультиплеер'}</span>
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <div className="max-[1100px]:mt-10 w-[70%] max-[1100px]:w-full pr-4 pb-10">
                         <div className="flex md:flex-col flex-row items-center md:items-start gap-x-2">
@@ -86,6 +131,12 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
                                 <Link href={`https://store.steampowered.com/app/${game.steam_appid}`} target="_blank" className="typeMovie rounded-md bg-[#4A90E2] w-fit px-2.5 py-1 text-white text-sm uppercase hover:bg-blue-600 transition">В Steam</Link>
                             </div>
                         </div>
+
+                        {game.release_date?.coming_soon && (
+                            <div className="text-[#CAE962] font-semibold text-base mt-4 mb-1">
+                                Выходит: {game.release_date.date}
+                            </div>
+                        )}
                         <h1 className='md:text-[50px] text-4xl font-bold w-fit my-4 leading-[1.1]'>{game.name}</h1>
                         <div className="flex items-center gap-4 flex-wrap mb-4">
                             {game.metacritic && (
