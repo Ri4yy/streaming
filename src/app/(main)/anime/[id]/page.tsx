@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const anime = await tmdbApi.getDetails(id, 'tv');
     
     const year = anime.first_air_date?.split('-')[0] || '';
-    const title = `${anime.title || anime.name} ${year ? `(${year}) ` : ''}— смотреть аниме, даты выхода серий, рейтинг | CineBox`;
+    const title = `${anime.title || anime.name} ${year ? `(${year}) ` : ''}— смотреть аниме, даты выхода серий, рейтинг`;
     const description = `Вся информация об аниме «${anime.title || anime.name}» ${year ? `(${year})` : ''}. Сюжет, даты выхода новых серий, отзывы зрителей и рекомендации.`;
     const imgUrl = tmdbApi.getImageUrl(anime.poster_path);
 

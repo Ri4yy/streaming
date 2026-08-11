@@ -15,9 +15,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const supabase = await createClient();
     const { data: collection } = await supabase.from('collections').select('title, hook_text').eq('slug', slug).single();
     
-    if (!collection) return { title: 'Не найдено | CineBox Подборки' };
+    if (!collection) return { title: 'Не найдено | Подборки' };
 
-    const title = `${collection.title} | CineBox Подборки`;
+    const title = `${collection.title} | Подборки`;
     return {
         title,
         description: collection.hook_text,
@@ -63,14 +63,18 @@ export default async function CollectionDetailPage({ params }: { params: Promise
             let duration = meta.duration || '';
             let trailerUrl = '';
             let image = meta.image || '';
+            let title = meta.title || 'Без названия';
+            let year = meta.year || '';
 
             if (item.item_type === 'games') {
                 try {
                     const gameDetails = await steamApi.getGameDetails(item.item_id);
                     if (gameDetails) {
                         rating = gameDetails.metacritic?.score ? gameDetails.metacritic.score / 10 : rating;
-                        genres = gameDetails.genres?.map(g => g.description) || genres;
-                        image = steamApi.getHeroImage(item.item_id) || image;
+                        genres = gameDetails.genres?.map((g: any) => g.description) || genres;
+                        image = steamApi.getHeroImage(item.item_id) || gameDetails.header_image || image;
+                        title = gameDetails.name || title;
+                        year = gameDetails.release_date?.date ? gameDetails.release_date.date.split(',')[1]?.trim() || gameDetails.release_date.date.split(' ')[2] || gameDetails.release_date.date : year;
                     }
                 } catch (e) {
                     console.error("Steam fetch error", e);
@@ -81,13 +85,18 @@ export default async function CollectionDetailPage({ params }: { params: Promise
                     const details = await tmdbApi.getDetails(item.item_id, type);
                     if (details) {
                         rating = details.vote_average || rating;
-                        genres = details.genres?.map(g => g.name) || genres;
+                        genres = details.genres?.map((g: any) => g.name) || genres;
                         if (details.runtime) duration = `${Math.floor(details.runtime / 60)}ч ${details.runtime % 60}м`;
                         else if (details.episode_run_time?.[0]) duration = `${details.episode_run_time[0]}м`;
 
+                        image = tmdbApi.getImageUrl(details.backdrop_path || details.poster_path, 'original') || image;
+                        title = details.title || details.name || title;
+                        const parsedYear = details.release_date ? details.release_date.split('-')[0] : (details.first_air_date ? details.first_air_date.split('-')[0] : '');
+                        if (parsedYear) year = parsedYear;
+
                         // Получаем трейлер
                         const videos = details.videos?.results || [];
-                        const trailer = videos.find(v => v.type === 'Trailer' && v.site === 'YouTube') || videos.find(v => v.site === 'YouTube');
+                        const trailer = videos.find((v: any) => v.type === 'Trailer' && v.site === 'YouTube') || videos.find((v: any) => v.site === 'YouTube');
                         if (trailer) {
                             trailerUrl = `https://www.youtube.com/watch?v=${trailer.key}`;
                         }
@@ -99,8 +108,8 @@ export default async function CollectionDetailPage({ params }: { params: Promise
 
             return {
                 id: item.item_id,
-                title: meta.title || 'Без названия',
-                year: meta.year || '',
+                title,
+                year,
                 image,
                 genres,
                 duration,

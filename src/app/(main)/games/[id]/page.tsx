@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     
     const rawDesc = game.short_description || game.detailed_description || '';
     const cleanDesc = rawDesc.replace(/<[^>]*>?/gm, '').substring(0, 160);
-    const title = `${game.name} — системные требования, дата выхода, отзывы, рейтинг | CineBox`;
+    const title = `${game.name} — системные требования, дата выхода, отзывы, рейтинг`;
     const description = cleanDesc || `Вся информация об игре «${game.name}». Системные требования, отзывы геймеров, трейлеры, скриншоты и рейтинг Metacritic.`;
     const imgUrl = game.header_image;
     

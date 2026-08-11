@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const movie = await tmdbApi.getDetails(id, 'movie');
     
     const year = movie.release_date?.split('-')[0] || '';
-    const title = `${movie.title || movie.name} ${year ? `(${year}) ` : ''}— обзор, актеры, отзывы, рейтинг | CineBox`;
+    const title = `${movie.title || movie.name} ${year ? `(${year}) ` : ''}— обзор, актеры, отзывы, рейтинг`;
     const description = `Вся информация о фильме «${movie.title || movie.name}» ${year ? `(${year})` : ''}. Сюжет, актерский состав, трейлеры и похожие фильмы. Читайте отзывы и узнайте рейтинг.`;
     const imgUrl = tmdbApi.getImageUrl(movie.poster_path);
 
