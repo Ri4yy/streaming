@@ -39,18 +39,15 @@ export default function CollectionItemBlock({ item, index }: { item: CollectionI
                 <div className="lg:col-span-7">
                     {item.trailerUrl ? (
                         <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
-                            <ReactPlayer
-                                url={item.trailerUrl}
-                                width="100%"
-                                height="100%"
-                                controls={true}
-                                light={item.image} // uses the image as placeholder, click to play
-                                playIcon={
-                                    <div className="w-16 h-16 rounded-full bg-[var(--theme-primary)]/90 backdrop-blur-md flex items-center justify-center shadow-[0_0_30px_var(--theme-primary)] transition-transform hover:scale-110 cursor-pointer">
-                                        <Play className="w-6 h-6 text-white fill-current ml-1" />
-                                    </div>
-                                }
-                            />
+                            <iframe 
+                                src={`https://www.youtube.com/embed/${item.trailerUrl.split('v=')[1]?.split('&')[0]}`}
+                                title="YouTube video player"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerPolicy="strict-origin-when-cross-origin"
+                                allowFullScreen
+                                className="absolute top-0 left-0 w-full h-full"
+                            ></iframe>
                         </div>
                     ) : (
                         <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border border-white/10 group cursor-pointer">

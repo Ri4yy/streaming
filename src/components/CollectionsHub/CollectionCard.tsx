@@ -34,7 +34,7 @@ const typeLabels = {
 export default function CollectionCard({ collection }: { collection: CollectionProps }) {
     return (
         <Link href={`/collections/${collection.type}/${collection.id}`} className="group block relative w-full h-full">
-            <div className="relative w-full aspect-[4/5] sm:aspect-square md:aspect-[4/5] rounded-2xl overflow-hidden bg-white/5 border border-white/10 shadow-lg shadow-black/20 backdrop-blur-md transition-all duration-300 group-hover:shadow-[0_0_20px_var(--theme-primary)] group-hover:border-[var(--theme-primary)]/50 group-hover:-translate-y-1">
+            <div className="relative w-full aspect-[3/4] md:aspect-[4/5] rounded-2xl overflow-hidden bg-white/5 border border-white/10 shadow-lg shadow-black/20 backdrop-blur-md transition-all duration-300 group-hover:shadow-[0_0_20px_var(--theme-primary)] group-hover:border-[var(--theme-primary)]/50 group-hover:-translate-y-1">
                 
                 {/* Cover Image */}
                 <div 
@@ -49,19 +49,19 @@ export default function CollectionCard({ collection }: { collection: CollectionP
                 {/* Content */}
                 <div className="absolute inset-0 p-5 flex flex-col justify-between z-10">
                     {/* Top Badges */}
-                    <div className="flex justify-between items-start w-full">
-                        <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md border border-white/10 px-2.5 py-1 rounded-lg text-white/90 text-[11px] font-bold uppercase tracking-wider shadow-sm">
+                    <div className="flex justify-between items-start w-full gap-2">
+                        <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md border border-white/10 px-2.5 py-1 rounded-lg text-white/90 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider shadow-sm whitespace-nowrap">
                             {typeIcons[collection.type]}
                             {typeLabels[collection.type]}
                         </div>
-                        <div className="bg-[var(--theme-primary)]/20 backdrop-blur-md border border-[var(--theme-primary)]/50 text-white px-2 py-1 rounded-lg text-[11px] font-bold shadow-sm">
+                        <div className="bg-[var(--theme-primary)]/20 backdrop-blur-md border border-[var(--theme-primary)]/50 text-white px-2 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold shadow-sm whitespace-nowrap text-center">
                             {collection.count} тайтлов
                         </div>
                     </div>
 
                     {/* Bottom Info */}
                     <div className="flex flex-col transform transition-transform duration-300 group-hover:-translate-y-1">
-                        <h3 className="text-base md:text-lg font-bold text-white leading-tight drop-shadow-md group-hover:text-[var(--theme-primary)] transition-colors">
+                        <h3 className="text-sm sm:text-base md:text-lg font-bold text-white leading-tight drop-shadow-md group-hover:text-[var(--theme-primary)] transition-colors line-clamp-3">
                             {collection.title}
                         </h3>
                         <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-300">

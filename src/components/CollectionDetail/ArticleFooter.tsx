@@ -11,7 +11,7 @@ interface ArticleFooterProps {
 
 export default function ArticleFooter({ tags, similarCollections }: ArticleFooterProps) {
     return (
-        <div className="w-full mt-12 mb-24">
+        <div className="w-full mt-12 mb-10 lg:mb-24">
             {/* Tags */}
             <div className="flex flex-wrap gap-2 mb-16">
                 <span className="text-white/50 text-sm py-1.5 mr-2">Теги:</span>
@@ -25,7 +25,7 @@ export default function ArticleFooter({ tags, similarCollections }: ArticleFoote
             {/* Similar Collections */}
             <div className="mb-20">
                 <h3 className="text-2xl font-bold text-white mb-8">Похожие подборки</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                     {similarCollections.map(collection => (
                         <CollectionCard key={collection.id} collection={collection} />
                     ))}

@@ -1,11 +1,12 @@
 import { MetadataRoute } from 'next';
+import { createClient } from '@/utils/supabase/server';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://cinebox.local'; // Replace with production URL
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cinebox.local';
+  const supabase = await createClient();
 
-  // We can fetch top movies/series here to include in sitemap
-  // For now, returning the main catalog pages
-  return [
+  // Define static routes
+  const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}`,
       lastModified: new Date(),
@@ -43,4 +44,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
   ];
+
+  // Fetch collections to include in sitemap
+  const { data: collections } = await supabase
+    .from('collections')
+    .select('slug, category, updated_at, created_at');
+
+  const collectionRoutes: MetadataRoute.Sitemap = collections?.map((col) => ({
+    url: `${baseUrl}/collections/${col.category}/${col.slug}`,
+    lastModified: new Date(col.updated_at || col.created_at || new Date()),
+    changeFrequency: 'weekly',
+    priority: 0.9,
+  })) || [];
+
+  return [...staticRoutes, ...collectionRoutes];
 }

@@ -13,14 +13,14 @@ import { notFound } from 'next/navigation';
 export async function generateMetadata({ params }: { params: Promise<{ slug: string, category: string }> }): Promise<Metadata> {
     const { slug } = await params;
     const supabase = await createClient();
-    const { data: collection } = await supabase.from('collections').select('title, hook_text').eq('slug', slug).single();
+    const { data: collection } = await supabase.from('collections').select('title, hook_text, seo_title, seo_description').eq('slug', slug).single();
     
     if (!collection) return { title: 'Не найдено | Подборки' };
 
-    const title = `${collection.title} | Подборки`;
+    const title = collection.seo_title || `${collection.title} | Подборки`;
     return {
         title,
-        description: collection.hook_text,
+        description: collection.seo_description || collection.hook_text,
     };
 }
 
