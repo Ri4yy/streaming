@@ -63,8 +63,12 @@ export default async function CollectionDetailPage({ params }: { params: Promise
             let duration = meta.duration || '';
             let trailerUrl = '';
             let image = meta.image || '';
+            if (image && image.startsWith('/')) {
+                image = `https://image.tmdb.org/t/p/original${image}`;
+            }
             let title = meta.title || 'Без названия';
             let year = meta.year || '';
+            let seasons = null;
 
             if (item.item_type === 'games') {
                 try {
@@ -100,6 +104,10 @@ export default async function CollectionDetailPage({ params }: { params: Promise
                         if (trailer) {
                             trailerUrl = `https://www.youtube.com/watch?v=${trailer.key}`;
                         }
+                        
+                        if (details.number_of_seasons) {
+                            seasons = details.number_of_seasons;
+                        }
                     }
                 } catch (e) {
                     console.error("TMDB fetch error", e);
@@ -113,6 +121,7 @@ export default async function CollectionDetailPage({ params }: { params: Promise
                 image,
                 genres,
                 duration,
+                seasons,
                 rating,
                 description: item.custom_description || '',
                 type: item.item_type,

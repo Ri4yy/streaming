@@ -19,6 +19,7 @@ export interface CollectionItemProps {
     type: 'movies' | 'series' | 'anime' | 'games';
     linkId: string;
     trailerUrl?: string;
+    seasons?: number | null;
 }
 
 export default function CollectionItemBlock({ item, index }: { item: CollectionItemProps; index: number }) {
@@ -73,10 +74,26 @@ export default function CollectionItemBlock({ item, index }: { item: CollectionI
                             <Film className="w-4 h-4" />
                             {item.genres.slice(0, 2).join(', ')}
                         </div>
-                        <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 text-white/80 px-2.5 py-1 rounded-lg text-sm font-medium backdrop-blur-md">
-                            <Clock className="w-4 h-4" />
-                            {item.duration}
-                        </div>
+                        {(() => {
+                            const hasDuration = item.duration && item.duration !== '0м' && item.duration !== '0ч 0м' && item.duration !== '0';
+                            if (!hasDuration && !item.seasons) return null;
+                            
+                            const getSeasonsText = (count: number) => {
+                                const v = count % 100;
+                                if (v >= 11 && v <= 19) return `${count} сезонов`;
+                                const r = count % 10;
+                                if (r === 1) return `${count} сезон`;
+                                if (r >= 2 && r <= 4) return `${count} сезона`;
+                                return `${count} сезонов`;
+                            };
+
+                            return (
+                                <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 text-white/80 px-2.5 py-1 rounded-lg text-sm font-medium backdrop-blur-md">
+                                    <Clock className="w-4 h-4" />
+                                    {hasDuration ? item.duration : getSeasonsText(item.seasons!)}
+                                </div>
+                            );
+                        })()}
                     </div>
 
                     {/* Review / Description Text */}
