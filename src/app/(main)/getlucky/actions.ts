@@ -10,6 +10,8 @@ export type GetLuckyFilters = {
     year?: string;
     ratingMin?: number;
     ratingMax?: number;
+    country?: string;
+    studio?: string;
 };
 
 // Shuffle array using Fisher-Yates
@@ -53,6 +55,8 @@ export async function spinRoulette(filters: GetLuckyFilters): Promise<TMDBMedia[
     }
     if (filters.ratingMin) options['vote_average.gte'] = String(filters.ratingMin);
     if (filters.ratingMax) options['vote_average.lte'] = String(filters.ratingMax);
+    if (filters.country) options['with_origin_country'] = filters.country;
+    if (filters.studio) options['with_companies'] = filters.studio;
 
     // Generate a random page to fetch (TMDB discover max page is 500)
     // We'll restrict to 1-100 to ensure we get decently popular items, 

@@ -35,6 +35,30 @@ const TYPE_OPTIONS = [
     { value: 'anime', label: 'Аниме' },
 ];
 
+const COUNTRIES = [
+    { value: 'US', label: 'США' },
+    { value: 'RU', label: 'Россия' },
+    { value: 'KR', label: 'Южная Корея' },
+    { value: 'JP', label: 'Япония' },
+    { value: 'GB', label: 'Великобритания' },
+    { value: 'FR', label: 'Франция' },
+    { value: 'DE', label: 'Германия' },
+    { value: 'CN', label: 'Китай' },
+];
+
+const STUDIOS = [
+    { value: '2', label: 'Walt Disney' },
+    { value: '3', label: 'Pixar' },
+    { value: '33', label: 'Universal' },
+    { value: '174', label: 'Warner Bros' },
+    { value: '420', label: 'Marvel Studios' },
+    { value: '521', label: 'DreamWorks' },
+    { value: '25', label: '20th Century Fox' },
+    { value: '12', label: 'New Line Cinema' },
+    { value: '4', label: 'Paramount' },
+    { value: '5', label: 'Columbia' }
+];
+
 export default function GetLuckyClient({ isAuth }: Props) {
     const [filters, setFilters] = useState<GetLuckyFilters>({
         type: 'all',
@@ -65,22 +89,47 @@ export default function GetLuckyClient({ isAuth }: Props) {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    const [nextItemsBuffer, setNextItemsBuffer] = useState<TMDBMedia[]>([]);
+
+    useEffect(() => {
+        let isMounted = true;
+        
+        // Fetch initial items for the wheel
+        spinRoulette(filters).then(items => {
+            if (isMounted) {
+                setRouletteItems(items);
+                // Background fetch for the next spin
+                spinRoulette(filters).then(buffer => {
+                    if (isMounted) setNextItemsBuffer(buffer);
+                });
+            }
+        });
+        
+        return () => { isMounted = false; };
+    }, [filters]);
+
     const handleSpin = async () => {
-        if (isSpinning) return;
+        if (isSpinning || rouletteItems.length === 0) return;
 
         setIsSpinning(true);
         setWinnerItem(null); // Clear previous result
-
-        // Fetch new items
-        const items = await spinRoulette(filters);
-
-        if (items.length > 0) {
-            setRouletteItems(items);
-            // The wheel component will handle the spinning and returning the winner
+        
+        // If we have a buffer ready and we've already spun once (we have history or a winner before),
+        // we can instantly swap to the buffer before spinning so it's a new set of movies!
+        if (nextItemsBuffer.length > 0) {
+            // We'll shuffle the current items slightly if it's the very first spin,
+            // or swap in the buffer if they click "Крутить ещё".
+            // Since resetting the wheel is instant, we can safely just swap it!
+            setRouletteItems(nextItemsBuffer);
+            
+            // Fetch the NEXT buffer
+            spinRoulette(filters).then(setNextItemsBuffer);
         } else {
-            setIsSpinning(false);
-            alert('Ничего не найдено по этим фильтрам');
+            // Fallback: shuffle current items so it doesn't land on the same one
+            setRouletteItems(prev => [...prev].sort(() => Math.random() - 0.5));
         }
+
+        // The RouletteWheel will automatically pick up the items and animate.
     };
 
     const handleSpinComplete = (winner: TMDBMedia) => {
@@ -167,6 +216,23 @@ export default function GetLuckyClient({ isAuth }: Props) {
                     <div className="flex items-center gap-1 pl-4 pr-2 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white font-medium text-[15px] shadow-lg backdrop-blur-md">
                         <span>Рейтинг от: {filters.ratingMin}</span>
                         <button onClick={() => setFilters(prev => ({ ...prev, ratingMin: undefined }))} className="ml-1 p-1 text-gray-400 hover:text-theme-main hover:bg-white/10 rounded-lg transition-all">
+                            <span className="text-[22px] leading-[0.6] block">&times;</span>
+                        </button>
+                    </div>
+                )}
+
+                {filters.country && (
+                    <div className="flex items-center gap-1 pl-4 pr-2 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white font-medium text-[15px] shadow-lg backdrop-blur-md">
+                        <span>Страна: {COUNTRIES.find(c => c.value === filters.country)?.label || filters.country}</span>
+                        <button onClick={() => setFilters(prev => ({ ...prev, country: undefined }))} className="ml-1 p-1 text-gray-400 hover:text-theme-main hover:bg-white/10 rounded-lg transition-all">
+                            <span className="text-[22px] leading-[0.6] block">&times;</span>
+                        </button>
+                    </div>
+                )}
+                {filters.studio && (
+                    <div className="flex items-center gap-1 pl-4 pr-2 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white font-medium text-[15px] shadow-lg backdrop-blur-md">
+                        <span>Студия: {STUDIOS.find(s => s.value === filters.studio)?.label || filters.studio}</span>
+                        <button onClick={() => setFilters(prev => ({ ...prev, studio: undefined }))} className="ml-1 p-1 text-gray-400 hover:text-theme-main hover:bg-white/10 rounded-lg transition-all">
                             <span className="text-[22px] leading-[0.6] block">&times;</span>
                         </button>
                     </div>
@@ -315,24 +381,47 @@ export default function GetLuckyClient({ isAuth }: Props) {
                             )}
 
                             {(activeMenu === 'country' || activeMenu === 'studio') && (
-                                <div className="flex flex-col">
+                                <div className="flex flex-col h-[350px]">
                                     <div className="flex items-center px-4 py-3 border-b border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors" onClick={() => setActiveMenu('main')}>
                                         <ChevronLeft className="w-4 h-4 text-gray-300 mr-3" />
                                         <span className="font-medium text-white text-[15px]">
-                                            {activeMenu === 'country' ? 'Страна' : 'Студия'}
+                                            {activeMenu === 'country' ? 'Страны' : 'Студии'}
                                         </span>
                                     </div>
-                                    <div className="p-4 flex flex-col gap-3">
-                                        <span className="text-sm text-gray-400 text-center py-2">
-                                            Будет доступно в следующем обновлении
-                                        </span>
-                                        <button
-                                            onClick={() => { setShowAdvanced(false); setTimeout(() => setActiveMenu('main'), 200); }}
-                                            className="w-full mt-2 bg-white/10 hover:bg-white/20 border border-white/10 text-white font-medium py-2 rounded-xl transition-all"
-                                        >
-                                            Закрыть
-                                        </button>
-                                    </div>
+                                    <ul className="flex flex-col overflow-y-auto custom-scrollbar p-2">
+                                        {(activeMenu === 'country' ? COUNTRIES : STUDIOS).map(item => {
+                                            const isChecked = activeMenu === 'country' 
+                                                ? filters.country === item.value 
+                                                : filters.studio === item.value;
+                                            return (
+                                                <li 
+                                                    key={item.value} 
+                                                    className="hover:bg-white/10 transition-all duration-200 px-3 py-2 rounded-xl"
+                                                >
+                                                    <label 
+                                                        className="flex gap-3 items-center cursor-pointer"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            if (activeMenu === 'country') {
+                                                                setFilters(prev => ({ ...prev, country: isChecked ? undefined : item.value }));
+                                                            } else {
+                                                                setFilters(prev => ({ ...prev, studio: isChecked ? undefined : item.value }));
+                                                            }
+                                                        }}
+                                                    >
+                                                        <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isChecked ? 'bg-theme-main border-theme-main' : 'border-white/30 bg-black/20'}`}>
+                                                            {isChecked && (
+                                                                <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                                                </svg>
+                                                            )}
+                                                        </div>
+                                                        <p className="select-none text-[15px] text-gray-200">{item.label}</p>
+                                                    </label>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
                                 </div>
                             )}
                         </div>
