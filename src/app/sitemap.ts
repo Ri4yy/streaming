@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { createClient } from '@/utils/supabase/server';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cinebox.local';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://vixio.online';
   const supabase = await createClient();
 
   // Define static routes

@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: "Обработка персональных данных",
-  description: "Политика обработки персональных данных сервиса CineBox.",
+  description: "Политика обработки персональных данных сервиса Vixio.",
 };
 
 export default function PrivacyPage() {
@@ -19,7 +19,7 @@ export default function PrivacyPage() {
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">Обработка персональных данных</h1>
                 <div className="text-gray-400 text-sm mb-6">Обновлено: 4 августа 2026 г.</div>
                 <p className="text-lg text-gray-300">
-                    CineBox (cinebox.ru) — справочный каталог фильмов, сериалов и рейтингов. Мы обрабатываем персональные данные только для работы сайта и аккаунтов. Видеопотоки и плееры — на сторонних ресурсах; мы не получаем и не храним их содержимое. Используя сайт, вы подтверждаете ознакомление с этим документом.
+                    Vixio (vixio.online) — справочный каталог фильмов, сериалов и рейтингов. Мы обрабатываем персональные данные только для работы сайта и аккаунтов. Видеопотоки и плееры — на сторонних ресурсах; мы не получаем и не храним их содержимое. Используя сайт, вы подтверждаете ознакомление с этим документом.
                 </p>
             </header>
 
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
                     <h2 className="text-2xl font-bold text-white mb-4">1. Контакты</h2>
                     <p className="mb-2">По вопросам персональных данных, удаления аккаунта и реализации ваших прав:</p>
                     <ul className="list-disc pl-5 space-y-1">
-                        <li>e-mail: <a href="mailto:admin@cinebox.ru" className="text-theme-main hover:underline">admin@cinebox.ru</a></li>
+                        <li>e-mail: <a href="mailto:admin@vixio.online" className="text-theme-main hover:underline">admin@vixio.online</a></li>
                         <li>Telegram: <a href="https://t.me/cinebox_support" target="_blank" rel="noopener noreferrer" className="text-theme-main hover:underline">@cinebox_support</a></li>
                     </ul>
                 </section>
@@ -64,12 +64,12 @@ export default function PrivacyPage() {
                     <h2 className="text-2xl font-bold text-white mb-4">5. Передача третьим лицам</h2>
                     <p className="mb-3">Данные могут обрабатываться хостингом, почтовыми сервисами и системами аналитики — в объёме, нужном для работы сайта. Мы не продаём персональные данные.</p>
                     <p className="mb-3">Серверы могут находиться за пределами РФ. Продолжая пользоваться сайтом, вы соглашаетесь на такую обработку в указанных целях.</p>
-                    <p><b>Мы не отвечаем</b> за обработку данных операторами сторонних плееров, сайтов и сервисов, на которые ведут ссылки или iframe с CineBox.</p>
+                    <p><b>Мы не отвечаем</b> за обработку данных операторами сторонних плееров, сайтов и сервисов, на которые ведут ссылки или iframe с Vixio.</p>
                 </section>
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">6. Хранение и удаление</h2>
-                    <p>Данные аккаунта хранятся, пока аккаунт активен. Технические журналы — обычно до 12 месяцев. Удаление аккаунта — по запросу на <a href="mailto:admin@cinebox.ru" className="text-theme-main hover:underline">admin@cinebox.ru</a>; часть данных может сохраняться, если это требуется законом.</p>
+                    <p>Данные аккаунта хранятся, пока аккаунт активен. Технические журналы — обычно до 12 месяцев. Удаление аккаунта — по запросу на <a href="mailto:admin@vixio.online" className="text-theme-main hover:underline">admin@vixio.online</a>; часть данных может сохраняться, если это требуется законом.</p>
                 </section>
 
                 <section>

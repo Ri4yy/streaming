@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "Профиль",
-  description: "Ваш личный профиль в CineBox.",
+  description: "Ваш личный профиль в Vixio.",
 };
 
 export default function ProfileLayout({

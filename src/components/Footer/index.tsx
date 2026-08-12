@@ -14,10 +14,10 @@ export default function Footer() {
                 <div className="flex flex-col md:flex-row justify-between gap-10">
                     <div className="flex flex-col gap-6 md:w-1/3">
                         <div>
-                            <Link href="/" className="text-2xl font-bold text-white tracking-wider">CineBox</Link>
+                            <Link href="/" className="text-2xl font-bold text-white tracking-wider">Vixio</Link>
                             <p className="mt-4 text-gray-400 text-sm leading-relaxed">Твой личный каталог и трекер для фильмов, сериалов, аниме и игр. Ищи, сохраняй и смотри.</p>
                         </div>
-                        <span className='text-gray-500 text-sm'>© 2026 CineBox</span>
+                        <span className='text-gray-500 text-sm'>© 2026 Vixio</span>
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-10 md:gap-16">

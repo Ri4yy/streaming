@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: "Пользовательское соглашение",
-  description: "Правила использования сервиса CineBox.",
+  description: "Правила использования сервиса Vixio.",
 };
 
 export default function TermsPage() {
@@ -19,14 +19,14 @@ export default function TermsPage() {
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">Пользовательское соглашение</h1>
                 <div className="text-gray-400 text-sm mb-6">Обновлено: 4 августа 2026 г.</div>
                 <p className="text-lg text-gray-300">
-                    Настоящие правила регулируют использование сайта CineBox (cinebox.ru). Заходя на сайт, регистрируя аккаунт или пользуясь функциями сервиса, вы принимаете условия в полном объёме. Не согласны — не используйте сайт.
+                    Настоящие правила регулируют использование сайта Vixio (vixio.online). Заходя на сайт, регистрируя аккаунт или пользуясь функциями сервиса, вы принимаете условия в полном объёме. Не согласны — не используйте сайт.
                 </p>
             </header>
 
             <div className="space-y-10 text-gray-300">
                 <section>
-                    <h2 className="text-2xl font-bold text-white mb-4">1. Что такое CineBox</h2>
-                    <p className="mb-3">CineBox — <b>справочный каталог</b> фильмов, сериалов, мультфильмов и аниме: карточки тайтлов, описания, постеры, рейтинги, профили и иные функции.</p>
+                    <h2 className="text-2xl font-bold text-white mb-4">1. Что такое Vixio</h2>
+                    <p className="mb-3">Vixio — <b>справочный каталог</b> фильмов, сериалов, мультфильмов и аниме: карточки тайтлов, описания, постеры, рейтинги, профили и иные функции.</p>
                     <p className="mb-3">Сервис <b>не размещает, не хранит, не транслирует и не распространяет</b> аудиовизуальные произведения на своих серверах. Сервис не является видеохостингом, стриминговой платформой, кинотеатром, правообладателем или официальным дистрибьютором контента.</p>
                     <p>Любой просмотр, если он доступен на сайте, осуществляется исключительно через <b>сторонние плееры, iframe и ссылки</b>, которые сервис не создаёт, не загружает и не контролирует.</p>
                 </section>
@@ -36,14 +36,14 @@ export default function TermsPage() {
                     <ul className="list-disc pl-5 space-y-2">
                         <li>Сервис не проверяет и не гарантирует законность, качество, полноту и безопасность материалов на сторонних сайтах и в плеерах.</li>
                         <li>Метаданные (названия, постеры, описания) могут поступать из открытых API (TMDB, Steam, Google Books и др.) и носят справочный характер без гарантии точности.</li>
-                        <li>Претензии к содержанию конкретного видеопотока направляйте <b>правообладателю и оператору соответствующего стороннего ресурса</b>, а не владельцу каталога CineBox.</li>
+                        <li>Претензии к содержанию конкретного видеопотока направляйте <b>правообладателю и оператору соответствующего стороннего ресурса</b>, а не владельцу каталога Vixio.</li>
                         <li>Просмотр и переход по ссылкам — <b>на ваш собственный риск</b> и в соответствии с законодательством вашей страны.</li>
                     </ul>
                 </section>
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">3. Обращения правообладателей</h2>
-                    <p className="mb-3">При мотивированном обращении о нарушении прав или законном требовании уполномоченного органа сервис может ограничить доступ к спорным материалам в каталоге (карточка, плеер) в разумный срок. e-mail: <a href="mailto:admin@cinebox.ru" className="text-theme-main hover:underline">admin@cinebox.ru</a>.</p>
+                    <p className="mb-3">При мотивированном обращении о нарушении прав или законном требовании уполномоченного органа сервис может ограничить доступ к спорным материалам в каталоге (карточка, плеер) в разумный срок. e-mail: <a href="mailto:admin@vixio.online" className="text-theme-main hover:underline">admin@vixio.online</a>.</p>
                     <p>Сервис не обязан превентивно модерировать весь контент сторонних плееров и не может удалять файлы или потоки на чужих серверах.</p>
                 </section>
 
@@ -85,7 +85,7 @@ export default function TermsPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">9. Ограничение ответственности</h2>
-                    <p className="mb-3">В максимальной степени, допускаемой законом, сервис CineBox <b>не несёт ответственности</b> за:</p>
+                    <p className="mb-3">В максимальной степени, допускаемой законом, сервис Vixio <b>не несёт ответственности</b> за:</p>
                     <ul className="list-disc pl-5 space-y-2 mb-3">
                         <li>содержание, качество, законность и последствия использования материалов в сторонних плеерах и на сторонних сайтах;</li>
                         <li>действия или бездействие третьих лиц и других пользователей;</li>
@@ -108,7 +108,7 @@ export default function TermsPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">12. Контакты</h2>
-                    <p><a href="mailto:admin@cinebox.ru" className="text-theme-main hover:underline">admin@cinebox.ru</a>, Telegram <a href="https://t.me/cinebox_support" target="_blank" rel="noopener noreferrer" className="text-theme-main hover:underline">@cinebox_support</a>.</p>
+                    <p><a href="mailto:admin@vixio.online" className="text-theme-main hover:underline">admin@vixio.online</a>, Telegram <a href="https://t.me/cinebox_support" target="_blank" rel="noopener noreferrer" className="text-theme-main hover:underline">@cinebox_support</a>.</p>
                 </section>
             </div>
         </main>

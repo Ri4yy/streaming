@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: "Обращения правообладателей (DMCA)",
-  description: "Обращения правообладателей и уполномоченных органов об ограничении доступа к материалам каталога CineBox.",
+  description: "Обращения правообладателей и уполномоченных органов об ограничении доступа к материалам каталога Vixio.",
 };
 
 export default function DmcaPage() {
@@ -19,7 +19,7 @@ export default function DmcaPage() {
                 <span className="inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/20 rounded-full mb-4">Notice-and-takedown</span>
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">Обращения правообладателей</h1>
                 <p className="text-lg text-gray-300 max-w-4xl">
-                    CineBox — справочно-информационный каталог. Мы <b>не размещаем и не храним</b> аудиовизуальные произведения на своих серверах; просмотр, если доступен, идёт через сторонние плееры. При получении мотивированного обращения мы ограничиваем доступ к спорным материалам в каталоге (карточка, плеер) в разумный срок.
+                    Vixio — справочно-информационный каталог. Мы <b>не размещаем и не храним</b> аудиовизуальные произведения на своих серверах; просмотр, если доступен, идёт через сторонние плееры. При получении мотивированного обращения мы ограничиваем доступ к спорным материалам в каталоге (карточка, плеер) в разумный срок.
                 </p>
             </header>
 
@@ -56,7 +56,7 @@ export default function DmcaPage() {
                             <div className="w-5 h-5 mt-0.5 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center shrink-0">
                                 <Check size={12} strokeWidth={3} />
                             </div>
-                            <span>заблокировать или скрыть карточку тайтла в каталоге CineBox;</span>
+                            <span>заблокировать или скрыть карточку тайтла в каталоге Vixio;</span>
                         </li>
                         <li className="flex items-start gap-3">
                             <div className="w-5 h-5 mt-0.5 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center shrink-0">
@@ -81,7 +81,7 @@ export default function DmcaPage() {
                             <div className="w-5 h-5 mt-0.5 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center shrink-0">
                                 <Check size={12} strokeWidth={3} />
                             </div>
-                            <span>не удаляем файлы и потоки на сторонних сайтах и у операторов плееров – только ограничиваем доступ через CineBox;</span>
+                            <span>не удаляем файлы и потоки на сторонних сайтах и у операторов плееров – только ограничиваем доступ через Vixio;</span>
                         </li>
                         <li className="flex items-start gap-3">
                             <div className="w-5 h-5 mt-0.5 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center shrink-0">
@@ -119,7 +119,7 @@ export default function DmcaPage() {
                             <div className="w-5 h-5 mt-0.5 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center shrink-0">
                                 <Check size={12} strokeWidth={3} />
                             </div>
-                            <span>Прямую ссылку (URL) на страницу CineBox со спорным материалом.</span>
+                            <span>Прямую ссылку (URL) на страницу Vixio со спорным материалом.</span>
                         </li>
                         <li className="flex items-start gap-3">
                             <div className="w-5 h-5 mt-0.5 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center shrink-0">
@@ -149,7 +149,7 @@ export default function DmcaPage() {
                     </p>
                     <div className="flex items-center gap-2 text-lg">
                         <span className="font-medium text-white">Email для связи:</span>
-                        <a href="mailto:admin@cinebox.ru?subject=Обращение правообладателя (DMCA)" className="text-theme-main font-bold hover:underline">admin@cinebox.ru</a>
+                        <a href="mailto:admin@vixio.online?subject=Обращение правообладателя (DMCA)" className="text-theme-main font-bold hover:underline">admin@vixio.online</a>
                     </div>
                 </section>
             </div>

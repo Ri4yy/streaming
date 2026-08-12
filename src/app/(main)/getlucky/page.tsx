@@ -5,7 +5,7 @@ import GetLuckyClient from '@/components/GetLucky/GetLuckyClient';
 import { createClient } from '@/utils/supabase/server';
 
 export const metadata: Metadata = {
-  title: "Мне повезёт — Случайный фильм | CineBox",
+  title: "Мне повезёт — Случайный фильм | Vixio",
   description: "Кейс-рулетка фильмов: настрой фильтры, крути и получай случайный фильм с работающим плеером.",
 };
 

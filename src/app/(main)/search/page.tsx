@@ -8,7 +8,7 @@ import { googleBooksApi } from '@/services/googleBooks';
 
 export const metadata: Metadata = {
   title: "Поиск",
-  description: "Поиск фильмов, сериалов, аниме, книг и игр по каталогу CineBox.",
+  description: "Поиск фильмов, сериалов, аниме, книг и игр по каталогу Vixio.",
 };
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q: string }> }) {

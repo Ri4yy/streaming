@@ -4,28 +4,30 @@ import ScrollToTopBtn from "@/components/ScrollToTopBtn";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://cinebox.local'), // Will be changed to production URL later
+  metadataBase: new URL('https://vixio.online'), // Will be changed to production URL later
   title: {
-    template: "%s | CineBox",
-    default: "CineBox — Каталог кино, сериалов, аниме и игр",
+    template: "%s | Vixio",
+    default: "Vixio — Каталог кино, сериалов, аниме и игр",
   },
-  description: "CineBox — твой личный каталог и трекер для фильмов, сериалов, аниме, игр и книг. Ищи, сохраняй и смотри.",
+  description: "Vixio — твой личный каталог и трекер для фильмов, сериалов, аниме, игр и книг. Ищи, сохраняй и смотри.",
   openGraph: {
-    title: "CineBox — Каталог кино, сериалов, аниме и игр",
-    description: "CineBox — твой личный каталог и трекер для фильмов, сериалов, аниме, игр и книг. Ищи, сохраняй и смотри.",
-    url: 'https://cinebox.local',
-    siteName: 'CineBox',
+    title: "Vixio — Каталог кино, сериалов, аниме и игр",
+    description: "Vixio — твой личный каталог и трекер для фильмов, сериалов, аниме, игр и книг. Ищи, сохраняй и смотри.",
+    url: 'https://vixio.online',
+    siteName: 'Vixio',
     locale: 'ru_RU',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: "CineBox — Каталог кино, сериалов, аниме и игр",
-    description: "CineBox — твой личный каталог и трекер для фильмов, сериалов, аниме, игр и книг. Ищи, сохраняй и смотри.",
+    title: "Vixio — Каталог кино, сериалов, аниме и игр",
+    description: "Vixio — твой личный каталог и трекер для фильмов, сериалов, аниме, игр и книг. Ищи, сохраняй и смотри.",
   },
   robots: {
     index: false,
@@ -59,6 +61,8 @@ export default function RootLayout({
       <body className="antialiased flex flex-col min-h-screen">
         <ScrollToTopBtn />
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
