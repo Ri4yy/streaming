@@ -98,6 +98,7 @@ export default async function CollectionsHubPage({ searchParams }: { searchParam
                     <FeaturedHeroLayout
                         trending={heroTrending}
                         latest={heroLatest}
+                        viewAllHref={activeType ? `/collections/${activeType}` : undefined}
                     />
                 )}
 

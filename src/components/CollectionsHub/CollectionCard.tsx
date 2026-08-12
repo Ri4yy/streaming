@@ -62,22 +62,20 @@ export default function CollectionCard({ collection }: { collection: CollectionP
                 {/* Content */}
                 <div className="absolute inset-0 p-5 flex flex-col justify-between z-10">
                     {/* Top Badges */}
-                    <div className="flex justify-between items-start w-full gap-1.5 flex-wrap max-w-full">
-                        <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md border border-white/10 px-2 py-1 sm:px-2.5 rounded-lg text-white/90 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider shadow-sm whitespace-nowrap shrink-0">
+                    <div className="flex items-start w-full gap-1.5 flex-wrap">
+                        <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md border border-white/10 px-2 py-1 sm:px-2.5 rounded-lg text-white/90 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider shadow-sm whitespace-nowrap">
                             {typeIcons[collection.type]}
                             {typeLabels[collection.type]}
                         </div>
-                        <div className="flex items-center gap-1.5 flex-wrap justify-end shrink-0 max-w-full">
-                            {isViewed && (
-                                <div className="flex items-center gap-1 bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 px-2 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold backdrop-blur-md shadow-sm shrink-0 whitespace-nowrap">
-                                    <Check className="w-3 h-3 stroke-[3]" />
-                                    <span>Просмотрено</span>
-                                </div>
-                            )}
-                            <div className="bg-[var(--theme-primary)]/20 backdrop-blur-md border border-[var(--theme-primary)]/50 text-white px-2 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold shadow-sm whitespace-nowrap text-center shrink-0">
-                                {collection.count} тайтлов
-                            </div>
+                        <div className="bg-[var(--theme-primary)]/20 backdrop-blur-md border border-[var(--theme-primary)]/50 text-white px-2 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold shadow-sm whitespace-nowrap text-center">
+                            {collection.count} тайтлов
                         </div>
+                        {isViewed && (
+                            <div className="flex items-center gap-1 bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 px-2 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold backdrop-blur-md shadow-sm whitespace-nowrap">
+                                <Check className="w-3 h-3 stroke-[3]" />
+                                <span>Просмотрено</span>
+                            </div>
+                        )}
                     </div>
 
                     {/* Bottom Info */}

@@ -12,12 +12,13 @@ import 'swiper/css/effect-fade';
 
 import { CollectionProps } from './CollectionCard';
 
-interface FeaturedHeroProps {
+interface FeaturedHeroLayoutProps {
     trending: CollectionProps[];
     latest: CollectionProps[];
+    viewAllHref?: string;
 }
 
-export default function FeaturedHeroLayout({ trending, latest }: FeaturedHeroProps) {
+export default function FeaturedHeroLayout({ trending, latest, viewAllHref }: FeaturedHeroLayoutProps) {
     return (
         <div className="w-full flex flex-col xl:flex-row gap-6 mb-12 mt-6 h-auto xl:h-[550px]">
             {/* Custom Styles for Slider Pagination */}
@@ -67,8 +68,8 @@ export default function FeaturedHeroLayout({ trending, latest }: FeaturedHeroPro
                                     style={{ backgroundImage: item.banner_image || item.image ? `url(${item.banner_image || item.image})` : 'none' }}
                                 />
                                 {/* Gradients & Blur */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#080c13] via-[#080c13]/50 to-transparent opacity-90 backdrop-blur-[2px]" />
-                                <div className="absolute inset-0 bg-gradient-to-r from-[var(--theme-bg)]/80 via-transparent to-transparent opacity-90 backdrop-blur-[2px]" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#080c13] via-[#080c13]/50 to-transparent opacity-90 backdrop-blur-sm" />
+                                <div className="absolute inset-0 bg-gradient-to-r from-[var(--theme-bg)]/80 via-transparent to-transparent opacity-90 backdrop-blur-sm" />
                                 
                                 {/* Content */}
                                 <div className="absolute inset-0 p-8 pb-16 md:p-12 md:pb-16 flex flex-col justify-end items-start z-10">
@@ -103,9 +104,11 @@ export default function FeaturedHeroLayout({ trending, latest }: FeaturedHeroPro
                     <h2 className="text-xl font-bold text-white flex items-center gap-2">
                         <Clock className="w-5 h-5 text-[var(--theme-primary)]" /> Свежее
                     </h2>
-                    <button className="text-sm text-white/50 hover:text-white transition-colors">
-                        Смотреть все
-                    </button>
+                    {viewAllHref && (
+                        <Link href={viewAllHref} className="text-sm text-white/50 hover:text-white transition-colors">
+                            Смотреть все
+                        </Link>
+                    )}
                 </div>
                 
                 <div className="flex flex-col gap-4 flex-1 overflow-y-auto pr-2 no-scrollbar">
