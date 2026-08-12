@@ -1,11 +1,14 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronRight, Calendar, Clock, Share2, MessageCircle } from 'lucide-react';
 import { SiTelegram, SiVk, SiX } from '@icons-pack/react-simple-icons';
+import { markCollectionAsViewed } from '@/utils/viewedCollections';
 
 interface HeaderProps {
+    id?: string;
+    slug?: string;
     title: string;
     coverImage: string;
     date: string;
@@ -23,7 +26,12 @@ const categoryTitles: Record<string, string> = {
     mixed: 'Разное',
 };
 
-export default function CollectionArticleHeader({ title, coverImage, date, readTime, hookText, category }: HeaderProps) {
+export default function CollectionArticleHeader({ id, slug, title, coverImage, date, readTime, hookText, category }: HeaderProps) {
+    useEffect(() => {
+        if (id || slug) {
+            markCollectionAsViewed(id || '', slug || '');
+        }
+    }, [id, slug]);
     return (
         <div className="relative w-full mb-12 rounded-t-3xl overflow-hidden">
             {/* Massive Banner Image */}
@@ -33,7 +41,7 @@ export default function CollectionArticleHeader({ title, coverImage, date, readT
             />
             
             {/* Gradients to ensure text readability */}
-            <div className="absolute inset-0 bg-[#080c13]/70 backdrop-blur-sm" />
+            <div className="absolute inset-0 bg-[#080c13]/60 backdrop-blur-sm" />
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)] via-[var(--theme-bg)]/80 to-transparent opacity-100" />
             <div className="absolute inset-0 bg-gradient-to-r from-[var(--theme-bg)]/80 to-transparent" />
 

@@ -26,7 +26,7 @@ export default async function CollectionCategoryPage({ params }: { params: Promi
 
     const { data } = await supabase
         .from('collections')
-        .select('id, title, hook_text, cover_image, banner_image, category, slug, collection_items(count)')
+        .select('id, title, hook_text, cover_image, banner_image, category, slug, collection_items(id)')
         .eq('is_published', true)
         .eq('category', category)
         .order('created_at', { ascending: false });
@@ -37,7 +37,7 @@ export default async function CollectionCategoryPage({ params }: { params: Promi
         description: col.hook_text,
         image: col.cover_image,
         banner_image: col.banner_image,
-        count: col.collection_items?.[0]?.count || 0,
+        count: col.collection_items?.length || 0,
         type: col.category
     }));
 

@@ -138,7 +138,7 @@ export default async function CollectionDetailPage({ params }: { params: Promise
     // В идеале нужен RPC метод для поиска по пересечению тегов
     const { data: similarData } = await supabase
         .from('collections')
-        .select('id, title, hook_text, cover_image, banner_image, category, slug, collection_items(count)')
+        .select('id, title, hook_text, cover_image, banner_image, category, slug, collection_items(id)')
         .eq('category', category)
         .neq('id', articleData.id)
         .limit(3);
@@ -149,7 +149,7 @@ export default async function CollectionDetailPage({ params }: { params: Promise
         description: col.hook_text,
         image: col.cover_image,
         banner_image: col.banner_image,
-        count: col.collection_items?.[0]?.count || 0,
+        count: col.collection_items?.length || 0,
         type: col.category
     }));
 
@@ -173,6 +173,8 @@ export default async function CollectionDetailPage({ params }: { params: Promise
                 
                 {/* Header / Hero Banner */}
                 <CollectionArticleHeader 
+                    id={articleData.id}
+                    slug={slug}
                     title={articleData.title}
                     coverImage={articleData.banner_image || articleData.cover_image}
                     date={formattedDate}

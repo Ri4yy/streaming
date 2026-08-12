@@ -66,9 +66,9 @@ export default function FeaturedHeroLayout({ trending, latest }: FeaturedHeroPro
                                     className="absolute inset-0 bg-cover bg-center transition-transform duration-[10000ms] scale-100 group-hover:scale-110 bg-[var(--theme-bg)]"
                                     style={{ backgroundImage: item.banner_image || item.image ? `url(${item.banner_image || item.image})` : 'none' }}
                                 />
-                                {/* Gradients */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#080c13] via-[#080c13]/50 to-transparent opacity-90" />
-                                <div className="absolute inset-0 bg-gradient-to-r from-[var(--theme-bg)]/80 via-transparent to-transparent opacity-90" />
+                                {/* Gradients & Blur */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#080c13] via-[#080c13]/50 to-transparent opacity-90 backdrop-blur-[2px]" />
+                                <div className="absolute inset-0 bg-gradient-to-r from-[var(--theme-bg)]/80 via-transparent to-transparent opacity-90 backdrop-blur-[2px]" />
                                 
                                 {/* Content */}
                                 <div className="absolute inset-0 p-8 pb-16 md:p-12 md:pb-16 flex flex-col justify-end items-start z-10">

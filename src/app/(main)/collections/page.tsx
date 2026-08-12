@@ -29,7 +29,7 @@ export default async function CollectionsHubPage({ searchParams }: { searchParam
     // Fetch collections
     const { data } = await supabase
         .from('collections')
-        .select('id, title, hook_text, cover_image, banner_image, category, slug, views, collection_items(count), collection_tags(tags(name, type))')
+        .select('id, title, hook_text, cover_image, banner_image, category, slug, views, collection_items(id), collection_tags(tags(name, type))')
         .eq('is_published', true)
         .order('created_at', { ascending: false });
 
@@ -49,7 +49,7 @@ export default async function CollectionsHubPage({ searchParams }: { searchParam
             description: col.hook_text,
             image: col.cover_image,
             banner_image: col.banner_image,
-            count: col.collection_items?.[0]?.count || 0,
+            count: col.collection_items?.length || 0,
             type: col.category,
             moods,
             allTags
@@ -113,10 +113,18 @@ export default async function CollectionsHubPage({ searchParams }: { searchParam
                     ) : (
                         <>
                             {/* 3. Main Collections Grid */}
-                            <CollectionsGrid collections={latestCollections} title="Свежие подборки" />
+                            <CollectionsGrid 
+                                collections={latestCollections} 
+                                title="Свежие подборки" 
+                                viewAllHref={activeType ? `/collections/${activeType}` : undefined}
+                            />
 
                             {/* 4. Another Grid */}
-                            <CollectionsGrid collections={popularWeekly} title="Популярное за неделю" />
+                            <CollectionsGrid 
+                                collections={popularWeekly} 
+                                title="Популярное за неделю" 
+                                viewAllHref={activeType ? `/collections/${activeType}` : undefined}
+                            />
                         </>
                     )
                 ) : (
