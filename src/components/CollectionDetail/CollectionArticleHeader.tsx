@@ -33,7 +33,7 @@ export default function CollectionArticleHeader({ id, slug, title, coverImage, d
         }
     }, [id, slug]);
     return (
-        <div className="relative w-full mb-12 rounded-t-3xl overflow-hidden">
+        <div className="relative w-full mb-6 md:mb-10 rounded-t-3xl overflow-hidden">
             {/* Massive Banner Image */}
             <div 
                 className="absolute inset-0 bg-cover bg-center"
@@ -45,10 +45,10 @@ export default function CollectionArticleHeader({ id, slug, title, coverImage, d
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)] via-[var(--theme-bg)]/80 to-transparent opacity-100" />
             <div className="absolute inset-0 bg-gradient-to-r from-[var(--theme-bg)]/80 to-transparent" />
 
-            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12 pt-24 md:pt-32 pb-16 md:pb-24 flex flex-col justify-end min-h-[500px]">
+            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12 pt-10 pb-16 md:pb-24 flex flex-col justify-end min-h-[500px]">
                 
                 {/* Breadcrumbs */}
-                <nav className="flex text-sm text-white/50 mb-6 font-medium" aria-label="Breadcrumb">
+                <nav className="flex text-sm text-white/50 mb-auto font-medium" aria-label="Breadcrumb">
                     <ol className="inline-flex items-center space-x-1 md:space-x-3">
                         <li className="inline-flex items-center">
                             <Link href="/" className="hover:text-white transition-colors">Главная</Link>
@@ -77,7 +77,7 @@ export default function CollectionArticleHeader({ id, slug, title, coverImage, d
                 </nav>
 
                 {/* H1 Title */}
-                <h1 className="text-4xl md:text-5xl lg:text-7xl font-sans font-black tracking-tight text-white leading-tight mb-6 drop-shadow-xl max-w-4xl">
+                <h1 className="text-3xl md:text-[52px] font-sans font-black tracking-tight text-white leading-tight mb-6 drop-shadow-xl max-w-4xl mt-10 md:mt-[120px]">
                     {title}
                 </h1>
 
