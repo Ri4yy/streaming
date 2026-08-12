@@ -15,7 +15,7 @@ export default function PrivacyPage() {
             </Link>
             
             <header className="mb-10">
-                <span className="text-theme-main font-medium uppercase tracking-wider text-sm mb-2 block">Конфиденциальность</span>
+                <span className="inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/20 rounded-full mb-4">Конфиденциальность</span>
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">Обработка персональных данных</h1>
                 <div className="text-gray-400 text-sm mb-6">Обновлено: 4 августа 2026 г.</div>
                 <p className="text-lg text-gray-300">
