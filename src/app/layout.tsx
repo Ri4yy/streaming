@@ -57,6 +57,7 @@ export default function RootLayout({
             `,
           }}
         />
+        <meta name="yandex-verification" content="04c3f7bd725e984c" />
       </head>
       <body className="antialiased flex flex-col min-h-screen">
         <ScrollToTopBtn />
