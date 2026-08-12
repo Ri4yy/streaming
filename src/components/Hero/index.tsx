@@ -59,7 +59,7 @@ export default function Hero({ movies }: { movies: TMDBMedia[] }) {
                         
                         <div className="container relative z-20 mx-auto h-full flex flex-col justify-center" data-swiper-parallax="-50%">
                             <div className="flex md:flex-col flex-row items-center md:items-start gap-x-2 mt-6 md:mt-0 mb-4" data-swiper-parallax="-100">
-                                <div className="rounded-lg backdrop-blur-xl h-fit bg-theme-main/30 border border-theme-main/50 w-fit px-3 py-1 text-white text-xs font-bold uppercase tracking-wider mb-2 shadow-[0_0_15px_var(--theme-border)]">
+                                <div className="rounded-lg backdrop-blur-xl h-fit bg-theme-main/30 border border-theme-main/50 w-fit px-3 py-1 text-white text-xs font-bold uppercase tracking-wider md:mb-2 mb-0 shadow-[0_0_15px_var(--theme-border)]">
                                     Топ новинка
                                 </div>
                                 <div className="flex items-center gap-x-2 md:mt-2">

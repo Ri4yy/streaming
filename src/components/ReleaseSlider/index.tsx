@@ -14,7 +14,7 @@ import 'swiper/css/navigation';
 export default function ReleaseSlider({ movies }: { movies: TMDBMedia[] }) {
     if (!movies || movies.length === 0) return null;
     return (  
-        <StaggerContainer className='xl:pl-[calc((100%-1240px)/2)] min-[1240px]:pl-[calc((100%-1160px)/2)] md:pl-10 px-5 md:px-0 pt-[100px]'>
+        <StaggerContainer className='xl:pl-[calc((100%-1240px)/2)] min-[1240px]:pl-[calc((100%-1160px)/2)] md:pl-10 px-5 md:px-0 pt-[60px] md:pt-[100px]'>
             <section>
                 <StaggerItem>
                     <h2 className='text-3xl font-bold flex items-center gap-3'>
@@ -27,14 +27,14 @@ export default function ReleaseSlider({ movies }: { movies: TMDBMedia[] }) {
                         <Swiper
                         className="!pt-5 !px-5"
                         breakpoints={{
-                            480: { slidesPerView: 2 },
-                            768: { slidesPerView: 3 },
-                            1024: { slidesPerView: 4 },
-                            1280: { slidesPerView: 5 },
+                            480: { slidesPerView: 2, spaceBetween: 30 },
+                            768: { slidesPerView: 3, spaceBetween: 40 },
+                            1024: { slidesPerView: 4, spaceBetween: 50 },
+                            1280: { slidesPerView: 5, spaceBetween: 50 },
                         }}
                         modules={[Navigation]}
-                        spaceBetween={50}
-                        slidesPerView={1.5}
+                        spaceBetween={20}
+                        slidesPerView={1}
                         >
                             <div slot="container-start" className="absolute top-0 left-0 w-full h-[calc(100%-76px)] bg-white/5 backdrop-blur-3xl border border-white/10 shadow-2xl rounded-l-2xl z-0 pointer-events-none"></div>
                             {movies.map((movie) => (

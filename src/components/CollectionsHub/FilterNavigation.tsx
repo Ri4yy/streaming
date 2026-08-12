@@ -177,7 +177,7 @@ export default function FilterNavigation({ availableMoods }: { availableMoods?: 
             </div>
 
             {/* Top Pills (Content Type) */}
-            <div className="flex items-center justify-center gap-2 overflow-x-auto max-w-full no-scrollbar px-4 pb-2">
+            <div className="flex items-center justify-start md:justify-center gap-2 overflow-x-auto max-w-full no-scrollbar px-4 pb-2">
                 <ul ref={tabsRef} className="flex relative bg-white/5 p-1.5 rounded-full border border-white/10 shadow-inner backdrop-blur-md" onMouseLeave={handleMouseLeave}>
                     {/* Sliding Pill Background */}
                     <div 
@@ -211,7 +211,7 @@ export default function FilterNavigation({ availableMoods }: { availableMoods?: 
             </div>
 
             {/* Bottom Tags (Mood) */}
-            <div className="flex items-center justify-center gap-3 overflow-x-auto max-w-full no-scrollbar px-4">
+            <div className="flex items-center justify-start md:justify-center gap-3 overflow-x-auto max-w-full no-scrollbar px-4">
                 {moodTags.map(tag => {
                     const isDisabled = availableMoods ? !availableMoods.includes(tag.label) : false;
                     return (

@@ -33,6 +33,7 @@ export default function Footer() {
                             <h3 className="text-white font-medium uppercase tracking-wider text-sm mb-2">Правовое</h3>
                             <Link href="/terms" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">Пользовательское соглашение</Link>
                             <Link href="/privacy" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">Обработка персональных данных</Link>
+                            <Link href="/dmca" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">DMCA (Правообладателям)</Link>
                         </div>
                     </div>
 

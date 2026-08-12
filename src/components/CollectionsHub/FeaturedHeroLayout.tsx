@@ -71,7 +71,7 @@ export default function FeaturedHeroLayout({ trending, latest }: FeaturedHeroPro
                                 <div className="absolute inset-0 bg-gradient-to-r from-[var(--theme-bg)]/80 via-transparent to-transparent opacity-90" />
                                 
                                 {/* Content */}
-                                <div className="absolute inset-0 p-8 md:p-12 md:pb-16 flex flex-col justify-end items-start z-10">
+                                <div className="absolute inset-0 p-8 pb-16 md:p-12 md:pb-16 flex flex-col justify-end items-start z-10">
                                     <div className="bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] border border-[var(--theme-primary)]/30 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5 backdrop-blur-md">
                                         <Flame className="w-4 h-4" /> Выбор редакции
                                     </div>

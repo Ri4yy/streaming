@@ -77,8 +77,8 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ id
             <div className="relative z-20">
                 <section className='pt-[120px] max-[1100px]:pb-20 w-full min-[1100px]:h-screen md:min-h-[800px] flex flex-col justify-center'>
                     <div className="container flex max-[1100px]:flex-col gap-x-20 items-center">
-                        <div className="max-[1100px]:mt-[160px] w-[30%] h-full max-[1100px]:w-full relative pb-32">
-                            <Image src={tmdbApi.getImageUrl(anime.poster_path)} alt="Poster" width={500} height={750} className='rounded-xl w-full object-cover h-[300px] min-[1100px]:h-full' />
+                        <div className="max-[1100px]:mt-6 w-[30%] h-full max-[1100px]:w-full max-[1100px]:max-w-[360px] max-[1100px]:mx-auto relative pb-32">
+                            <Image src={tmdbApi.getImageUrl(anime.poster_path)} alt="Poster" width={500} height={750} className='rounded-xl w-full object-cover max-[1100px]:aspect-[9/16] min-[1100px]:h-full' />
                             <DetailActions
                                 id={anime.id}
                                 type="anime"

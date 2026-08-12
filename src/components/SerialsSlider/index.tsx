@@ -13,18 +13,18 @@ import 'swiper/css/navigation';
 export default function SerialsSlider({ series }: { series: TMDBMedia[] }) {
     if (!series || series.length === 0) return null;
     return (  
-        <section className='container py-[100px]'>
+        <section className='container py-[60px] md:py-[100px]'>
             <div className='pt-8'>
                 <Swiper
-                breakpoints={{
-                    480: { slidesPerView: 2 },
-                    768: { slidesPerView: 3 },
-                    1024: { slidesPerView: 4 },
-                    1280: { slidesPerView: 5 },
-                }}
-                modules={[Navigation]}
-                spaceBetween={50}
-                slidesPerView={1.5}
+                    breakpoints={{
+                        480: { slidesPerView: 2, spaceBetween: 30 },
+                        768: { slidesPerView: 3, spaceBetween: 40 },
+                        1024: { slidesPerView: 4, spaceBetween: 50 },
+                        1280: { slidesPerView: 5, spaceBetween: 50 },
+                    }}
+                    modules={[Navigation]}
+                    spaceBetween={20}
+                    slidesPerView={1}
                 className='flex flex-col'
                 >
                     <div slot="container-start" className="flex justify-between items-center mb-8 md:mb-12 pt-2 gap-4">

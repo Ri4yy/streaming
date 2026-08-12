@@ -6,7 +6,7 @@ import { TMDBMedia, tmdbApi } from '@/services/tmdb';
 export default function FilmsOfWeek({ movie }: { movie: TMDBMedia }) {
     if (!movie) return null;
     return ( 
-        <div className="xs:py-[120px] py-20 bg-[linear-gradient(90deg,#e6aa9d_0%,#be5d6c_100%)] mt-[100px]">
+        <div className="xs:py-[120px] py-20 bg-[linear-gradient(90deg,#e6aa9d_0%,#be5d6c_100%)] mt-[60px] md:mt-[100px]">
             <div className="container flex md:flex-row flex-col justify-between items-center gap-x-14">
                 <div className="md:w-2/5">
                     <div className="rounded-lg backdrop-blur-xl bg-white/10 border border-white/20 shadow-lg w-fit px-3 py-1 text-white/90 text-sm font-medium">В тренде</div>
@@ -31,7 +31,7 @@ export default function FilmsOfWeek({ movie }: { movie: TMDBMedia }) {
                         </div>
                     </div>
                 </div>
-                <div className="md:w-1/2 overflow-hidden rounded-xl mt-6 relative h-[300px] md:h-[400px]">
+                <div className="w-full md:w-1/2 overflow-hidden rounded-xl mt-6 relative h-[300px] md:h-[400px]">
                     <Image src={tmdbApi.getImageUrl(movie.backdrop_path || movie.poster_path, 'original')} alt={movie.title || movie.name || ''} fill className='w-full object-cover overflow-hidden hover:scale-105 transition-all duration-700' />
                 </div>
             </div>

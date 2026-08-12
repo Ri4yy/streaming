@@ -13,7 +13,7 @@ import 'swiper/css/navigation';
 export default function UpComingSlider({ movies }: { movies: TMDBMedia[] }) {
     if (!movies || movies.length === 0) return null;
     return (  
-        <div className="container pt-[100px]">
+        <div className="container pt-[60px] md:pt-[100px]">
             <h2 className='md:text-[32px] text-2xl leading-[1.2] font-bold flex items-center gap-3'>
                 <Calendar className="w-8 h-8 text-white" />
                 Предстоящие релизы
@@ -21,12 +21,14 @@ export default function UpComingSlider({ movies }: { movies: TMDBMedia[] }) {
             <div className="pt-10">
                 <Swiper
                     breakpoints={{
-                        320: { slidesPerView: 1 },
-                        769: { slidesPerView: 2 },
+                        480: { slidesPerView: 2, spaceBetween: 30 },
+                        768: { slidesPerView: 3, spaceBetween: 40 },
+                        1024: { slidesPerView: 4, spaceBetween: 50 },
+                        1280: { slidesPerView: 5, spaceBetween: 50 },
                     }}
                     modules={[Navigation]}
                     spaceBetween={20}
-                    slidesPerView={2}
+                    slidesPerView={1}
                 >
                     {movies.map((movie) => (
                         <SwiperSlide key={movie.id}>
