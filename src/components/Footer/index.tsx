@@ -20,9 +20,15 @@ export default function Footer() {
                         <span className='text-gray-500 text-sm'>© 2026 CineBox</span>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-10 md:gap-20">
+                    <div className="flex flex-col sm:flex-row gap-10 md:gap-16">
                         <div className="flex flex-col gap-4">
-                            <h3 className="text-white font-medium uppercase tracking-wider text-sm mb-2">Разделы</h3>
+                            <h3 className="text-white font-medium uppercase tracking-wider text-sm mb-2">Общее</h3>
+                            <Link href="/getlucky" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">Случайный фильм</Link>
+                            <Link href="/collections" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">Подборки</Link>
+                        </div>
+
+                        <div className="flex flex-col gap-4">
+                            <h3 className="text-white font-medium uppercase tracking-wider text-sm mb-2">Каталог</h3>
                             <Link href="/movies" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">Фильмы</Link>
                             <Link href="/series" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">Сериалы</Link>
                             <Link href="/anime" className="text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-300">Аниме</Link>
