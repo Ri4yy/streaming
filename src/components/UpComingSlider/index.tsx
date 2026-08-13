@@ -21,10 +21,10 @@ export default function UpComingSlider({ movies }: { movies: TMDBMedia[] }) {
             <div className="pt-10">
                 <Swiper
                     breakpoints={{
-                        480: { slidesPerView: 2, spaceBetween: 30 },
-                        768: { slidesPerView: 3, spaceBetween: 40 },
-                        1024: { slidesPerView: 4, spaceBetween: 50 },
-                        1280: { slidesPerView: 5, spaceBetween: 50 },
+                        480: { slidesPerView: 1, spaceBetween: 30 },
+                        768: { slidesPerView: 2, spaceBetween: 40 },
+                        1024: { slidesPerView: 2, spaceBetween: 50 },
+                        1280: { slidesPerView: 2, spaceBetween: 50 },
                     }}
                     modules={[Navigation]}
                     spaceBetween={20}

@@ -27,7 +27,7 @@ export default function FilmsOfWeek({ movie }: { movie: TMDBMedia }) {
                     </p>
                     <div className="flex md:flex-row flex-col md:items-center gap-x-6 gap-y-2">
                         <div className="flex items-center gap-x-6">
-                            <Link href={`/movies/${movie.id}`} className='px-6 py-2.5 rounded-xl backdrop-blur-md bg-white/10 border border-white/20 shadow-lg hover:bg-white/20 hover:border-white/30 transition-all duration-300 text-white font-medium'>Подробнее</Link>
+                            <Link href={`/${movie.media_type === 'tv' || movie.name ? 'series' : 'movies'}/${movie.id}`} className='px-6 py-2.5 rounded-xl backdrop-blur-md bg-white/10 border border-white/20 shadow-lg hover:bg-white/20 hover:border-white/30 transition-all duration-300 text-white font-medium'>Подробнее</Link>
                         </div>
                     </div>
                 </div>

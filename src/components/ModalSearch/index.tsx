@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { IoClose } from 'react-icons/io5';
-import { BsSearch, BsChevronDown, BsStarFill } from "react-icons/bs";
+import { BsSearch, BsChevronDown, BsStarFill, BsHeart, BsHeartFill } from "react-icons/bs";
 import { useRouter } from 'next/navigation';
 import { Listbox, Transition } from '@headlessui/react';
 import Link from 'next/link';
@@ -254,54 +254,75 @@ function ResultGroup({ title, items, onSelect }: { title: string, items: GlobalS
 
 function ResultItem({ item, onSelect }: { item: GlobalSearchResult, onSelect: () => void }) {
     const [imgSrc, setImgSrc] = useState(item.img);
+    const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
         setImgSrc(item.img);
     }, [item.img]);
 
+    const toggleFavorite = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsFavorite(!isFavorite);
+        // Here you would typically add API logic to save favorite
+    };
+
     return (
-        <Link 
-            href={item.href} 
-            onClick={onSelect}
-            className="flex items-center gap-4 p-2 rounded-lg hover:bg-white/10 transition-colors group"
-        >
-            <div className="w-12 h-16 bg-black/40 rounded overflow-hidden shrink-0 relative">
-                {imgSrc && !imgSrc.includes('null') ? (
-                    <Image 
-                        src={imgSrc} 
-                        alt={item.title} 
-                        fill 
-                        className="object-cover" 
-                        onError={() => {
-                            if (item.fallbackImg && imgSrc !== item.fallbackImg) {
-                                setImgSrc(item.fallbackImg);
-                            }
-                        }}
-                    />
+        <div className="relative group">
+            <Link 
+                href={item.href} 
+                onClick={onSelect}
+                className="flex items-center gap-4 p-2 rounded-lg hover:bg-white/10 transition-colors"
+            >
+                <div className="w-12 h-16 bg-black/40 rounded overflow-hidden shrink-0 relative">
+                    {imgSrc && !imgSrc.includes('null') ? (
+                        <Image 
+                            src={imgSrc} 
+                            alt={item.title} 
+                            fill 
+                            className="object-cover" 
+                            onError={() => {
+                                if (item.fallbackImg && imgSrc !== item.fallbackImg) {
+                                    setImgSrc(item.fallbackImg);
+                                }
+                            }}
+                        />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center text-xs text-white/30 text-center p-1">Нет фото</div>
+                    )}
+                </div>
+                <div className="flex flex-col justify-center overflow-hidden w-full pr-10">
+                    <div className="flex items-center justify-between gap-3">
+                        <p className="text-white font-medium truncate group-hover:text-theme-main transition-colors">{item.title}</p>
+                        {item.rate > 0 && (
+                            <div className="flex items-center gap-1 bg-black/40 px-2 py-0.5 rounded text-xs shrink-0">
+                                <BsStarFill className="w-2.5 h-2.5 text-yellow-500" />
+                                <span className="text-white">{item.rate.toFixed(1)}</span>
+                            </div>
+                        )}
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-400 mt-1">
+                        <span>{item.genre}</span>
+                        {item.year && (
+                            <>
+                                <span className="w-1 h-1 rounded-full bg-gray-600"></span>
+                                <span>{item.year}</span>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </Link>
+            <button 
+                onClick={toggleFavorite}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-white/10 transition-colors opacity-0 group-hover:opacity-100 z-10 focus:opacity-100"
+                title={isFavorite ? "Убрать из избранного" : "Добавить в избранное"}
+            >
+                {isFavorite ? (
+                    <BsHeartFill className="w-4 h-4 text-theme-main" />
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center text-xs text-white/30 text-center p-1">Нет фото</div>
+                    <BsHeart className="w-4 h-4 text-gray-400 hover:text-white" />
                 )}
-            </div>
-            <div className="flex flex-col justify-center overflow-hidden w-full">
-                <div className="flex items-center justify-between gap-3">
-                    <p className="text-white font-medium truncate group-hover:text-theme-main transition-colors">{item.title}</p>
-                    {item.rate > 0 && (
-                        <div className="flex items-center gap-1 bg-black/40 px-2 py-0.5 rounded text-xs shrink-0">
-                            <BsStarFill className="w-2.5 h-2.5 text-yellow-500" />
-                            <span className="text-white">{item.rate.toFixed(1)}</span>
-                        </div>
-                    )}
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-400 mt-1">
-                    <span>{item.genre}</span>
-                    {item.year && (
-                        <>
-                            <span className="w-1 h-1 rounded-full bg-gray-600"></span>
-                            <span>{item.year}</span>
-                        </>
-                    )}
-                </div>
-            </div>
-        </Link>
+            </button>
+        </div>
     );
 }
