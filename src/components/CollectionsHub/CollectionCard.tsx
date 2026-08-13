@@ -51,7 +51,7 @@ export default function CollectionCard({ collection }: { collection: CollectionP
                 
                 {/* Cover Image */}
                 <div 
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-80"
+                    className="absolute inset-0 bg-cover bg-center transition-all duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-80 blur-[2px] group-hover:blur-none"
                     style={{ backgroundImage: `url(${collection.image})` }}
                 />
                 

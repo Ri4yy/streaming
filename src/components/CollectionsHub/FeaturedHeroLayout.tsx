@@ -117,7 +117,7 @@ export default function FeaturedHeroLayout({ trending, latest, viewAllHref }: Fe
                             {/* Small Cover */}
                             <div className="relative w-24 h-24 rounded-xl overflow-hidden shrink-0 bg-white/5">
                                 <div 
-                                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                    className="absolute inset-0 bg-cover bg-center transition-all duration-500 group-hover:scale-110 blur-[2px] group-hover:blur-none"
                                     style={{ backgroundImage: item.image ? `url(${item.image})` : 'none' }}
                                 />
                             </div>
