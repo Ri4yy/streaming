@@ -58,29 +58,45 @@ export async function spinRoulette(filters: GetLuckyFilters): Promise<TMDBMedia[
     if (filters.country) options['with_origin_country'] = filters.country;
     if (filters.studio) options['with_companies'] = filters.studio;
 
-    // Generate a random page to fetch (TMDB discover max page is 500)
-    // We'll restrict to 1-100 to ensure we get decently popular items, 
-    // unless the user applied strict filters.
-    // Ideally, we'd fetch page 1 first to get total_pages, but to save a request,
-    // we'll just assume there are at least 50 pages for basic queries.
-    // For anime, it's safer to use a smaller max page like 20.
-    let maxPage = 50;
-    if (filters.type === 'anime') maxPage = 20;
-
-    const randomPage = Math.floor(Math.random() * maxPage) + 1;
-
     try {
         let resultsToReturn: TMDBMedia[] = [];
-        const { results } = await tmdbApi.getDiscoverPaginated(typeToFetch, options, randomPage);
         
-        if (!results || results.length === 0) {
-            // Fallback to trending if something goes wrong
-            const fallback = await tmdbApi.getTrending('all', 'week', 1);
-            resultsToReturn = fallback.results;
-        } else {
-            resultsToReturn = results;
+        // First fetch page 1 to get total pages
+        let firstPageResponse = await tmdbApi.getDiscoverPaginated(typeToFetch, options, 1);
+        
+        // If no results, try relaxing the vote_count constraint
+        if ((!firstPageResponse.results || firstPageResponse.results.length === 0) && options['vote_count.gte']) {
+            delete options['vote_count.gte'];
+            firstPageResponse = await tmdbApi.getDiscoverPaginated(typeToFetch, options, 1);
         }
 
+        let totalAvailablePages = firstPageResponse.total_pages;
+        
+        if (!firstPageResponse.results || firstPageResponse.results.length === 0) {
+            // Return empty array if no results match the strict filters
+            return [];
+        } else {
+            // Cap max pages
+            let maxPage = Math.min(totalAvailablePages, filters.type === 'anime' ? 20 : 50);
+            
+            if (maxPage > 1) {
+                // Pick a random page between 1 and maxPage
+                const randomPage = Math.floor(Math.random() * maxPage) + 1;
+                
+                if (randomPage === 1) {
+                    resultsToReturn = firstPageResponse.results;
+                } else {
+                    const randomPageResponse = await tmdbApi.getDiscoverPaginated(typeToFetch, options, randomPage);
+                    resultsToReturn = randomPageResponse.results && randomPageResponse.results.length > 0 
+                        ? randomPageResponse.results 
+                        : firstPageResponse.results;
+                }
+            } else {
+                resultsToReturn = firstPageResponse.results;
+            }
+        }
+
+        const originalResults = [...resultsToReturn];
         // Exclude watched items if requested
         if (filters.excludeWatched) {
             const supabase = await createClient();
@@ -102,7 +118,7 @@ export async function spinRoulette(filters: GetLuckyFilters): Promise<TMDBMedia[
 
         // If filtering removed everything, just return the unfiltered (better than nothing)
         if (resultsToReturn.length === 0) {
-            resultsToReturn = results || [];
+            resultsToReturn = originalResults;
         }
 
         // Shuffle the results so the outcome is unpredictable

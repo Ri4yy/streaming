@@ -66,6 +66,7 @@ export default function GetLuckyClient({ isAuth }: Props) {
     });
 
     const [isSpinning, setIsSpinning] = useState(false);
+    const [isLoadingItems, setIsLoadingItems] = useState(true);
     const [rouletteItems, setRouletteItems] = useState<TMDBMedia[]>([]);
     const [winnerItem, setWinnerItem] = useState<TMDBMedia | null>(null);
     const [history, setHistory] = useState<TMDBMedia[]>([]);
@@ -93,15 +94,20 @@ export default function GetLuckyClient({ isAuth }: Props) {
 
     useEffect(() => {
         let isMounted = true;
+        setIsLoadingItems(true);
+        setWinnerItem(null);
         
         // Fetch initial items for the wheel
         spinRoulette(filters).then(items => {
             if (isMounted) {
                 setRouletteItems(items);
+                setIsLoadingItems(false);
                 // Background fetch for the next spin
-                spinRoulette(filters).then(buffer => {
-                    if (isMounted) setNextItemsBuffer(buffer);
-                });
+                if (items.length > 0) {
+                    spinRoulette(filters).then(buffer => {
+                        if (isMounted) setNextItemsBuffer(buffer);
+                    });
+                }
             }
         });
         
@@ -437,13 +443,19 @@ export default function GetLuckyClient({ isAuth }: Props) {
                     onComplete={handleSpinComplete}
                 />
 
+                {rouletteItems.length === 0 && !isLoadingItems && (
+                    <p className="text-red-400 mt-4 text-center max-w-md font-medium">
+                        По вашим фильтрам ничего не найдено. Попробуйте изменить параметры.
+                    </p>
+                )}
+
                 <button
                     onClick={handleSpin}
-                    disabled={isSpinning}
-                    className="mt-8 relative overflow-hidden group px-10 py-4 rounded-2xl font-bold text-lg text-white shadow-[0_0_20px_rgba(239,68,68,0.4)] disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95"
+                    disabled={isSpinning || isLoadingItems || rouletteItems.length === 0}
+                    className="mt-8 relative overflow-hidden group px-10 py-4 rounded-2xl font-bold text-lg text-white shadow-[0_0_20px_rgba(239,68,68,0.4)] disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 disabled:hover:scale-100"
                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-500 transition-transform group-hover:scale-105"></div>
-                    <span className="relative z-10">Мне повезёт</span>
+                    <span className="relative z-10">{isLoadingItems ? 'Загрузка...' : 'Мне повезёт'}</span>
                 </button>
             </div>
 
