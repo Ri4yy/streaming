@@ -96,6 +96,7 @@ export default function GetLuckyClient({ isAuth }: Props) {
         let isMounted = true;
         setIsLoadingItems(true);
         setWinnerItem(null);
+        setNextItemsBuffer([]); // Clear buffer on filter change
         
         // Fetch initial items for the wheel
         spinRoulette(filters).then(items => {
