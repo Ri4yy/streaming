@@ -129,15 +129,7 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ id
                             <p className='text-lg text-[#BFBFBF] my-8 xl:w-4/5 leading-[1.2] line-clamp-3'>
                                 {anime.overview || "Описание отсутствует."}
                             </p>
-                            <ul className='flex md:flex-row flex-col gap-x-8 gap-y-2 md:items-center'>
-                                {anime.credits?.cast?.slice(0, 3).map(person => (
-                                    <li key={person.id}>
-                                        <Link href="#" className='text-white hover:text-[#CAE962] transition-all duration-300'>
-                                            {person.name}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
+
                             {trailer && <TrailerModal trailerKey={trailer.key} />}
                         </div>
                     </div>

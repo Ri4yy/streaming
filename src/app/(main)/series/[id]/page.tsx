@@ -130,15 +130,7 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ i
                             <p className='text-lg text-[#BFBFBF] my-8 xl:w-4/5 leading-[1.2] line-clamp-3'>
                                 {series.overview || "Описание отсутствует."}
                             </p>
-                            <ul className='flex md:flex-row flex-col gap-x-8 gap-y-2 md:items-center'>
-                                {series.credits?.cast?.slice(0, 3).map(person => (
-                                    <li key={person.id}>
-                                        <Link href="#" className='text-white hover:text-theme-main transition-all duration-300'>
-                                            {person.name}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
+
                             {trailer && <TrailerModal trailerKey={trailer.key} />}
                         </div>
                     </div>
