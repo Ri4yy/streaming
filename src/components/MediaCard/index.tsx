@@ -38,7 +38,7 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
 
     return (
         <div className="flex flex-col gap-4 group h-full">
-            <div className={`w-full relative rounded-lg overflow-hidden bg-white/5 ${size === 'small' ? 'aspect-[9/16] min-h-[320px]' : 'h-[400px]'}`}>
+            <div className={`w-full relative rounded-lg overflow-hidden bg-white/5 aspect-[9/16]`}>
                 {/* Image loading skeleton */}
                 {!isLoaded && (
                     <div className="absolute inset-0 bg-white/10 animate-pulse z-0"></div>
@@ -70,7 +70,7 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
                         src={imgSrc}
                         alt={name}
                         fill
-                        className={`flex rounded-lg w-full overflow-hidden transition-all duration-700 z-10 ${size === 'small' ? 'h-[300px]' : 'h-[400px]'} ${isHorizontal ? 'object-contain scale-100 group-hover:scale-105' : 'object-cover group-hover:scale-105'} ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+                        className={`flex rounded-lg w-full h-full overflow-hidden transition-all duration-700 z-10 aspect-[9/16] ${isHorizontal ? 'object-contain scale-100 group-hover:scale-105' : 'object-cover group-hover:scale-105'} ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
                         onLoad={(e) => {
                             setIsLoaded(true);
                             const target = e.target as HTMLImageElement;
@@ -92,7 +92,7 @@ export default function MediaCard({ id, name, year, genre, rate, img, fallbackIm
                     />
                 </Link>
             </div>
-            <Link href={href} className={`${size === 'small' ? 'text-base' : 'text-xl'} hover:text-theme-main transition-colors duration-300 line-clamp-1`}>{name}</Link>
+            <Link href={href} className={`text-base hover:text-theme-main transition-colors duration-300 line-clamp-1`}>{name}</Link>
             <ul className='flex gap-x-3 items-center'>
                 <li className='text-[#BFBFBF] text-sm truncate'>{year}</li>
                 <li><div className='h-1 w-1 rounded-full bg-[#323234]'></div></li>

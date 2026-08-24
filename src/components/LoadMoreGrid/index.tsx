@@ -67,7 +67,7 @@ export default function LoadMoreGrid({ initialItems, catalogType, totalPages }: 
 
     return (
         <div className="flex flex-col items-center">
-            <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 mt-20 gap-x-5 gap-y-9 w-full">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 mt-20 gap-x-5 gap-y-9 w-full">
                 {items.length > 0 ? (
                     items.map((item, index) => (
                         <MediaCard 

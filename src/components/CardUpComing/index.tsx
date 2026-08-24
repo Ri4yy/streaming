@@ -23,7 +23,7 @@ export default function CardUpComing({ name, desc, rate, img, href = "/movies/1"
 
     return (
         <Link href={href} className='group'>
-            <div className="flex flex-col relative w-full h-[350px] overflow-hidden rounded-xl">
+            <div className="flex flex-col relative w-full aspect-[16/9] overflow-hidden rounded-xl">
                 <Image src={img} alt={name} fill className='absolute top-0 left-0 rounded-xl -z-10 h-full object-cover overflow-hidden w-full' />
                 <button
                     onClick={toggleFavorite}
@@ -39,8 +39,8 @@ export default function CardUpComing({ name, desc, rate, img, href = "/movies/1"
                         </svg>
                         <span className='pl-2'>{typeof rate === 'number' ? rate.toFixed(1) : rate}</span>
                     </div>
-                    <span className='text-xl line-clamp-2'>{name}</span>
-                    <p className='text-[#e8dfde] mt-2 line-clamp-3'>{desc}</p>
+                    <span className='text-base line-clamp-2'>{name}</span>
+                    <p className='text-[#e8dfde] text-sm mt-2 line-clamp-3'>{desc}</p>
                 </div>
             </div>
         </Link>

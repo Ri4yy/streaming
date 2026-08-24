@@ -20,7 +20,7 @@ export default function SerialsSlider({ series }: { series: TMDBMedia[] }) {
                         480: { slidesPerView: 2, spaceBetween: 30 },
                         768: { slidesPerView: 3, spaceBetween: 40 },
                         1024: { slidesPerView: 4, spaceBetween: 50 },
-                        1280: { slidesPerView: 5, spaceBetween: 50 },
+                        1280: { slidesPerView: 6, spaceBetween: 50 },
                     }}
                     modules={[Navigation]}
                     spaceBetween={20}

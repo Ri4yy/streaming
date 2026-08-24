@@ -14,7 +14,7 @@ export default function CategoryLoading() {
                 {/* Grid Skeleton */}
                 <div className="mb-16">
                     <div className="w-48 h-8 bg-white/5 animate-pulse rounded-lg mb-8"></div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-6">
                         {[...Array(10)].map((_, itemIdx) => (
                             <div key={itemIdx} className="flex flex-col gap-4">
                                 <div className="w-full aspect-[4/5] bg-white/5 animate-pulse rounded-3xl border border-white/5"></div>

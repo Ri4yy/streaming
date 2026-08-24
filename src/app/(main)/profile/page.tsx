@@ -179,7 +179,7 @@ function ProfileContent() {
                 {filteredItems.length === 0 ? (
                     <p className="text-gray-400 p-5">В этой категории пока ничего нет</p>
                 ) : (
-                    <ul className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-4'>
+                    <ul className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 mt-4'>
                         {filteredItems.map(item => (
                             <li key={`${item.media_type}-${item.media_id}`}>
                                 <MediaCard 

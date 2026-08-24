@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Script from 'next/script';
 import DetailActions from '@/components/DetailActions';
+import BackButton from '@/components/BackButton';
 import { steamApi } from '@/services/steam';
 import { notFound } from 'next/navigation';
 import GameScreenshots from '@/components/GameScreenshots';
@@ -78,8 +79,13 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
             </div>
 
             <div className="relative z-20">
-                <section className='pb-20 pt-[120px] md:pt-[150px] w-full min-h-screen'>
-                    <div className="container flex max-[1100px]:flex-col gap-x-20 items-start">
+                <div className="absolute top-[100px] left-0 w-full z-30">
+                    <div className="container">
+                        <BackButton fallbackHref="/games" />
+                    </div>
+                </div>
+                <section className='pt-[150px] max-[1100px]:pb-20 w-full min-[1100px]:h-screen md:min-h-[800px] flex flex-col justify-center'>
+                    <div className="container flex max-[1100px]:flex-col gap-x-20 items-center">
                     <div className="max-[1100px]:mt-[40px] w-[30%] h-full max-[1100px]:w-full relative min-[1100px]:sticky min-[1100px]:top-[120px]">
                         <div className="relative pb-32">
                             {/* Постер с фоллбеком */}

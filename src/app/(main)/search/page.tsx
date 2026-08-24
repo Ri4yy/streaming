@@ -63,7 +63,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             {moviesList.length > 0 && (
                 <section className="mb-14">
                     <h2 className="text-2xl font-bold mb-6 border-b border-white/20 pb-2">Фильмы</h2>
-                    <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 gap-x-5 gap-y-9">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-x-5 gap-y-9">
                         {moviesList.map(movie => (
                             <MediaCard 
                                 key={movie.id}
@@ -84,7 +84,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             {seriesList.length > 0 && (
                 <section className="mb-14">
                     <h2 className="text-2xl font-bold mb-6 border-b border-white/20 pb-2">Сериалы</h2>
-                    <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 gap-x-5 gap-y-9">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-x-5 gap-y-9">
                         {seriesList.map(series => (
                             <MediaCard 
                                 key={series.id}
@@ -105,7 +105,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             {gamesList.length > 0 && (
                 <section className="mb-14">
                     <h2 className="text-2xl font-bold mb-6 border-b border-white/20 pb-2">Игры</h2>
-                    <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 gap-x-5 gap-y-9">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-x-5 gap-y-9">
                         {gamesList.map(game => (
                             <MediaCard
                                 key={game.steam_appid}
@@ -126,7 +126,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             {booksList.length > 0 && (
                 <section className="mb-14">
                     <h2 className="text-2xl font-bold mb-6 border-b border-white/20 pb-2">Книги</h2>
-                    <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 gap-x-5 gap-y-9">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-x-5 gap-y-9">
                         {booksList.map(book => (
                             <MediaCard 
                                 key={book.id}

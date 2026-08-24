@@ -48,7 +48,7 @@ export default function CollectionArticleHeader({ id, slug, title, coverImage, d
             <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12 pt-10 pb-16 md:pb-24 flex flex-col justify-end min-h-[500px]">
                 
                 {/* Breadcrumbs */}
-                <nav className="flex text-sm text-white/50 mb-auto font-medium" aria-label="Breadcrumb">
+                <nav className="flex text-sm text-white/50 mb-4 font-medium" aria-label="Breadcrumb">
                     <ol className="inline-flex items-center space-x-1 md:space-x-3">
                         <li className="inline-flex items-center">
                             <Link href="/" className="hover:text-white transition-colors">Главная</Link>

@@ -37,7 +37,7 @@ export default function MoviesLoading() {
 
                 {/* Grid Skeleton */}
                 <div className="flex flex-col items-center">
-                    <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 gap-x-5 gap-y-9 w-full">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-x-5 gap-y-9 w-full">
                         {Array.from({ length: 20 }).map((_, index) => (
                             <div key={index} className="flex flex-col gap-2">
                                 <div className="w-full aspect-[2/3] bg-white/5 border border-white/10 rounded-xl"></div>
