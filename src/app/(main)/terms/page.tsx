@@ -43,7 +43,7 @@ export default function TermsPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">3. Обращения правообладателей</h2>
-                    <p className="mb-3">При мотивированном обращении о нарушении прав или законном требовании уполномоченного органа сервис может ограничить доступ к спорным материалам в каталоге (карточка, плеер) в разумный срок. e-mail: <a href="mailto:admin@vixio.online" className="text-theme-main hover:underline">admin@vixio.online</a>.</p>
+                    <p className="mb-3">При мотивированном обращении о нарушении прав или законном требовании уполномоченного органа сервис может ограничить доступ к спорным материалам в каталоге (карточка, плеер) в разумный срок. e-mail: <a href="mailto:vixio.online@proton.me" className="text-theme-main hover:underline">vixio.online@proton.me</a>.</p>
                     <p>Сервис не обязан превентивно модерировать весь контент сторонних плееров и не может удалять файлы или потоки на чужих серверах.</p>
                 </section>
 
@@ -108,7 +108,7 @@ export default function TermsPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">12. Контакты</h2>
-                    <p><a href="mailto:admin@vixio.online" className="text-theme-main hover:underline">admin@vixio.online</a>, Telegram <a href={`https://t.me/${process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}`} target="_blank" rel="noopener noreferrer" className="text-theme-main hover:underline">@{process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}</a>.</p>
+                    <p><a href="mailto:vixio.online@proton.me" className="text-theme-main hover:underline">vixio.online@proton.me</a>, Telegram <a href={`https://t.me/${process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}`} target="_blank" rel="noopener noreferrer" className="text-theme-main hover:underline">@{process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}</a>.</p>
                 </section>
             </div>
         </main>

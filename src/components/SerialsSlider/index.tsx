@@ -17,14 +17,14 @@ export default function SerialsSlider({ series }: { series: TMDBMedia[] }) {
             <div className='pt-8'>
                 <Swiper
                     breakpoints={{
-                        480: { slidesPerView: 2, spaceBetween: 30 },
-                        768: { slidesPerView: 3, spaceBetween: 40 },
-                        1024: { slidesPerView: 4, spaceBetween: 50 },
-                        1280: { slidesPerView: 6, spaceBetween: 50 },
+                        480: { slidesPerView: 2 },
+                        768: { slidesPerView: 3 },
+                        1024: { slidesPerView: 4 },
+                        1280: { slidesPerView: 6 },
                     }}
                     modules={[Navigation]}
                     spaceBetween={20}
-                    slidesPerView={1}
+                    slidesPerView={1.5}
                 className='flex flex-col'
                 >
                     <div slot="container-start" className="flex justify-between items-center mb-8 md:mb-12 pt-2 gap-4">

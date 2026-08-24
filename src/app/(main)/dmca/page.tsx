@@ -149,7 +149,7 @@ export default function DmcaPage() {
                     </p>
                     <div className="flex items-center gap-2 text-lg">
                         <span className="font-medium text-white">Email для связи:</span>
-                        <a href="mailto:admin@vixio.online?subject=Обращение правообладателя (DMCA)" className="text-theme-main font-bold hover:underline">admin@vixio.online</a>
+                        <a href="mailto:vixio.online@proton.me?subject=Обращение правообладателя (DMCA)" className="text-theme-main font-bold hover:underline">vixio.online@proton.me</a>
                     </div>
                 </section>
             </div>

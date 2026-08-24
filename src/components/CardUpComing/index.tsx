@@ -23,7 +23,7 @@ export default function CardUpComing({ name, desc, rate, img, href = "/movies/1"
 
     return (
         <Link href={href} className='group'>
-            <div className="flex flex-col relative w-full aspect-[16/9] overflow-hidden rounded-xl">
+            <div className="flex flex-col relative w-full h-[400px] md:h-auto md:aspect-[16/9] overflow-hidden rounded-xl">
                 <Image src={img} alt={name} fill className='absolute top-0 left-0 rounded-xl -z-10 h-full object-cover overflow-hidden w-full' />
                 <button
                     onClick={toggleFavorite}

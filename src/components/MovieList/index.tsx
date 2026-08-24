@@ -19,7 +19,7 @@ export default function MovieList({ movies }: { movies: TMDBMedia[] }) {
                         Недавно вышедшие фильмы
                     </h2>
                 </StaggerItem>
-                <div className="grid xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 xs:grid-cols-2 gap-x-7 md:gap-y-12 gap-y-8 mt-10">
+                <div className="grid xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 md:gap-x-7 md:gap-y-12 gap-y-8 mt-10">
                     {movies.slice(0, 6).map((movie) => 
                         <StaggerItem key={movie.id} className="h-full">
                             <MediaCard 

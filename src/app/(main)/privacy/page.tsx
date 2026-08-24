@@ -28,7 +28,7 @@ export default function PrivacyPage() {
                     <h2 className="text-2xl font-bold text-white mb-4">1. Контакты</h2>
                     <p className="mb-2">По вопросам персональных данных, удаления аккаунта и реализации ваших прав:</p>
                     <ul className="list-disc pl-5 space-y-1">
-                        <li>e-mail: <a href="mailto:admin@vixio.online" className="text-theme-main hover:underline">admin@vixio.online</a></li>
+                        <li>e-mail: <a href="mailto:vixio.online@proton.me" className="text-theme-main hover:underline">vixio.online@proton.me</a></li>
                         <li>Telegram: <a href={`https://t.me/${process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}`} target="_blank" rel="noopener noreferrer" className="text-theme-main hover:underline">@{process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}</a></li>
                     </ul>
                 </section>
@@ -69,7 +69,7 @@ export default function PrivacyPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">6. Хранение и удаление</h2>
-                    <p>Данные аккаунта хранятся, пока аккаунт активен. Технические журналы — обычно до 12 месяцев. Удаление аккаунта — по запросу на <a href="mailto:admin@vixio.online" className="text-theme-main hover:underline">admin@vixio.online</a>; часть данных может сохраняться, если это требуется законом.</p>
+                    <p>Данные аккаунта хранятся, пока аккаунт активен. Технические журналы — обычно до 12 месяцев. Удаление аккаунта — по запросу на <a href="mailto:vixio.online@proton.me" className="text-theme-main hover:underline">vixio.online@proton.me</a>; часть данных может сохраняться, если это требуется законом.</p>
                 </section>
 
                 <section>
