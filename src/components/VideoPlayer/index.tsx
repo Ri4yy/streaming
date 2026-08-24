@@ -15,7 +15,7 @@ export default function VideoPlayer({ tmdbId, imdbId, type }: VideoPlayerProps) 
 
     // Мы используем dangerouslySetInnerHTML, чтобы React не конфликтовал с внешним скриптом, 
     // который модифицирует DOM (заменяет <ins> на <iframe>).
-    const insHtml = `<ins data-publisher-id="${publisherId}" data-type="${mediaType}" data-id="${mediaId}" data-design="1" data-height="100%" data-width="100%"></ins>`;
+    const insHtml = `<ins data-publisher-id="${publisherId}" data-type="${mediaType}" data-id="${mediaId}" data-design="2" data-color1="#333333" data-color2="#d4d4d4" data-color3="#999999" data-color4="#CCCCCC" data-color5="#FFFFFF" data-height="100%" data-width="100%"></ins>`;
 
     return (
         <div 
