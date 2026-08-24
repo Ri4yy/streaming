@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Script from 'next/script';
 import DetailActions from '@/components/DetailActions';
 import DetailTabs from '@/components/DetailTabs';
+import VideoPlayer from '@/components/VideoPlayer';
 import FramesSlider from '@/components/FramesSlider';
 import TrailerModal from '@/components/TrailerModal';
 import SimilarSlider from '@/components/SimilarSlider';
@@ -130,6 +131,10 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ id
                 {movie.images?.backdrops && movie.images.backdrops.length > 0 && (
                     <FramesSlider images={movie.images.backdrops} />
                 )}
+
+                <div className="container mt-12 mb-12">
+                    <VideoPlayer tmdbId={movie.id} imdbId={movie.external_ids?.imdb_id} type="movie" />
+                </div>
 
                 <DetailTabs media={movie} type="movie" />
 

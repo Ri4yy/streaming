@@ -62,6 +62,9 @@ export interface TMDBDetail extends TMDBMedia {
     images?: {
         backdrops: { file_path: string }[];
     };
+    external_ids?: {
+        imdb_id?: string | null;
+    };
     number_of_seasons?: number;
     number_of_episodes?: number;
     status?: string;
@@ -220,7 +223,7 @@ export const tmdbApi = {
 
     getDetails: (id: string, type: 'movie' | 'tv' | string) =>
         fetchTMDB<TMDBDetail>(`/${type}/${id}`, {
-            append_to_response: 'videos,credits,images'
+            append_to_response: 'videos,credits,images,external_ids'
         }),
 
     getRecommendations: async (id: string | number, type: 'movie' | 'tv'): Promise<TMDBMedia[]> => {

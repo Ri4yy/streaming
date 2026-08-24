@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Script from 'next/script';
 import DetailActions from '@/components/DetailActions';
+import VideoPlayer from '@/components/VideoPlayer';
 import DetailTabs from '@/components/DetailTabs';
 import FramesSlider from '@/components/FramesSlider';
 import TrailerModal from '@/components/TrailerModal';
@@ -146,6 +147,10 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ i
                 {series.images?.backdrops && series.images.backdrops.length > 0 && (
                     <FramesSlider images={series.images.backdrops} />
                 )}
+
+                <div className="container mt-12 mb-12">
+                    <VideoPlayer tmdbId={series.id} imdbId={series.external_ids?.imdb_id} type="tv" />
+                </div>
 
                 <DetailTabs media={series} type="tv" />
 

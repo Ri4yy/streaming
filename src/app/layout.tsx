@@ -58,6 +58,9 @@ export default function RootLayout({
           }}
         />
         <meta name="yandex-verification" content="04c3f7bd725e984c" />
+        {/* Vibix Player SDK */}
+        <Script src="https://graphicslab.io/sdk/v2/rendex-sdk.min.js" strategy="afterInteractive" />
+        <Script src="https://alt.graphicslab.io/sdk/v2/rendex-sdk.min.js" strategy="afterInteractive" />
       </head>
       <body className="antialiased flex flex-col min-h-screen">
         <ScrollToTopBtn />

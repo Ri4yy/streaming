@@ -8,6 +8,7 @@ import FramesSlider from '@/components/FramesSlider';
 import TrailerModal from '@/components/TrailerModal';
 import SimilarSlider from '@/components/SimilarSlider';
 import BackButton from '@/components/BackButton';
+import VideoPlayer from '@/components/VideoPlayer';
 import { tmdbApi } from '@/services/tmdb';
 import type { Metadata } from 'next';
 
@@ -145,6 +146,10 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ id
                 {anime.images?.backdrops && anime.images.backdrops.length > 0 && (
                     <FramesSlider images={anime.images.backdrops} />
                 )}
+
+                <div className="container mt-12 mb-12">
+                    <VideoPlayer tmdbId={anime.id} imdbId={anime.external_ids?.imdb_id} type="tv" />
+                </div>
 
                 <DetailTabs media={anime} type="anime" />
 
