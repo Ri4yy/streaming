@@ -138,7 +138,7 @@ export default function Header() {
         <>
             <header className={`flex justify-between items-center px-8 py-1 rounded-2xl backdrop-blur-xl bg-black/40 border border-white/10 shadow-lg shadow-black/20 w-[98%] left-[1%] absolute ${scrollDirection === "down" ? "-top-24 " : "fixed"} top-2 transition-all duration-500 z-[60]`}>
                 <Link 
-                    href={`https://t.me/${process.env.NEXT_PUBLIC_BOT_USERNAME}`}
+                    href={`https://t.me/${process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}`}
                     target="_blank" 
                     title="Перейти в Telegram-бота"
                     className="flex items-center justify-center w-10 h-10 rounded-[14px] bg-[#0088cc]/10 border border-[#0088cc]/20 text-[#0088cc] hover:bg-[#0088cc]/20 hover:border-[#0088cc]/40 hover:shadow-[0_0_15px_rgba(0,136,204,0.15)] transition-all duration-300"

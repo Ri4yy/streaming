@@ -84,8 +84,8 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
                         <BackButton fallbackHref="/games" />
                     </div>
                 </div>
-                <section className='pt-[150px] max-[1100px]:pb-20 w-full min-[1100px]:h-screen md:min-h-[800px] flex flex-col justify-center'>
-                    <div className="container flex max-[1100px]:flex-col gap-x-20 items-center">
+                <section className='pt-[150px] max-[1100px]:pb-20 w-full min-[1100px]:min-h-screen md:min-h-[800px] flex flex-col justify-center'>
+                    <div className="container flex max-[1100px]:flex-col gap-x-20 items-start">
                     <div className="max-[1100px]:mt-[40px] w-[30%] h-full max-[1100px]:w-full relative min-[1100px]:sticky min-[1100px]:top-[120px]">
                         <div className="relative pb-32">
                             {/* Постер с фоллбеком */}

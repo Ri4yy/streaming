@@ -108,7 +108,7 @@ export default function TermsPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">12. Контакты</h2>
-                    <p><a href="mailto:admin@vixio.online" className="text-theme-main hover:underline">admin@vixio.online</a>, Telegram <a href={`https://t.me/${process.env.NEXT_PUBLIC_BOT_USERNAME}`} target="_blank" rel="noopener noreferrer" className="text-theme-main hover:underline">@{process.env.NEXT_PUBLIC_BOT_USERNAME}</a>.</p>
+                    <p><a href="mailto:admin@vixio.online" className="text-theme-main hover:underline">admin@vixio.online</a>, Telegram <a href={`https://t.me/${process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}`} target="_blank" rel="noopener noreferrer" className="text-theme-main hover:underline">@{process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}</a>.</p>
                 </section>
             </div>
         </main>
