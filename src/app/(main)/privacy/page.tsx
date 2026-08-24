@@ -29,7 +29,7 @@ export default function PrivacyPage() {
                     <p className="mb-2">По вопросам персональных данных, удаления аккаунта и реализации ваших прав:</p>
                     <ul className="list-disc pl-5 space-y-1">
                         <li>e-mail: <a href="mailto:admin@vixio.online" className="text-theme-main hover:underline">admin@vixio.online</a></li>
-                        <li>Telegram: <a href="https://t.me/cinebox_support" target="_blank" rel="noopener noreferrer" className="text-theme-main hover:underline">@cinebox_support</a></li>
+                        <li>Telegram: <a href={`https://t.me/${process.env.NEXT_PUBLIC_BOT_USERNAME}`} target="_blank" rel="noopener noreferrer" className="text-theme-main hover:underline">@{process.env.NEXT_PUBLIC_BOT_USERNAME}</a></li>
                     </ul>
                 </section>
 

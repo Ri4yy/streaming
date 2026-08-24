@@ -29,7 +29,6 @@ const searchCategories = [
     { id: 'series', name: 'Сериалы' },
     { id: 'anime', name: 'Аниме' },
     { id: 'games', name: 'Игры' },
-    { id: 'books', name: 'Книги' },
 ];
 
 const categoryPlaceholders: Record<string, string[]> = {
@@ -202,7 +201,6 @@ export default function ModalSearch({ activeSearch, setActiveSearch }: { activeS
                                     <ResultGroup title="Сериалы" items={(results as GroupedGlobalSearchResults).series} onSelect={() => setActiveSearch(false)} />
                                     <ResultGroup title="Аниме" items={(results as GroupedGlobalSearchResults).anime} onSelect={() => setActiveSearch(false)} />
                                     <ResultGroup title="Игры" items={(results as GroupedGlobalSearchResults).games} onSelect={() => setActiveSearch(false)} />
-                                    <ResultGroup title="Книги" items={(results as GroupedGlobalSearchResults).books} onSelect={() => setActiveSearch(false)} />
                                     
                                     {Object.values(results as GroupedGlobalSearchResults).every(arr => arr.length === 0) && (
                                         <p className="text-gray-400 text-center py-8">Ничего не найдено</p>
