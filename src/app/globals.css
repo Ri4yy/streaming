@@ -279,3 +279,8 @@
   --theme-bg: #0c110a;
   --theme-input-bg: rgba(255, 255, 255, 0.06);
 }
+
+/* Hide default Watch Party UI from sync-lib.js since we have a custom one */
+.watch-party-ui {
+    display: none !important;
+}

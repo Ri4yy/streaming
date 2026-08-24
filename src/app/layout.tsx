@@ -61,6 +61,8 @@ export default function RootLayout({
         {/* Vibix Player SDK */}
         <Script src="https://graphicslab.io/sdk/v2/rendex-sdk.min.js" strategy="afterInteractive" />
         <Script src="https://alt.graphicslab.io/sdk/v2/rendex-sdk.min.js" strategy="afterInteractive" />
+        {/* Watch Party Sync Lib */}
+        <Script src="https://sync.videoframe2.com/sync-lib.js" strategy="afterInteractive" />
       </head>
       <body className="antialiased flex flex-col min-h-screen">
         <ScrollToTopBtn />
