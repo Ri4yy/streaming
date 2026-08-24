@@ -61,43 +61,7 @@ export default function VideoPlayer({ tmdbId, imdbId, type }: VideoPlayerProps) 
         }
     }, [chatMessages]);
 
-    // Listen to window messages for chat and player events
-    useEffect(() => {
-        if (!isWatchParty) return;
 
-        const handleMessage = (e: MessageEvent) => {
-            const data = e.data;
-            if (!data) return;
-
-            if (data.type === 'chat') {
-                setChatMessages(prev => [...prev, {
-                    id: Date.now().toString() + Math.random().toString(),
-                    username: data.username || 'Зритель',
-                    message: data.message,
-                    type: 'chat'
-                }]);
-            } else if (data.type === 'playerEvent' && data.username) {
-                let text = '';
-                switch (data.event) {
-                    case 'play': text = 'запустил видео ▶️'; break;
-                    case 'pause': text = 'поставил на паузу ⏸️'; break;
-                    case 'seek': text = 'перемотал видео ⏩'; break;
-                    case 'file': text = 'переключил серию 📺'; break;
-                }
-                if (text) {
-                    setChatMessages(prev => [...prev, {
-                        id: Date.now().toString() + Math.random().toString(),
-                        username: data.username,
-                        message: text,
-                        type: 'system'
-                    }]);
-                }
-            }
-        };
-
-        window.addEventListener('message', handleMessage);
-        return () => window.removeEventListener('message', handleMessage);
-    }, [isWatchParty]);
 
     // Initialize WatchParty
     useEffect(() => {
@@ -108,6 +72,35 @@ export default function VideoPlayer({ tmdbId, imdbId, type }: VideoPlayerProps) 
                     username: username,
                     debug: false
                 });
+
+                // Monkey-patch to capture incoming chat messages
+                const originalAddChat = party.addChatMessage.bind(party);
+                party.addChatMessage = (user: string, msg: string, own: boolean, isSystem: boolean) => {
+                    // We only add to our state if it's from others or system, 
+                    // since we already optimistically add our own messages
+                    if (!own) {
+                        setChatMessages(prev => [...prev, {
+                            id: Date.now().toString() + Math.random().toString(),
+                            username: user,
+                            message: msg,
+                            type: isSystem ? 'system' : 'chat'
+                        }]);
+                    }
+                    originalAddChat(user, msg, own, isSystem);
+                };
+
+                // Monkey-patch to capture system notifications
+                const originalShowNotification = party.showNotification.bind(party);
+                party.showNotification = (msg: string) => {
+                    setChatMessages(prev => [...prev, {
+                        id: Date.now().toString() + Math.random().toString(),
+                        username: 'Система',
+                        message: msg,
+                        type: 'system'
+                    }]);
+                    originalShowNotification(msg);
+                };
+
                 setPartyInstance(party);
             }, 1000);
             return () => clearTimeout(timer);
