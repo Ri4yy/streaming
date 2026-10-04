@@ -102,7 +102,7 @@ export default function TWASearchPage() {
                    id={item.id || item.steam_appid || item.appid}
                    name={item.title || item.name || item.volumeInfo?.title}
                    rate={item.vote_average || item.volumeInfo?.averageRating || 0}
-                   img={item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : (item.imageLinks?.thumbnail || item.header_image || item.volumeInfo?.imageLinks?.thumbnail || '')}
+                   img={item.poster_path ? `/tmdb/t/p/w500${item.poster_path}` : (item.imageLinks?.thumbnail || item.header_image || item.volumeInfo?.imageLinks?.thumbnail || '')}
                    type={item.media_type}
                    year={new Date(item.release_date?.date || item.release_date || item.first_air_date || item.publishedDate || item.volumeInfo?.publishedDate || Date.now()).getFullYear() || ''}
                    genre={item.genre_ids ? 'Жанр' : (item.volumeInfo?.authors?.join(', ') || '')}

@@ -64,7 +64,7 @@ export default async function CollectionDetailPage({ params }: { params: Promise
             let trailerUrl = '';
             let image = meta.image || '';
             if (image && image.startsWith('/')) {
-                image = `https://image.tmdb.org/t/p/original${image}`;
+                image = `/tmdb/t/p/original${image}`;
             }
             let title = meta.title || 'Без названия';
             let year = meta.year || '';

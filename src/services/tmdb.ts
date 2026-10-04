@@ -1,6 +1,6 @@
 export const TMDB_API_BASE_URL = 'https://api.themoviedb.org/3';
-export const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
-export const TMDB_IMAGE_ORIGINAL_URL = 'https://image.tmdb.org/t/p/original';
+export const TMDB_IMAGE_BASE_URL = '/tmdb/t/p/w500';
+export const TMDB_IMAGE_ORIGINAL_URL = '/tmdb/t/p/original';
 
 const TMDB_API_KEY = process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
@@ -233,7 +233,14 @@ export const tmdbApi = {
 
     getImageUrl: (path: string | null, size: 'w500' | 'original' = 'w500') => {
         if (!path) return '/img/poster/spider.jpg';
-        return size === 'w500' ? `${TMDB_IMAGE_BASE_URL}${path}` : `${TMDB_IMAGE_ORIGINAL_URL}${path}`;
+        if (path.startsWith('http')) {
+            if (path.includes('image.tmdb.org/')) {
+                return path.replace('https://image.tmdb.org', '/tmdb');
+            }
+            return path;
+        }
+        const formattedPath = path.startsWith('/') ? path : `/${path}`;
+        return size === 'w500' ? `${TMDB_IMAGE_BASE_URL}${formattedPath}` : `${TMDB_IMAGE_ORIGINAL_URL}${formattedPath}`;
     },
 
     search: (query: string, type: 'movie' | 'tv' | 'multi' = 'multi', page = 1) =>

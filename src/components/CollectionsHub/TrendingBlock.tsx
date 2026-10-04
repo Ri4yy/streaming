@@ -15,7 +15,7 @@ export default function TrendingBlock() {
                 {/* Background Image (Placeholder) */}
                 <div 
                     className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                    style={{ backgroundImage: 'url("https://image.tmdb.org/t/p/original/8rpDcsfLJypbO6vtecsmEZzAUdi.jpg")' }}
+                    style={{ backgroundImage: 'url("/tmdb/t/p/original/8rpDcsfLJypbO6vtecsmEZzAUdi.jpg")' }}
                 />
                 
                 {/* Gradient Overlay */}

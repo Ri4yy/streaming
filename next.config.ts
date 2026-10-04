@@ -51,6 +51,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/tmdb/:path*',
+        destination: 'https://image.tmdb.org/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
